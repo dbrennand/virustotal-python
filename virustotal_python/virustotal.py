@@ -34,7 +34,7 @@ class Virustotal(object):
     def __init__(self, API_KEY=None):
         self.API_KEY = API_KEY
         self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
-        self.VERSION = "1.0"
+        self.VERSION = "0.0.1"
         self.headers = {
             "Accept-Encoding": "gzip, deflate",
             "User-Agent": f"gzip,  virustotal-python {self.VERSION}",
@@ -90,7 +90,7 @@ class Virustotal(object):
     def url_report(self, resource, scan=None):
         """
         Retrieve scan report(s) for a given url(s) (https://www.virustotal.com/en/documentation/public-api/#getting-url-scans)
-           :param resource: The url(s) of the given report to be retrieved or scan_id or a CSV list made up of a combination of hashes and scan_ids (MAX 4); the scan_ids or URLs must be separated by a new line character.
+           :param resource: The url(s) of the given report to be retrieved or scan_id or a CSV list made up of scan_ids or urls (MAX 4); the scan_ids or urls `must` be separated by a new line character.
            :param scan: An optional parameter. When set to "1" will automatically submit the URL for analysis if no report is found for it in VirusTotal's database.
            :rtype: A dictionary containing the resp_code and JSON response.
         """
@@ -131,13 +131,13 @@ class Virustotal(object):
            :param comment: The str comment to be submitted.
            :rtype: A dictionary containing the resp_code and JSON response.
         """
-        params = {"apikey": self.API_KEY, "resource": resource, "comment": comment} 
+        params = {"apikey": self.API_KEY, "resource": resource, "comment": comment}
         resp = self.make_request(f"{self.BASEURL}comments/put", params=params)
         return resp
 
     def make_request(self, endpoint, params, method="POST", **kwargs):
         """
-        Make the request to the specified endpoint.
+        Helper function to make the request to the specified endpoint.
            :param endpoint: The specific Virustotal API endpoint.
            :param method: The request method to use.
            :param params: The parameters to go along with the request.
@@ -153,7 +153,7 @@ class Virustotal(object):
 
     def validate_response(self, response):
         """
-        Validate the response request produced from make_request().
+        Helper function to validate the response request produced from make_request().
            :param response: The requests response object.
            :rtype: A dictionary containing the resp_code and JSON response.
         """

@@ -1,24 +1,3 @@
-# virustotal-python
-A light wrapper around the public VirusTotal API.
-
-# Dependancies
-* Written in Python 3.7. Python 2 is **not** supported; sorry 😢.
-
-```
-[dev-packages]
-black = "*"
-
-[packages]
-requests = "*"
-```
-
-```pipenv install```
-
-## TODO
-* Add package to PyPi package index.
-
-## Example Usage
-```python
 from virustotal import Virustotal
 from pprint import pprint
 vtotal = Virustotal("Insert API Key Here.")
@@ -55,26 +34,3 @@ resp = vtotal.domain_report("027.ru")
 
 # Put a comment onto a specific resource.
 resp = vtotal.put_comment("ihaveaproblem.info", comment="This website is flagged by a few scanners as malicious! #watchout")
-```
-
-```python
-# Example resp for url_scan()
-resp = vtotal.url_scan("ihaveaproblem.info") # Query a single url.
-pprint(resp)
-{'json_resp': {'permalink': 'https://www.virustotal.com/url/fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e/analysis/1549973453/',
-               'resource': 'http://ihaveaproblem.info/',
-               'response_code': 1,
-               'scan_date': '2019-02-12 12:10:53',
-               'scan_id': 'fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e-1549973453',
-               'url': 'http://ihaveaproblem.info/',
-               'verbose_msg': 'Scan request successfully queued, come back '
-                              'later for the report'},
- 'status_code': 200}
-```
-
-## Authors -- Contributors
-
-* **Dextroz** - *Author* - [Dextroz](https://github.com/Dextroz)
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) for details.
