@@ -1,0 +1,168 @@
+"""
+MIT License
+
+Copyright (c) 2019 Daniel Brennand (Dextroz)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE."""
+try:
+    from requests import get, post
+    from os.path import abspath, basename
+except ImportError:
+    print(f"Failed to import required modules: {err}")
+
+
+class Virustotal(object):
+    """Base class for interacting with the Virustotal Public API. (https://www.virustotal.com/en/documentation/public-api/)
+    """
+
+    def __init__(self, API_KEY=None):
+        self.API_KEY = API_KEY
+        self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
+        self.VERSION = "1.0"
+        self.headers = {
+            "Accept-Encoding": "gzip, deflate",
+            "User-Agent": f"gzip,  virustotal-python {self.VERSION}",
+        }
+        if API_KEY is None:
+            raise ValueError(
+                "An API_KEY is required to interact with the VirusTotal API."
+            )
+
+    def file_scan(self, file):
+        """
+        Send a file to Virustotal for analysis. (https://www.virustotal.com/en/documentation/public-api/#scanning-files)
+           :param file: The path to the file to be sent to Virustotal for analysis.
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        params = {"apikey": self.API_KEY}
+        files = {"file": (basename(file), open(abspath(file), "rb"))}
+        resp = self.make_request(f"{self.BASEURL}file/scan", params=params, files=files)
+        return resp
+
+    def file_rescan(self, resource):
+        """
+        Resend a file to Virustotal for analysis. (https://www.virustotal.com/en/documentation/public-api/#rescanning-files)
+           :param resource: The resource of the specified file. Can be an `md5/sha1/sha256 hash` or CSV list made up of a combination of any of the three allowed hashes (MAX 25 items).
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        params = {"apikey": self.API_KEY, "resource": resource}
+        resp = self.make_request(f"{self.BASEURL}file/rescan", params=params)
+        return resp
+
+    def file_report(self, resource):
+        """
+        Retrieve scan report(s) for a given file from Virustotal. (https://www.virustotal.com/en/documentation/public-api/#getting-file-scans)
+           :param resource: The `md5/sha1/sha256 hash` of the file or CSV list made up of a combination of hashes and scan_ids (MAX 4 items).
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        params = {"apikey": self.API_KEY, "resource": resource}
+        resp = self.make_request(
+            f"{self.BASEURL}file/report", params=params, method="GET"
+        )
+        return resp
+
+    def url_scan(self, url):
+        """
+        Send url(s) to Virustotal. (https://www.virustotal.com/en/documentation/public-api/#scanning-urls)
+           :param url: The url(s) to be scanned. Also accepts a list of urls (MAX 4); urls must be separated by a new line character.
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        params = {"apikey": self.API_KEY, "url": url}
+        resp = self.make_request(f"{self.BASEURL}url/scan", params=params)
+        return resp
+
+    def url_report(self, resource, scan=None):
+        """
+        Retrieve scan report(s) for a given url(s) (https://www.virustotal.com/en/documentation/public-api/#getting-url-scans)
+           :param resource: The url(s) of the given report to be retrieved or scan_id or a CSV list made up of a combination of hashes and scan_ids (MAX 4); the scan_ids or URLs must be separated by a new line character.
+           :param scan: An optional parameter. When set to "1" will automatically submit the URL for analysis if no report is found for it in VirusTotal's database.
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        params = {"apikey": self.API_KEY, "resource": resource}
+        if scan is not None:
+            params["scan"] = scan
+        resp = self.make_request(f"{self.BASEURL}url/report", params=params)
+        return resp
+
+    def ipaddress_report(self, ip):
+        """
+        Retrieve a scan report for a specific ip address. (https://www.virustotal.com/en/documentation/public-api/#getting-ip-reports)
+           :param ip: A valid IPV4 address in dotted quad notation.
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        params = {"apikey": self.API_KEY, "ip": ip}
+        resp = self.make_request(
+            f"{self.BASEURL}ip-address/report", params=params, method="GET"
+        )
+        return resp
+
+    def domain_report(self, domain):
+        """
+        Retrieve a scan report for a specific domain name. (https://www.virustotal.com/en/documentation/public-api/#getting-domain-reports)
+           :param domain: A domain name.
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        params = {"apikey": self.API_KEY, "domain": domain}
+        resp = self.make_request(
+            f"{self.BASEURL}domain/report", params=params, method="GET"
+        )
+        return resp
+
+    def put_comment(self, resource, comment):
+        """
+        Make comments on files and URLs. (https://www.virustotal.com/en/documentation/public-api/#making-comments)
+           :param resource: The `md5/sha1/sha256 hash` of the file you want to review or the URL itself that you want to comment on.
+           :param comment: The str comment to be submitted.
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        params = {"apikey": self.API_KEY, "resource": resource, "comment": comment} 
+        resp = self.make_request(f"{self.BASEURL}comments/put", params=params)
+        return resp
+
+    def make_request(self, endpoint, params, method="POST", **kwargs):
+        """
+        Make the request to the specified endpoint.
+           :param endpoint: The specific Virustotal API endpoint.
+           :param method: The request method to use.
+           :param params: The parameters to go along with the request.
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        if method == "POST":
+            resp = post(endpoint, params=params, headers=self.headers, **kwargs)
+        elif method == "GET":
+            resp = get(endpoint, params=params, headers=self.headers, **kwargs)
+        else:
+            raise ValueError("Invalid request method.")
+        return self.validate_response(resp)
+
+    def validate_response(self, response):
+        """
+        Validate the response request produced from make_request().
+           :param response: The requests response object.
+           :rtype: A dictionary containing the resp_code and JSON response.
+        """
+        if response.status_code == 200:
+            json_resp = response.json()
+            return dict(status_code=response.status_code, json_resp=json_resp)
+        else:
+            return dict(
+                status_code=response.status_code,
+                error=response.text,
+                resp=response.content,
+            )
