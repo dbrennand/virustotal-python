@@ -7,12 +7,17 @@ A light wrapper around the public VirusTotal API.
 ```
 [dev-packages]
 black = "*"
+twine = "*"
 
 [packages]
 requests = "*"
 ```
 
 ```pipenv install```
+
+Or 
+
+```pip install -r requirements.txt```
 
 Or
 
