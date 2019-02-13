@@ -5,9 +5,13 @@ verify_ssl = true
 
 [dev-packages]
 black = "*"
+twine = "*"
 
 [packages]
 requests = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

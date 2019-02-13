@@ -7,6 +7,7 @@ A light wrapper around the public VirusTotal API.
 ```
 [dev-packages]
 black = "*"
+twine = "*"
 
 [packages]
 requests = "*"
@@ -14,12 +15,17 @@ requests = "*"
 
 ```pipenv install```
 
-## TODO
-* Add package to PyPi package index.
+Or 
+
+```pip3 install -r requirements.txt```
+
+Or
+
+```pip3 install virustotal-python```
 
 ## Example Usage
 ```python
-from virustotal import Virustotal
+from virustotal_python import Virustotal
 from pprint import pprint
 vtotal = Virustotal("Insert API Key Here.")
 
@@ -58,7 +64,8 @@ resp = vtotal.put_comment("ihaveaproblem.info", comment="This website is flagged
 ```
 
 ```python
-# Example resp for url_scan()
+# Example resp for url_scan().
+# Assuming you have already initiated Virustotal() and imported pprint.
 resp = vtotal.url_scan("ihaveaproblem.info") # Query a single url.
 pprint(resp)
 {'json_resp': {'permalink': 'https://www.virustotal.com/url/fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e/analysis/1549973453/',
