@@ -34,7 +34,7 @@ class Virustotal(object):
     def __init__(self, API_KEY=None):
         self.API_KEY = API_KEY
         self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
-        self.VERSION = "0.0.1"
+        self.VERSION = "0.0.2"
         self.headers = {
             "Accept-Encoding": "gzip, deflate",
             "User-Agent": f"gzip,  virustotal-python {self.VERSION}",
@@ -55,46 +55,46 @@ class Virustotal(object):
         resp = self.make_request(f"{self.BASEURL}file/scan", params=params, files=files)
         return resp
 
-    def file_rescan(self, resource):
+    def file_rescan(self, *resource: list):
         """
         Resend a file to Virustotal for analysis. (https://www.virustotal.com/en/documentation/public-api/#rescanning-files)
-           :param resource: The resource of the specified file. Can be an `md5/sha1/sha256 hash` or CSV list made up of a combination of any of the three allowed hashes (MAX 25 items).
+           :param *resource: A list of resource(s) of a specified file(s). Can be `md5/sha1/sha256 hashes`. Can be a combination of any of the three allowed hashes (MAX 25 items).
            :rtype: A dictionary containing the resp_code and JSON response.
         """
-        params = {"apikey": self.API_KEY, "resource": resource}
+        params = {"apikey": self.API_KEY, "resource": ",".join(*resource)}
         resp = self.make_request(f"{self.BASEURL}file/rescan", params=params)
         return resp
 
-    def file_report(self, resource):
+    def file_report(self, *resource: list):
         """
         Retrieve scan report(s) for a given file from Virustotal. (https://www.virustotal.com/en/documentation/public-api/#getting-file-scans)
-           :param resource: The `md5/sha1/sha256 hash` of the file or CSV list made up of a combination of hashes and scan_ids (MAX 4 items).
+           :param *resource: A list of resource(s) of a specified file(s). Can be `md5/sha1/sha256 hashes` and/or combination of hashes and scan_ids (MAX 4 per standard request rate).
            :rtype: A dictionary containing the resp_code and JSON response.
         """
-        params = {"apikey": self.API_KEY, "resource": resource}
+        params = {"apikey": self.API_KEY, "resource": ",".join(*resource)}
         resp = self.make_request(
             f"{self.BASEURL}file/report", params=params, method="GET"
         )
         return resp
 
-    def url_scan(self, url):
+    def url_scan(self, *url: list):
         """
         Send url(s) to Virustotal. (https://www.virustotal.com/en/documentation/public-api/#scanning-urls)
-           :param url: The url(s) to be scanned. Also accepts a list of urls (MAX 4); urls must be separated by a new line character.
+           :param *url: A list of url(s) to be scanned. (MAX 4 per standard request rate).
            :rtype: A dictionary containing the resp_code and JSON response.
         """
-        params = {"apikey": self.API_KEY, "url": url}
+        params = {"apikey": self.API_KEY, "url": "\n".join(*url)}
         resp = self.make_request(f"{self.BASEURL}url/scan", params=params)
         return resp
 
-    def url_report(self, resource, scan=None):
+    def url_report(self, *resource: list, scan=None):
         """
         Retrieve scan report(s) for a given url(s) (https://www.virustotal.com/en/documentation/public-api/#getting-url-scans)
-           :param resource: The url(s) of the given report to be retrieved or scan_id or a CSV list made up of scan_ids or urls (MAX 4); the scan_ids or urls `must` be separated by a new line character.
-           :param scan: An optional parameter. When set to "1" will automatically submit the URL for analysis if no report is found for it in VirusTotal's database.
+           :param *resource: A list of the url(s) and/or scan_id(s) report(s) to be retrieved (MAX 4 per standard request rate).
+           :param scan: An optional parameter. When set to "1" it will automatically submit the URL for analysis if no report is found for it in VirusTotal's database.
            :rtype: A dictionary containing the resp_code and JSON response.
         """
-        params = {"apikey": self.API_KEY, "resource": resource}
+        params = {"apikey": self.API_KEY, "resource": "\n".join(*resource)}
         if scan is not None:
             params["scan"] = scan
         resp = self.make_request(f"{self.BASEURL}url/report", params=params)
