@@ -117,6 +117,12 @@ pprint(resp)
  'status_code': 200}
 ```
 
+## Changelog
+
+* 0.0.2 - Changes to file_rescan(), file_report(), url_scan(), url_report() to improve ease of use of the wrapper. See issue [#2](https://github.com/Dextroz/virustotal-python/issues/2). Examples updated for changes.
+
+* 0.0.1 - Inital release of virustotal-python. Covered all endpoints of the Virustotal public API. 
+
 ## Authors -- Contributors
 
 * **Dextroz** - *Author* - [Dextroz](https://github.com/Dextroz)
