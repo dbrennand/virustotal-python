@@ -34,7 +34,7 @@ class Virustotal(object):
     def __init__(self, API_KEY=None):
         self.API_KEY = API_KEY
         self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
-        self.VERSION = "0.0.2"
+        self.VERSION = "0.0.3"
         self.headers = {
             "Accept-Encoding": "gzip, deflate",
             "User-Agent": f"gzip,  virustotal-python {self.VERSION}",
