@@ -104,7 +104,7 @@ pprint(resp)
 ```python
 # Example resp for url_scan().
 # Assuming you have already initiated Virustotal() and imported pprint.
-resp = vtotal.url_scan("ihaveaproblem.info") # Query a single url.
+resp = vtotal.url_scan(["ihaveaproblem.info"]) # Query a single url.
 pprint(resp)
 {'json_resp': {'permalink': 'https://www.virustotal.com/url/fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e/analysis/1549973453/',
                'resource': 'http://ihaveaproblem.info/',
@@ -118,6 +118,10 @@ pprint(resp)
 ```
 
 ## Changelog
+
+* 0.0.4 - README.md updated; dependencies updated.
+
+* 0.0.3 - Updated dependencies for urllib3 security vulnerability.
 
 * 0.0.2 - Changes to file_rescan(), file_report(), url_scan(), url_report() to improve ease of use of the wrapper. See issue [#2](https://github.com/Dextroz/virustotal-python/issues/2). Examples updated for changes.
 
