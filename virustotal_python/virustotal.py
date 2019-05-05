@@ -28,13 +28,15 @@ except ImportError:
 
 
 class Virustotal(object):
-    """Base class for interacting with the Virustotal Public API. (https://www.virustotal.com/en/documentation/public-api/)
+    """
+    Base class for interacting with the Virustotal Public API. (https://www.virustotal.com/en/documentation/public-api/)
     """
 
-    def __init__(self, API_KEY=None):
+    def __init__(self, API_KEY=None, PROXIES=None):
         self.API_KEY = API_KEY
+        self.PROXIES = PROXIES
         self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
-        self.VERSION = "0.0.4"
+        self.VERSION = "0.0.5"
         self.headers = {
             "Accept-Encoding": "gzip, deflate",
             "User-Agent": f"gzip,  virustotal-python {self.VERSION}",
@@ -52,7 +54,9 @@ class Virustotal(object):
         """
         params = {"apikey": self.API_KEY}
         files = {"file": (basename(file), open(abspath(file), "rb"))}
-        resp = self.make_request(f"{self.BASEURL}file/scan", params=params, files=files)
+        resp = self.make_request(
+            f"{self.BASEURL}file/scan", params=params, files=files, proxies=self.PROXIES
+        )
         return resp
 
     def file_rescan(self, *resource: list):
@@ -62,7 +66,9 @@ class Virustotal(object):
            :rtype: A dictionary containing the resp_code and JSON response.
         """
         params = {"apikey": self.API_KEY, "resource": ",".join(*resource)}
-        resp = self.make_request(f"{self.BASEURL}file/rescan", params=params)
+        resp = self.make_request(
+            f"{self.BASEURL}file/rescan", params=params, proxies=self.PROXIES
+        )
         return resp
 
     def file_report(self, *resource: list):
@@ -73,7 +79,10 @@ class Virustotal(object):
         """
         params = {"apikey": self.API_KEY, "resource": ",".join(*resource)}
         resp = self.make_request(
-            f"{self.BASEURL}file/report", params=params, method="GET"
+            f"{self.BASEURL}file/report",
+            params=params,
+            method="GET",
+            proxies=self.PROXIES,
         )
         return resp
 
@@ -84,7 +93,9 @@ class Virustotal(object):
            :rtype: A dictionary containing the resp_code and JSON response.
         """
         params = {"apikey": self.API_KEY, "url": "\n".join(*url)}
-        resp = self.make_request(f"{self.BASEURL}url/scan", params=params)
+        resp = self.make_request(
+            f"{self.BASEURL}url/scan", params=params, proxies=self.PROXIES
+        )
         return resp
 
     def url_report(self, *resource: list, scan=None):
@@ -97,7 +108,9 @@ class Virustotal(object):
         params = {"apikey": self.API_KEY, "resource": "\n".join(*resource)}
         if scan is not None:
             params["scan"] = scan
-        resp = self.make_request(f"{self.BASEURL}url/report", params=params)
+        resp = self.make_request(
+            f"{self.BASEURL}url/report", params=params, proxies=self.PROXIES
+        )
         return resp
 
     def ipaddress_report(self, ip):
@@ -108,7 +121,10 @@ class Virustotal(object):
         """
         params = {"apikey": self.API_KEY, "ip": ip}
         resp = self.make_request(
-            f"{self.BASEURL}ip-address/report", params=params, method="GET"
+            f"{self.BASEURL}ip-address/report",
+            params=params,
+            method="GET",
+            proxies=self.PROXIES,
         )
         return resp
 
@@ -120,7 +136,10 @@ class Virustotal(object):
         """
         params = {"apikey": self.API_KEY, "domain": domain}
         resp = self.make_request(
-            f"{self.BASEURL}domain/report", params=params, method="GET"
+            f"{self.BASEURL}domain/report",
+            params=params,
+            method="GET",
+            proxies=self.PROXIES,
         )
         return resp
 
@@ -132,7 +151,9 @@ class Virustotal(object):
            :rtype: A dictionary containing the resp_code and JSON response.
         """
         params = {"apikey": self.API_KEY, "resource": resource, "comment": comment}
-        resp = self.make_request(f"{self.BASEURL}comments/put", params=params)
+        resp = self.make_request(
+            f"{self.BASEURL}comments/put", params=params, proxies=self.PROXIES
+        )
         return resp
 
     def make_request(self, endpoint, params, method="POST", **kwargs):

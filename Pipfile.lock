@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c7b3bb4696877a2affec0b303b86679b2d3fd7569c7ba4ffe5f0162edb919d54"
+            "sha256": "e0ed78b15052319e02e39491735f6e3a614d3ed47d1bec35f32a6dcaac0a8597"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -37,7 +37,17 @@
             ],
             "version": "==2.8"
         },
+        "pysocks": {
+            "hashes": [
+                "sha256:3fe52c55890a248676fd69dc9e3c4e811718b777834bcaab7a8125cf9deac672",
+                "sha256:6d13981cc41cfff685270f3ee84de46a29dce982e5d16c904c11d6b3df14d761"
+            ],
+            "version": "==1.6.8"
+        },
         "requests": {
+            "extras": [
+                "socks"
+            ],
             "hashes": [
                 "sha256:502a824f31acdacb3a35b6690b5fbf0bc41d63a24a45c4004352b0242707598e",
                 "sha256:7bf2a778576d825600030a110f3c0e3e8edc51dfaafe1c146e39a2027784957b"
@@ -141,6 +151,9 @@
             "version": "==24.0"
         },
         "requests": {
+            "extras": [
+                "socks"
+            ],
             "hashes": [
                 "sha256:502a824f31acdacb3a35b6690b5fbf0bc41d63a24a45c4004352b0242707598e",
                 "sha256:7bf2a778576d825600030a110f3c0e3e8edc51dfaafe1c146e39a2027784957b"

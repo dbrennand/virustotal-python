@@ -1,7 +1,18 @@
 from virustotal import Virustotal
 from pprint import pprint
 
+# Normal Initialisation.
 vtotal = Virustotal("Insert API Key Here.")
+
+# NEW as of version 0.0.5: Proxy support.
+# Example Usage: Using HTTP(S)
+vtotal = Virustotal(
+    "Insert API Key Here.",
+    {"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"})
+# Or using SOCKS
+vtotal = Virustotal(
+    "Insert API Key Here.",
+    {"http": "socks5://user:pass@host:port", "https": "socks5://user:pass@host:port"})
 
 # NOTE: Check virustotal.py for docstrings containing full parameter descriptions.
 
