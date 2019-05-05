@@ -130,7 +130,7 @@ pprint(resp)
 
 ## Changelog
 
-* 0.0.5 - Added Proxy support. Via HTTP(S) or using SOCKS.
+* 0.0.5 - Added Proxy support. Via HTTP(S) or using SOCKS: See #8.
 
 * 0.0.4 - README.md updated; dependencies updated.
 
