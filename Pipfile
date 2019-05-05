@@ -8,7 +8,7 @@ black = "*"
 twine = "*"
 
 [packages]
-requests = "*"
+requests = {extras = ["socks"],version = "*"}
 
 [requires]
 python_version = "3.7"
