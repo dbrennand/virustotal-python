@@ -1,4 +1,4 @@
-# virustotal-python
+# virustotal-python 🐍
 A light wrapper around the public VirusTotal API.
 
 # Dependancies
@@ -10,7 +10,7 @@ black = "*"
 twine = "*"
 
 [packages]
-requests = "*"
+requests = {extras = ["socks"],version = "*"}
 ```
 
 ```pipenv install```
@@ -25,7 +25,7 @@ Or
 
 ## Example Usage
 ```python
-from virustotal import Virustotal
+from virustotal_python import Virustotal
 from pprint import pprint
 
 # Normal Initialisation.
@@ -129,6 +129,8 @@ pprint(resp)
 ```
 
 ## Changelog
+
+* 0.0.6 - Fixed usage example and dependencies in README.md, Setup github.io website, updated requirements.txt.
 
 * 0.0.5 - Added Proxy support. Via HTTP(S) or using SOCKS: See [#8](https://github.com/Dextroz/virustotal-python/pull/8).
 
