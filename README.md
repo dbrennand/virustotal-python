@@ -1,5 +1,6 @@
 # virustotal-python 🐍
 ![PyPI](https://img.shields.io/pypi/v/virustotal-python.svg?style=flat-square)
+
 A light wrapper around the public VirusTotal API.
 
 # Dependancies
