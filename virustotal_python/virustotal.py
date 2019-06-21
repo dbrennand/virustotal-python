@@ -23,7 +23,7 @@ SOFTWARE."""
 try:
     from requests import get, post
     from os.path import abspath, basename
-except ImportError:
+except ImportError as err:
     print(f"Failed to import required modules: {err}")
 
 
@@ -32,11 +32,11 @@ class Virustotal(object):
     Base class for interacting with the Virustotal Public API. (https://www.virustotal.com/en/documentation/public-api/)
     """
 
-    def __init__(self, API_KEY=None, PROXIES=None):
+    def __init__(self, API_KEY: str = None, PROXIES: dict = None):
         self.API_KEY = API_KEY
         self.PROXIES = PROXIES
         self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
-        self.VERSION = "0.0.6"
+        self.VERSION = "0.0.7"
         self.headers = {
             "Accept-Encoding": "gzip, deflate",
             "User-Agent": f"gzip,  virustotal-python {self.VERSION}",
@@ -48,7 +48,7 @@ class Virustotal(object):
 
     def file_scan(self, file):
         """
-        Send a file to Virustotal for analysis. (https://www.virustotal.com/en/documentation/public-api/#scanning-files)
+        Send a file to Virustotal for analysis. (https://developers.virustotal.com/v2.0/reference#file-scan)
            :param file: The path to the file to be sent to Virustotal for analysis.
            :rtype: A dictionary containing the resp_code and JSON response.
         """
@@ -61,7 +61,7 @@ class Virustotal(object):
 
     def file_rescan(self, *resource: list):
         """
-        Resend a file to Virustotal for analysis. (https://www.virustotal.com/en/documentation/public-api/#rescanning-files)
+        Resend a file to Virustotal for analysis. (https://developers.virustotal.com/v2.0/reference#file-rescan)
            :param *resource: A list of resource(s) of a specified file(s). Can be `md5/sha1/sha256 hashes`. Can be a combination of any of the three allowed hashes (MAX 25 items).
            :rtype: A dictionary containing the resp_code and JSON response.
         """
@@ -73,7 +73,7 @@ class Virustotal(object):
 
     def file_report(self, *resource: list):
         """
-        Retrieve scan report(s) for a given file from Virustotal. (https://www.virustotal.com/en/documentation/public-api/#getting-file-scans)
+        Retrieve scan report(s) for a given file from Virustotal. (https://developers.virustotal.com/v2.0/reference#file-report)
            :param *resource: A list of resource(s) of a specified file(s). Can be `md5/sha1/sha256 hashes` and/or combination of hashes and scan_ids (MAX 4 per standard request rate).
            :rtype: A dictionary containing the resp_code and JSON response.
         """
@@ -88,7 +88,7 @@ class Virustotal(object):
 
     def url_scan(self, *url: list):
         """
-        Send url(s) to Virustotal. (https://www.virustotal.com/en/documentation/public-api/#scanning-urls)
+        Send url(s) to Virustotal. (https://developers.virustotal.com/v2.0/reference#url-scan)
            :param *url: A list of url(s) to be scanned. (MAX 4 per standard request rate).
            :rtype: A dictionary containing the resp_code and JSON response.
         """
@@ -98,11 +98,11 @@ class Virustotal(object):
         )
         return resp
 
-    def url_report(self, *resource: list, scan=None):
+    def url_report(self, *resource: list, scan: int = None):
         """
-        Retrieve scan report(s) for a given url(s) (https://www.virustotal.com/en/documentation/public-api/#getting-url-scans)
+        Retrieve scan report(s) for a given url(s) (https://developers.virustotal.com/v2.0/reference#url-report)
            :param *resource: A list of the url(s) and/or scan_id(s) report(s) to be retrieved (MAX 4 per standard request rate).
-           :param scan: An optional parameter. When set to "1" it will automatically submit the URL for analysis if no report is found for it in VirusTotal's database.
+           :param scan: An optional parameter. When set to 1 it will automatically submit the URL for analysis if no report is found for it in VirusTotal's database.
            :rtype: A dictionary containing the resp_code and JSON response.
         """
         params = {"apikey": self.API_KEY, "resource": "\n".join(*resource)}
@@ -113,9 +113,9 @@ class Virustotal(object):
         )
         return resp
 
-    def ipaddress_report(self, ip):
+    def ipaddress_report(self, ip: str):
         """
-        Retrieve a scan report for a specific ip address. (https://www.virustotal.com/en/documentation/public-api/#getting-ip-reports)
+        Retrieve a scan report for a specific ip address. (https://developers.virustotal.com/v2.0/reference#ip-address-report)
            :param ip: A valid IPV4 address in dotted quad notation.
            :rtype: A dictionary containing the resp_code and JSON response.
         """
@@ -128,9 +128,9 @@ class Virustotal(object):
         )
         return resp
 
-    def domain_report(self, domain):
+    def domain_report(self, domain: str):
         """
-        Retrieve a scan report for a specific domain name. (https://www.virustotal.com/en/documentation/public-api/#getting-domain-reports)
+        Retrieve a scan report for a specific domain name. (https://developers.virustotal.com/v2.0/reference#domain-report)
            :param domain: A domain name.
            :rtype: A dictionary containing the resp_code and JSON response.
         """
@@ -143,9 +143,9 @@ class Virustotal(object):
         )
         return resp
 
-    def put_comment(self, resource, comment):
+    def put_comment(self, resource: str, comment: str):
         """
-        Make comments on files and URLs. (https://www.virustotal.com/en/documentation/public-api/#making-comments)
+        Make comments on files and URLs. (https://developers.virustotal.com/v2.0/reference#comments-put)
            :param resource: The `md5/sha1/sha256 hash` of the file you want to review or the URL itself that you want to comment on.
            :param comment: The str comment to be submitted.
            :rtype: A dictionary containing the resp_code and JSON response.
@@ -156,7 +156,7 @@ class Virustotal(object):
         )
         return resp
 
-    def make_request(self, endpoint, params, method="POST", **kwargs):
+    def make_request(self, endpoint: str, params: dict, method="POST", **kwargs):
         """
         Helper function to make the request to the specified endpoint.
            :param endpoint: The specific Virustotal API endpoint.
