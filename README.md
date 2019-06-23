@@ -16,15 +16,8 @@ pytest = "*"
 requests = {extras = ["socks"],version = "*"}
 ```
 
-```pipenv install```
-
-Or 
-
-```pip3 install -r requirements.txt```
-
-Or
-
-```pip3 install virustotal-python```
+Install `virustotal-python` using either:
+* `pip3 install virustotal-python`, `pipenv install`, `pip3 install -r requirements.txt`, `python setup.py install`.
 
 ## Example Usage
 ```python
