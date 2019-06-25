@@ -17,7 +17,7 @@ vtotal = Virustotal(
 # NOTE: Check virustotal.py for docstrings containing full parameter descriptions.
 
 # Send a file to Virustotal for analysis.
-resp = vtotal.file_scan("./test.py")  # PATH to file for querying.
+resp = vtotal.file_scan("./tests.py")  # PATH to file for querying.
 
 # Resend a file to Virustotal for analysis.
 # A list containing the resource (SHA256) HASH of the file above.
@@ -67,7 +67,7 @@ resp = vtotal.url_report(
         "wikipedia.com",
         "github.com",
     ],
-    scan="1",
+    scan=1,
 )
 
 # Query an IP to Virustotal.
