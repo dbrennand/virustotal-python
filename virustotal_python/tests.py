@@ -33,17 +33,6 @@ def test_file_scan(virustotal_object):
     assert resp["json_resp"]["response_code"] == 1
 
 
-def test_file_rescan(virustotal_object):
-    resp = virustotal_object.file_rescan(
-        [
-            "75efd85cf6f8a962fe016787a7f57206ea9263086ee496fc62e3fc56734d4b53",
-            "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115",
-        ]
-    )
-    assert resp["status_code"] == 200
-    assert_content(resp)
-
-
 def test_file_report(virustotal_object):
     resp = virustotal_object.file_report(
         [

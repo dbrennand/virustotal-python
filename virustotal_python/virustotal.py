@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2019 Dextroz (Dextroz)
+Copyright (c) 2020 Dextroz (Dextroz)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -65,11 +65,7 @@ class Virustotal(object):
            :param *resource: A list of resource(s) of a specified file(s). Can be `md5/sha1/sha256 hashes`. Can be a combination of any of the three allowed hashes (MAX 25 items).
            :rtype: A dictionary containing the resp_code and JSON response.
         """
-        params = {"apikey": self.API_KEY, "resource": ",".join(*resource)}
-        resp = self.make_request(
-            f"{self.BASEURL}file/rescan", params=params, proxies=self.PROXIES
-        )
-        return resp
+        raise DeprecationWarning("VirusTotal removed this API endpoint from the public API.")
 
     def file_report(self, *resource: list):
         """
