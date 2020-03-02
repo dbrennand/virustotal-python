@@ -19,7 +19,7 @@ vtotal = Virustotal(
 # Send a file to Virustotal for analysis.
 resp = vtotal.file_scan("./tests.py")  # PATH to file for querying.
 
-# NOTE: This endpoint has been removed from the Virustotal API.
+# NOTE: This endpoint has been removed from the Public Virustotal API.
 # Resend a file to Virustotal for analysis.
 # A list containing the resource (SHA256) HASH of the file above.
 #resp = vtotal.file_rescan(
