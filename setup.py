@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf8") as readme:
 
 setup(
     name="virustotal-python",
-    version="0.0.8",
+    version="0.0.9",
     author="Dextroz",
     description="A light wrapper around the public VirusTotal API.",
     long_description=long_description,

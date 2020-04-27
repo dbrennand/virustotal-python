@@ -118,6 +118,8 @@ pprint(resp)
 
 ## Changelog
 
+* 0.0.9 - Update dependencies for security vulnerability.
+
 * 0.0.8 - Updated dependencies, removed method `file_rescan`
 
 * 0.0.7 - Added tests. Updated dependencies, Updated examples and README, `url_report` param `scan` now accepts `type(int)`, **no** longer `type(str)`
