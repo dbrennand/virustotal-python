@@ -6,11 +6,11 @@ with open("README.md", "r", encoding="utf8") as readme:
 setup(
     name="virustotal-python",
     version="0.0.9",
-    author="Dextroz",
+    author="dbrennand",
     description="A light wrapper around the public VirusTotal API.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Dextroz/virustotal-python",
+    url="https://github.com/dbrennand/virustotal-python",
     packages=find_packages(),
     classifiers=[
         "License :: OSI Approved :: MIT License",
