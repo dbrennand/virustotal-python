@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2020 Dextroz (Dextroz)
+Copyright (c) 2020 dbrennand (dbrennand)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
