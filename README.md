@@ -126,19 +126,19 @@ pprint(resp)
 
 * 0.0.6 - Fixed usage example and dependencies in README.md, Setup github.io website, updated requirements.txt.
 
-* 0.0.5 - Added Proxy support. Via HTTP(S) or using SOCKS: See [#8](https://github.com/Dextroz/virustotal-python/pull/8).
+* 0.0.5 - Added Proxy support. Via HTTP(S) or using SOCKS: See [#8](https://github.com/dbrennand/virustotal-python/pull/8).
 
 * 0.0.4 - README.md updated; dependencies updated.
 
 * 0.0.3 - Updated dependencies for urllib3 security vulnerability.
 
-* 0.0.2 - Changes to file_rescan(), file_report(), url_scan(), url_report() to improve ease of use of the wrapper. See issue [#2](https://github.com/Dextroz/virustotal-python/issues/2). Examples updated for changes.
+* 0.0.2 - Changes to file_rescan(), file_report(), url_scan(), url_report() to improve ease of use of the wrapper. See issue [#2](https://github.com/dbrennand/virustotal-python/issues/2). Examples updated for changes.
 
 * 0.0.1 - Inital release of virustotal-python. Covered all endpoints of the Virustotal public API. 
 
 ## Authors -- Contributors
 
-* **Dextroz** - *Author* - [Dextroz](https://github.com/Dextroz)
+* **dbrennand** - *Author* - [dbrennand](https://github.com/dbrennand)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) for details.
