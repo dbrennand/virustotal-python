@@ -91,13 +91,13 @@ class Virustotal(object):
                 endpoint = f"{self.BASEURL}files"
             resp = self.make_request(endpoint, files=files, proxies=self.PROXIES)
         else:
+            # v2 API request
             # If upload_url is provided, override default v2 API endpoint
             if upload_url:
                 endpoint = upload_url
             else:
                 # Use standard v2 API endpoint
                 endpoint = f"{self.BASEURL}file/scan"
-            # v2 API request
             params = {"apikey": self.API_KEY}
             resp = self.make_request(
                 endpoint,
