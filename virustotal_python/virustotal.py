@@ -89,7 +89,7 @@ class Virustotal(object):
             else:
                 # Use standard v3 API endpoint
                 endpoint = f"{self.BASEURL}files"
-            resp = self.make_request(endpoint, files=files, proxies=self.PROXIES)
+            resp = self.make_request(endpoint, files=files)
         else:
             # v2 API request
             # If upload_url is provided, override default v2 API endpoint
@@ -99,12 +99,7 @@ class Virustotal(object):
                 # Use standard v2 API endpoint
                 endpoint = f"{self.BASEURL}file/scan"
             params = {"apikey": self.API_KEY}
-            resp = self.make_request(
-                endpoint,
-                params=params,
-                files=files,
-                proxies=self.PROXIES,
-            )
+            resp = self.make_request(endpoint, params=params, files=files)
         return resp
 
     def file_upload_url(self):
@@ -120,19 +115,49 @@ class Virustotal(object):
         :returns: A dictionary containing the resp_code and JSON response.
         """
         if self.API_VERSION == "v3":
-            resp = self.make_request(
-                f"{self.BASE_URL}files/upload_url",
-                method="GET",
-                proxies=self.PROXIES,
-            )
+            resp = self.make_request(f"{self.BASE_URL}files/upload_url", method="GET")
         else:
             # v2 API request
             params = {"apikey": self.API_KEY}
             resp = self.make_request(
-                f"{self.BASE_URL}file/scan/upload_url",
-                method="GET",
-                proxies=self.PROXIES,
+                f"{self.BASE_URL}file/scan/upload_url", method="GET"
             )
+        return resp
+
+    def file_id(self, id: str):
+        """
+        Retrieve information about a file from the VirusTotal API.
+
+        NOTE: This method is exclusive to v3 of the VirusTotal API.
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#file-info)
+
+        :param id: A SHA-256, SHA-1 or MD5 hash identifying the file to retrieve information about.
+        :returns: A dictionary containing the resp_code and JSON response.
+        """
+        if self.API_VERSION is not "v3":
+            raise NotImplementedError(
+                "This method is exclusive to v3 of the VirusTotal API."
+            )
+        resp = self.make_request(f"{self.BASE_URL}files/{id}", method="GET")
+        return resp
+
+    def file_id_analyse(self, id: str):
+        """
+        Reanalyse a file already submitted to VirusTotal.
+
+        NOTE: This method is exclusive to v3 of the VirusTotal API.
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#files-analyse)
+
+        :param id: A SHA-256, SHA-1 or MD5 hash identifying the file to reanalyse.
+        :returns: A dictionary containing the resp_code and JSON response.
+        """
+        if self.API_VERSION is not "v3":
+            raise NotImplementedError(
+                "This method is exclusive to v3 of the VirusTotal API."
+            )
+        resp = self.make_request(f"{self.BASE_URL}files/{id}/analyse")
         return resp
 
     def file_rescan(self, *resource: list):
@@ -156,7 +181,6 @@ class Virustotal(object):
             f"{self.BASEURL}file/report",
             params=params,
             method="GET",
-            proxies=self.PROXIES,
         )
         return resp
 
@@ -168,7 +192,8 @@ class Virustotal(object):
         """
         params = {"apikey": self.API_KEY, "url": "\n".join(*url)}
         resp = self.make_request(
-            f"{self.BASEURL}url/scan", params=params, proxies=self.PROXIES
+            f"{self.BASEURL}url/scan",
+            params=params,
         )
         return resp
 
@@ -183,7 +208,8 @@ class Virustotal(object):
         if scan is not None:
             params["scan"] = scan
         resp = self.make_request(
-            f"{self.BASEURL}url/report", params=params, proxies=self.PROXIES
+            f"{self.BASEURL}url/report",
+            params=params,
         )
         return resp
 
@@ -198,7 +224,6 @@ class Virustotal(object):
             f"{self.BASEURL}ip-address/report",
             params=params,
             method="GET",
-            proxies=self.PROXIES,
         )
         return resp
 
@@ -213,7 +238,6 @@ class Virustotal(object):
             f"{self.BASEURL}domain/report",
             params=params,
             method="GET",
-            proxies=self.PROXIES,
         )
         return resp
 
@@ -226,22 +250,39 @@ class Virustotal(object):
         """
         params = {"apikey": self.API_KEY, "resource": resource, "comment": comment}
         resp = self.make_request(
-            f"{self.BASEURL}comments/put", params=params, proxies=self.PROXIES
+            f"{self.BASEURL}comments/put",
+            params=params,
         )
         return resp
 
-    def make_request(self, endpoint: str, params: dict, method="POST", **kwargs):
+    def make_request(
+        self, endpoint: str, params: dict = None, method: str = "POST", **kwargs
+    ):
         """
-        Helper function to make the request to the specified endpoint.
-           :param endpoint: The specific VirusTotal API endpoint.
-           :param method: The request method to use.
-           :param params: The parameters to go along with the request.
-           :rtype: A dictionary containing the resp_code and JSON response.
+        Helper function to make a request to the specified VirusTotal API endpoint.
+
+        :param endpoint: The specific VirusTotal API endpoint.
+        :param method: The request method to use.
+        :param params: The parameters to go along with the request.
+        :returns: A dictionary containing the resp_code and JSON response.
+        :raises ValueError: Raises ValueError when an invalid method is provided.
         """
         if method == "POST":
-            resp = post(endpoint, params=params, headers=self.HEADERS, **kwargs)
+            resp = post(
+                endpoint,
+                params=params,
+                headers=self.HEADERS,
+                proxies=self.PROXIES,
+                **kwargs,
+            )
         elif method == "GET":
-            resp = get(endpoint, params=params, headers=self.HEADERS, **kwargs)
+            resp = get(
+                endpoint,
+                params=params,
+                headers=self.HEADERS,
+                proxies=self.PROXIES,
+                **kwargs,
+            )
         else:
             raise ValueError("Invalid request method.")
         return self.validate_response(resp)
