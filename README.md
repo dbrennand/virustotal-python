@@ -1,7 +1,7 @@
 # virustotal-python 🐍
 ![PyPI](https://img.shields.io/pypi/v/virustotal-python.svg?style=flat-square)
 
-A light wrapper around the public VirusTotal API.
+A light wrapper around the public VirusTotal v2 and v3 API.
 
 # Dependencies
 * Written in Python 3.7.
@@ -118,6 +118,8 @@ pprint(resp)
 
 ## Changelog
 
+* 0.1.0 - Added support for the VirusTotal v3 API, added a missing endpoint for the v2 API: `/file/scan/upload_url`.
+
 * 0.0.9 - Update dependencies for security vulnerability.
 
 * 0.0.8 - Updated dependencies, removed method `file_rescan`
@@ -134,7 +136,7 @@ pprint(resp)
 
 * 0.0.2 - Changes to file_rescan(), file_report(), url_scan(), url_report() to improve ease of use of the wrapper. See issue [#2](https://github.com/dbrennand/virustotal-python/issues/2). Examples updated for changes.
 
-* 0.0.1 - Inital release of virustotal-python. Covered all endpoints of the Virustotal public API. 
+* 0.0.1 - Initial release of virustotal-python. Covered all endpoints of the Virustotal public API.
 
 ## Authors -- Contributors
 
