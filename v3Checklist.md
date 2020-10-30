@@ -14,6 +14,8 @@
 
 - [✔️] Add v3 support for `file_scan`.
 
+- [✔️] Add new parameter to `file_scan` named `upload_url`. Providing this parameter overrides the default API endpoint for this method to upload files larger than 32MB.
+
 - [✔️] Add missing method `file_upload_url`.
 
 - [] v3 API provides errors as [JSON response](https://developers.virustotal.com/v3.0/reference#errors). Accommodate this in `validate_response` helper function.
