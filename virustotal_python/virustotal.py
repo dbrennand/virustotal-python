@@ -21,33 +21,144 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from requests import get, post
-from os.path import abspath, basename
+import requests
+import os
+from typing import Tuple
+
+
+class VirustotalResponse(object):
+    """
+    Response class for VirusTotal API requests.
+    """
+
+    def __init__(self, response: requests.Response):
+        """
+        Initalisation for VirustotalResponse class.
+
+        :param response: A requests.Response object from a successfull API request to the VirusTotal API.
+        """
+        self.response = response
+
+    @property
+    def headers(self) -> dict:
+        """
+        Obtain the HTTP headers of a VirusTotal API request.
+
+        :returns: The HTTP headers of the requests.Response object.
+        """
+        return self.response.headers
+
+    @property
+    def status_code(self) -> int:
+        """
+        Obtain the HTTP status code of a VirusTotal API request.
+
+        :returns: The HTTP status code of the requests.Response object.
+        """
+        return self.response.status_code
+
+    @property
+    def text(self) -> str:
+        """
+        Obtain the HTTP text response of a VirusTotal API request.
+
+        :returns: The HTTP text response of the requests.Response object.
+        """
+        return self.response.text
+
+    def response(self) -> requests.Response:
+        """
+        Obtain the HTTP response object (requests.Response) of a VirusTotal API request.
+        You may want to access this property if you wanted to read other aspects of the response such as cookies.
+
+        :returns: A requests.Response object.
+        """
+        return self.response
+
+    def json(self, **kwargs) -> dict:
+        """
+        Obtain the JSON response of a VirusTotal API request.
+
+        :param **kwargs: Parameters to pass to json. Identical to `json.loads(**kwargs)`.
+        :returns: JSON response of the requests.Response object.
+        :raises ValueError: Raises ValueError when there is no JSON in the response body to deserialize.
+        """
+        return self.response.json(**kwargs)
+
+    def response_code(self) -> Tuple[int, None]:
+        """
+        Obtain the response_code from the JSON response of a VirusTotal API request.
+
+        [v2 documentation](https://developers.virustotal.com/reference#api-responses)
+
+        :returns: An int of the response_code from the VirusTotal API JSON response (if any), otherwise, returns None.
+        """
+        if self.status_code == 200:
+            json_resp = self.json()
+            # response_code will only be present in a v2 VirusTotal request
+            # Check for it and if present, return it
+            response_code = json_resp.get("response_code", None)
+            if response_code:
+                return response_code
+            else:
+                return None
+        else:
+            return None
+
+    def error(self) -> Tuple[dict, None]:
+        """
+        Obtain the error that occurred from a VirusTotal API request (if any).
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#errors)
+
+        :returns: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns None.
+        """
+        if self.status_code != 200:
+            # Attempt to decode JSON as the v3 VirusTotal API returns the error message as JSON
+            try:
+                return self.json().get("error", None)
+            except ValueError:
+                # Catch exception if there is no JSON to be deserialized
+                # Most likely using the v2 VirusTotal API
+                # Fallback to standard dict object containing the HTTP response text
+                return dict(error=self.text)
+        else:
+            return None
 
 
 class Virustotal(object):
     """
-    Base class for interacting with the public VirusTotal API [v2](https://www.virustotal.com/en/documentation/public-api/) and [v3](https://developers.virustotal.com/v3.0/reference).
+    Interact with the public VirusTotal API.
+
+    [v2 documentation](https://www.virustotal.com/en/documentation/public-api/)
+
+    [v3 documentation](https://developers.virustotal.com/v3.0/reference)
     """
 
     def __init__(
-        self, API_KEY: str = None, PROXIES: dict = None, API_VERSION: str = "v2"
+        self,
+        API_KEY: str = os.environ.get("VIRUSTOTAL_API_KEY", None),
+        API_VERSION: str = "v2",
+        PROXIES: dict = None,
+        TIMEOUT: float = None,
     ):
         """
-        Initalisation method for Virustotal class.
+        Initalisation function for Virustotal class.
 
-        :param API_KEY: The API used to interact with the VirusTotal v2 and v3 APIs.
-        :param PROXIES: A dictionary object containing proxies used when making requests.
+        :param API_KEY: The API key used to interact with the VirusTotal v2 and v3 APIs. Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
         :param API_VERSION: The version to use when interacting with the VirusTotal API. This parameter defaults to 'v2' for backwards compatibility.
+        :param PROXIES: A dictionary containing proxies used when making requests.
+        :param TIMEOUT: A float for the amount of time to wait in seconds for the HTTP request before timing out.
         :raises ValueError: Raises ValueError when no API_KEY is provided or the API_VERSION is invalid.
         """
         self.VERSION = "0.1.0"
         self.API_KEY = API_KEY
         if API_KEY is None:
             raise ValueError(
-                "An API_KEY is required to interact with the VirusTotal API."
+                "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable VIRUSTOTAL_API_KEY."
             )
         self.PROXIES = PROXIES
+        self.TIMEOUT = TIMEOUT
         # Declare appropriate variables depending on the API_VERSION provided
         if API_VERSION == "v2":
             self.API_VERSION = API_VERSION
@@ -66,239 +177,106 @@ class Virustotal(object):
             }
         else:
             raise ValueError(
-                f"The API version {API_VERSION} is not a valid VirusTotal API version.\nValid API versions are: 'v2' or 'v3'."
+                f"The API version '{API_VERSION}' is not a valid VirusTotal API version.\nValid API versions are: 'v2' or 'v3'."
             )
 
-    def file_scan(self, file, upload_url: str = None):
+    def request(
+        self,
+        resource: str,
+        params: dict = None,
+        method: str = "GET",
+        json: dict = None,
+        files: dict = None,
+        backwards_compatibility: bool = False,
+    ) -> Tuple[dict, VirustotalResponse]:
         """
-        Send a file to VirusTotal for analysis. Max file size is 32MB.
+        Make a request to the VirusTotal API.
 
-        [v2 documentation](https://developers.virustotal.com/v2.0/reference#file-scan)
-
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#files-scan)
-
-        :param file: The path to the file to be sent to VirusTotal for analysis.
-        :param upload_url: The URL used to upload files larger than 32MB to VirusTotal for analysis. Obtained from the `file_upload_url` method.
-        :returns: A dictionary containing the resp_code and JSON response.
-        """
-        files = {"file": (basename(file), open(abspath(file), "rb"))}
-        if self.API_VERSION == "v3":
-            # If upload_url is provided, override default v3 API endpoint
-            if upload_url:
-                endpoint = upload_url
-            else:
-                # Use standard v3 API endpoint
-                endpoint = f"{self.BASEURL}files"
-            resp = self.make_request(endpoint, files=files)
-        else:
-            # v2 API request
-            # If upload_url is provided, override default v2 API endpoint
-            if upload_url:
-                endpoint = upload_url
-            else:
-                # Use standard v2 API endpoint
-                endpoint = f"{self.BASEURL}file/scan"
-            params = {"apikey": self.API_KEY}
-            resp = self.make_request(endpoint, params=params, files=files)
-        return resp
-
-    def file_upload_url(self):
-        """
-        Get a URL for uploading files larger than 32MB to the VirusTotal API.
-
-        NOTE: For the v2 API, this endpoint requires additional privileges. For the v3 API, no additional privileges are required based on the documentation.
-
-        [v2 documentation](https://developers.virustotal.com/reference#file-scan-upload-url)
-
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#files-upload-url)
-
-        :returns: A dictionary containing the resp_code and JSON response.
-        """
-        if self.API_VERSION == "v3":
-            resp = self.make_request(f"{self.BASE_URL}files/upload_url", method="GET")
-        else:
-            # v2 API request
-            params = {"apikey": self.API_KEY}
-            resp = self.make_request(
-                f"{self.BASE_URL}file/scan/upload_url", method="GET"
-            )
-        return resp
-
-    def file_id(self, id: str):
-        """
-        Retrieve information about a file from the VirusTotal API.
-
-        NOTE: This method is exclusive to v3 of the VirusTotal API.
-
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#file-info)
-
-        :param id: A SHA-256, SHA-1 or MD5 hash identifying the file to retrieve information about.
-        :returns: A dictionary containing the resp_code and JSON response.
-        """
-        if self.API_VERSION is not "v3":
-            raise NotImplementedError(
-                "This method is exclusive to v3 of the VirusTotal API."
-            )
-        resp = self.make_request(f"{self.BASE_URL}files/{id}", method="GET")
-        return resp
-
-    def file_id_analyse(self, id: str):
-        """
-        Reanalyse a file already submitted to VirusTotal.
-
-        NOTE: This method is exclusive to v3 of the VirusTotal API.
-
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#files-analyse)
-
-        :param id: A SHA-256, SHA-1 or MD5 hash identifying the file to reanalyse.
-        :returns: A dictionary containing the resp_code and JSON response.
-        """
-        if self.API_VERSION is not "v3":
-            raise NotImplementedError(
-                "This method is exclusive to v3 of the VirusTotal API."
-            )
-        resp = self.make_request(f"{self.BASE_URL}files/{id}/analyse")
-        return resp
-
-    def file_rescan(self, *resource: list):
-        """
-        Resend a file to VirusTotal for analysis. (https://developers.virustotal.com/v2.0/reference#file-rescan)
-           :param *resource: A list of resource(s) of a specified file(s). Can be `md5/sha1/sha256 hashes`. Can be a combination of any of the three allowed hashes (MAX 25 items).
-           :rtype: A dictionary containing the resp_code and JSON response.
-        """
-        raise DeprecationWarning(
-            "VirusTotal removed this API endpoint from the public API."
-        )
-
-    def file_report(self, *resource: list):
-        """
-        Retrieve scan report(s) for a given file from VirusTotal. (https://developers.virustotal.com/v2.0/reference#file-report)
-           :param *resource: A list of resource(s) of a specified file(s). Can be `md5/sha1/sha256 hashes` and/or combination of hashes and scan_ids (MAX 4 per standard request rate).
-           :rtype: A dictionary containing the resp_code and JSON response.
-        """
-        params = {"apikey": self.API_KEY, "resource": ",".join(*resource)}
-        resp = self.make_request(
-            f"{self.BASEURL}file/report",
-            params=params,
-            method="GET",
-        )
-        return resp
-
-    def url_scan(self, *url: list):
-        """
-        Send url(s) to VirusTotal. (https://developers.virustotal.com/v2.0/reference#url-scan)
-           :param *url: A list of url(s) to be scanned. (MAX 4 per standard request rate).
-           :rtype: A dictionary containing the resp_code and JSON response.
-        """
-        params = {"apikey": self.API_KEY, "url": "\n".join(*url)}
-        resp = self.make_request(
-            f"{self.BASEURL}url/scan",
-            params=params,
-        )
-        return resp
-
-    def url_report(self, *resource: list, scan: int = None):
-        """
-        Retrieve scan report(s) for a given url(s) (https://developers.virustotal.com/v2.0/reference#url-report)
-           :param *resource: A list of the url(s) and/or scan_id(s) report(s) to be retrieved (MAX 4 per standard request rate).
-           :param scan: An optional parameter. When set to 1 it will automatically submit the URL for analysis if no report is found for it in VirusTotal's database.
-           :rtype: A dictionary containing the resp_code and JSON response.
-        """
-        params = {"apikey": self.API_KEY, "resource": "\n".join(*resource)}
-        if scan is not None:
-            params["scan"] = scan
-        resp = self.make_request(
-            f"{self.BASEURL}url/report",
-            params=params,
-        )
-        return resp
-
-    def ipaddress_report(self, ip: str):
-        """
-        Retrieve a scan report for a specific ip address. (https://developers.virustotal.com/v2.0/reference#ip-address-report)
-           :param ip: A valid IPV4 address in dotted quad notation.
-           :rtype: A dictionary containing the resp_code and JSON response.
-        """
-        params = {"apikey": self.API_KEY, "ip": ip}
-        resp = self.make_request(
-            f"{self.BASEURL}ip-address/report",
-            params=params,
-            method="GET",
-        )
-        return resp
-
-    def domain_report(self, domain: str):
-        """
-        Retrieve a scan report for a specific domain name. (https://developers.virustotal.com/v2.0/reference#domain-report)
-           :param domain: A domain name.
-           :rtype: A dictionary containing the resp_code and JSON response.
-        """
-        params = {"apikey": self.API_KEY, "domain": domain}
-        resp = self.make_request(
-            f"{self.BASEURL}domain/report",
-            params=params,
-            method="GET",
-        )
-        return resp
-
-    def put_comment(self, resource: str, comment: str):
-        """
-        Make comments on files and URLs. (https://developers.virustotal.com/v2.0/reference#comments-put)
-           :param resource: The `md5/sha1/sha256 hash` of the file you want to review or the URL itself that you want to comment on.
-           :param comment: The str comment to be submitted.
-           :rtype: A dictionary containing the resp_code and JSON response.
-        """
-        params = {"apikey": self.API_KEY, "resource": resource, "comment": comment}
-        resp = self.make_request(
-            f"{self.BASEURL}comments/put",
-            params=params,
-        )
-        return resp
-
-    def make_request(
-        self, endpoint: str, params: dict = None, method: str = "POST", **kwargs
-    ):
-        """
-        Helper function to make a request to the specified VirusTotal API endpoint.
-
-        :param endpoint: The specific VirusTotal API endpoint.
+        :param resource: A valid VirusTotal API endpoint. (E.g. 'files/{id}')
+        :param params: A dictionary containing API endpoint parameters.
         :param method: The request method to use.
-        :param params: The parameters to go along with the request.
-        :returns: A dictionary containing the resp_code and JSON response.
-        :raises ValueError: Raises ValueError when an invalid method is provided.
+        :param json: A dictionary containing the JSON payload to send.
+        :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
+        :param backwards_compatibility: Preserve the old response format of previous virustotal-python versions prior to 0.1.0.
+        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if backwards_compatibility is True otherwise, a VirustotalResponse class object is returned.
+        :raises Exception: Raise Exception when an unsupported method is provided.
         """
-        if method == "POST":
-            resp = post(
+        # Create API endpoint
+        endpoint = f"{self.BASE_URL}{resource}"
+        if method == "GET":
+            response = requests.get(
                 endpoint,
                 params=params,
+                json=json,
+                files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
-                **kwargs,
+                timeout=self.TIMEOUT,
             )
-        elif method == "GET":
-            resp = get(
+        elif method == "POST":
+            response = requests.post(
                 endpoint,
                 params=params,
+                json=json,
+                files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
-                **kwargs,
+                timeout=self.TIMEOUT,
+            )
+        elif method == "PATCH":
+            response = requests.patch(
+                endpoint,
+                params=params,
+                json=json,
+                files=files,
+                headers=self.HEADERS,
+                proxies=self.PROXIES,
+                timeout=self.TIMEOUT,
+            )
+        elif method == "DELETE":
+            response = requests.delete(
+                endpoint,
+                params=params,
+                json=json,
+                files=files,
+                headers=self.HEADERS,
+                proxies=self.PROXIES,
+                timeout=self.TIMEOUT,
             )
         else:
-            raise ValueError("Invalid request method.")
-        return self.validate_response(resp)
+            raise Exception(f"The request method '{method}' is not supported.")
+        # Validate response and return it
+        return self.validate_response(
+            response, backwards_compatibility=backwards_compatibility
+        )
 
-    def validate_response(self, response):
+    def validate_response(
+        self, response: requests.Response, backwards_compatibility: bool = False
+    ) -> Tuple[dict, VirustotalResponse]:
         """
-        Helper function to validate the response request produced from make_request().
-           :param response: The requests response object.
-           :rtype: A dictionary containing the resp_code and JSON response.
+        Helper function to validate the request response.
+
+        :param response: A requests.Response object from a successfull API request to the VirusTotal API.
+        :param backwards_compatibility: Preserve the old response format of previous virustotal-python versions prior to 0.1.0.
+        :returns: A dictionary containing the resp_code and JSON response (if any) or VirustotalResponse class object.
         """
-        if response.status_code == 200:
-            json_resp = response.json()
-            return dict(status_code=response.status_code, json_resp=json_resp)
+        if backwards_compatibility:
+            if response.status_code == 200:
+                json_resp = response.json()
+                return dict(status_code=response.status_code, json_resp=json_resp)
+            else:
+                # An error has occurred
+                # The v3 API returns the error as JSON, attempt to retrieve it
+                try:
+                    error_json = response.json()
+                except ValueError:
+                    # API version being used is likely to be v2. Catch the raised ValueError and continue
+                    pass
+                return dict(
+                    status_code=response.status_code,
+                    # Provide JSON error message if retrieved successfully, otherwise fallback on response.text
+                    error=(error_json if error_json else response.text),
+                    resp=response.content,
+                )
         else:
-            return dict(
-                status_code=response.status_code,
-                error=response.text,
-                resp=response.content,
-            )
+            return VirustotalResponse(response)
