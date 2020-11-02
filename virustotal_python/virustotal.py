@@ -90,10 +90,7 @@ class VirustotalResponse(object):
             # response_code will only be present in a v2 VirusTotal request
             # Check for it and if present, return it
             response_code = json_resp.get("response_code", None)
-            if response_code:
-                return response_code
-            else:
-                return None
+            return response_code
         else:
             return None
 
