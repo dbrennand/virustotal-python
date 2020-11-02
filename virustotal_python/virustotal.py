@@ -141,6 +141,7 @@ class Virustotal(object):
         self,
         API_KEY: str = os.environ.get("VIRUSTOTAL_API_KEY", None),
         API_VERSION: str = "v2",
+        COMPATIBILITY_ENABLED: bool = False,
         PROXIES: dict = None,
         TIMEOUT: float = None,
     ):
@@ -149,6 +150,7 @@ class Virustotal(object):
 
         :param API_KEY: The API key used to interact with the VirusTotal v2 and v3 APIs. Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
         :param API_VERSION: The version to use when interacting with the VirusTotal API. This parameter defaults to 'v2' for backwards compatibility.
+        :param COMPATIBILITY_ENABLED: Preserve the old response format of previous virustotal-python versions prior to 0.1.0 for backwards compatibility.
         :param PROXIES: A dictionary containing proxies used when making requests.
         :param TIMEOUT: A float for the amount of time to wait in seconds for the HTTP request before timing out.
         :raises ValueError: Raises ValueError when no API_KEY is provided or the API_VERSION is invalid.
@@ -159,6 +161,7 @@ class Virustotal(object):
                 "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable VIRUSTOTAL_API_KEY."
             )
         self.API_KEY = API_KEY
+        self.COMPATIBILITY_ENABLED = COMPATIBILITY_ENABLED
         self.PROXIES = PROXIES
         self.TIMEOUT = TIMEOUT
         # Declare appropriate variables depending on the API_VERSION provided
@@ -189,7 +192,6 @@ class Virustotal(object):
         method: str = "GET",
         json: dict = None,
         files: dict = None,
-        backwards_compatibility: bool = False,
     ) -> Tuple[dict, VirustotalResponse]:
         """
         Make a request to the VirusTotal API.
@@ -199,8 +201,7 @@ class Virustotal(object):
         :param method: The request method to use.
         :param json: A dictionary containing the JSON payload to send.
         :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
-        :param backwards_compatibility: Preserve the old response format of previous virustotal-python versions prior to 0.1.0.
-        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if backwards_compatibility is True otherwise, a VirustotalResponse class object is returned.
+        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True otherwise, a VirustotalResponse class object is returned.
         :raises Exception: Raise Exception when an unsupported method is provided.
         """
         # Create API endpoint
@@ -248,21 +249,18 @@ class Virustotal(object):
         else:
             raise Exception(f"The request method '{method}' is not supported.")
         # Validate response and return it
-        return self.validate_response(
-            response, backwards_compatibility=backwards_compatibility
-        )
+        return self.validate_response(response)
 
     def validate_response(
-        self, response: requests.Response, backwards_compatibility: bool = False
+        self, response: requests.Response
     ) -> Tuple[dict, VirustotalResponse]:
         """
         Helper function to validate the request response.
 
         :param response: A requests.Response object from a successfull API request to the VirusTotal API.
-        :param backwards_compatibility: Preserve the old response format of previous virustotal-python versions prior to 0.1.0.
         :returns: A dictionary containing the resp_code and JSON response (if any) or VirustotalResponse class object.
         """
-        if backwards_compatibility:
+        if self.COMPATIBILITY_ENABLED:
             if response.status_code == 200:
                 json_resp = response.json()
                 return dict(status_code=response.status_code, json_resp=json_resp)
