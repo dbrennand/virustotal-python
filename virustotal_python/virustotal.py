@@ -152,11 +152,11 @@ class Virustotal(object):
         :raises ValueError: Raises ValueError when no API_KEY is provided or the API_VERSION is invalid.
         """
         self.VERSION = "0.1.0"
-        self.API_KEY = API_KEY
         if API_KEY is None:
             raise ValueError(
                 "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable VIRUSTOTAL_API_KEY."
             )
+        self.API_KEY = API_KEY
         self.PROXIES = PROXIES
         self.TIMEOUT = TIMEOUT
         # Declare appropriate variables depending on the API_VERSION provided
