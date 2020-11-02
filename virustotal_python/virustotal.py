@@ -69,23 +69,14 @@ class VirustotalResponse(object):
     @property
     def requests_response(self) -> requests.Response:
         """
-        Obtain the HTTP response object (requests.Response) of a VirusTotal API request.
+        Obtain the HTTP requests.Response object of a VirusTotal API request.
         You may want to access this property if you wanted to read other aspects of the response such as cookies.
 
         :returns: A requests.Response object.
         """
         return self.response
 
-    def json(self, **kwargs) -> dict:
-        """
-        Obtain the JSON response of a VirusTotal API request.
-
-        :param **kwargs: Parameters to pass to json. Identical to `json.loads(**kwargs)`.
-        :returns: JSON response of the requests.Response object.
-        :raises ValueError: Raises ValueError when there is no JSON in the response body to deserialize.
-        """
-        return self.response.json(**kwargs)
-
+    @property
     def response_code(self) -> Tuple[int, None]:
         """
         Obtain the response_code from the JSON response of a VirusTotal API request.
@@ -106,6 +97,7 @@ class VirustotalResponse(object):
         else:
             return None
 
+    @property
     def error(self) -> Tuple[dict, None]:
         """
         Obtain the error that occurred from a VirusTotal API request (if any).
@@ -127,6 +119,16 @@ class VirustotalResponse(object):
                 return dict(error=self.text)
         else:
             return None
+
+    def json(self, **kwargs) -> dict:
+        """
+        Obtain the JSON response of a VirusTotal API request.
+
+        :param **kwargs: Parameters to pass to json. Identical to `json.loads(**kwargs)`.
+        :returns: JSON response of the requests.Response object.
+        :raises ValueError: Raises ValueError when there is no JSON in the response body to deserialize.
+        """
+        return self.response.json(**kwargs)
 
 
 class Virustotal(object):
