@@ -111,6 +111,8 @@ class VirustotalResponse(object):
 
         [v3 documentation](https://developers.virustotal.com/v3.0/reference#errors)
 
+        [v2 documentation](https://developers.virustotal.com/reference#api-responses)
+
         :returns: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns None.
         """
         if self.status_code != 200:
