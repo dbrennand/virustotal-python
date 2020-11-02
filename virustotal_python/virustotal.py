@@ -188,7 +188,7 @@ class Virustotal(object):
     def request(
         self,
         resource: str,
-        params: dict = None,
+        params: dict = {},
         method: str = "GET",
         json: dict = None,
         files: dict = None,
@@ -197,7 +197,7 @@ class Virustotal(object):
         Make a request to the VirusTotal API.
 
         :param resource: A valid VirusTotal API endpoint. (E.g. 'files/{id}')
-        :param params: A dictionary containing API endpoint parameters.
+        :param params: A dictionary containing API endpoint query parameters.
         :param method: The request method to use.
         :param json: A dictionary containing the JSON payload to send.
         :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
@@ -205,7 +205,11 @@ class Virustotal(object):
         :raises Exception: Raise Exception when an unsupported method is provided.
         """
         # Create API endpoint
-        endpoint = f"{self.BASE_URL}{resource}"
+        endpoint = f"{self.BASEURL}{resource}"
+        # If API version being used is v2, add the API key to params
+        if self.API_VERSION == "v2":
+            # Not the greatest solution as it's a little costly silently manipulating params dict on every request if v2...
+            params["apikey"] = self.API_KEY
         if method == "GET":
             response = requests.get(
                 endpoint,
