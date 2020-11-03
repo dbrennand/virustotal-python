@@ -26,6 +26,45 @@ import os
 from typing import Tuple
 
 
+class VirustotalError(Exception):
+    """
+    Class for VirusTotal API request errors.
+    """
+
+    def __init__(self, response: requests.Response):
+        """
+        Initalisation for VirustotalError class.
+
+        :param response: A requests.Response object from a failed API request to the VirusTotal API.
+        """
+        self.response = response
+
+    def __str__(self):
+        return f"Error {self.error().get('code', 'unknown')} ({self.response.status_code}): {self.error().get('message', 'No message')}"
+
+    def error(self) -> Tuple[dict]:
+        """
+        Retrieve the error that occurred from a VirusTotal API request.
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#errors)
+
+        [v2 documentation](https://developers.virustotal.com/reference#api-responses)
+
+        :returns: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns None.
+        """
+        # Attempt to decode JSON as the v3 VirusTotal API returns the error message as JSON
+        try:
+            return self.response.json().get("error", dict())
+        except ValueError:
+            # Catch exception if there is no JSON to be deserialized
+            # Most likely using the v2 VirusTotal API
+            # Check there is response text, if not, return an empty dict
+            if self.response.text:
+                return dict(message=self.response.text)
+            else:
+                return dict()
+
+
 class VirustotalResponse(object):
     """
     Response class for VirusTotal API requests.
@@ -42,7 +81,7 @@ class VirustotalResponse(object):
     @property
     def headers(self) -> dict:
         """
-        Obtain the HTTP headers of a VirusTotal API request.
+        Retrieve the HTTP headers of a VirusTotal API request.
 
         :returns: The HTTP headers of the requests.Response object.
         """
@@ -51,7 +90,7 @@ class VirustotalResponse(object):
     @property
     def status_code(self) -> int:
         """
-        Obtain the HTTP status code of a VirusTotal API request.
+        Retrieve the HTTP status code of a VirusTotal API request.
 
         :returns: The HTTP status code of the requests.Response object.
         """
@@ -60,7 +99,7 @@ class VirustotalResponse(object):
     @property
     def text(self) -> str:
         """
-        Obtain the HTTP text response of a VirusTotal API request.
+        Retrieve the HTTP text response of a VirusTotal API request.
 
         :returns: The HTTP text response of the requests.Response object.
         """
@@ -69,7 +108,7 @@ class VirustotalResponse(object):
     @property
     def requests_response(self) -> requests.Response:
         """
-        Obtain the HTTP requests.Response object of a VirusTotal API request.
+        Retrieve the HTTP requests.Response object of a VirusTotal API request.
         You may want to access this property if you wanted to read other aspects of the response such as cookies.
 
         :returns: A requests.Response object.
@@ -77,49 +116,54 @@ class VirustotalResponse(object):
         return self.response
 
     @property
+    def data(self) -> Tuple[dict, list, None]:
+        """
+        Retrieve the value of the key 'data' in the JSON response from a VirusTotal API request.
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#objects)
+
+        :returns: A dictionary or list depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns None.
+        """
+        return self.json().get("data", None)
+
+    @property
+    def object_type(self) -> Tuple[list, str, None]:
+        """
+        Retrieve the object type(s) in the JSON response from a VirusTotal API request.
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#objects)
+
+        [More v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
+
+        :returns: A list or string depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns None.
+        """
+        data = self.data
+        # Check if data is more than one object
+        if isinstance(data, list):
+            object_list = []
+            for data_object in data:
+                data_object_type = data_object.get("type", None)
+                object_list.append(data_object_type)
+            return object_list
+        elif isinstance(data, dict):
+            return data.get("type", None)
+        else:
+            return None
+
+    @property
     def response_code(self) -> Tuple[int, None]:
         """
-        Obtain the response_code from the JSON response of a VirusTotal API request.
+        Retrieve the response_code from the JSON response of a VirusTotal API request.
 
         [v2 documentation](https://developers.virustotal.com/reference#api-responses)
 
         :returns: An int of the response_code from the VirusTotal API JSON response (if any), otherwise, returns None.
         """
-        if self.status_code == 200:
-            json_resp = self.json()
-            # response_code will only be present in a v2 VirusTotal request
-            # Check for it and if present, return it
-            response_code = json_resp.get("response_code", None)
-            return response_code
-        else:
-            return None
+        return self.json().get("response_code", None)
 
-    @property
-    def error(self) -> Tuple[dict, None]:
+    def json(self, **kwargs) -> Tuple[dict, list]:
         """
-        Obtain the error that occurred from a VirusTotal API request (if any).
-
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#errors)
-
-        [v2 documentation](https://developers.virustotal.com/reference#api-responses)
-
-        :returns: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns None.
-        """
-        if self.status_code != 200:
-            # Attempt to decode JSON as the v3 VirusTotal API returns the error message as JSON
-            try:
-                return self.json().get("error", None)
-            except ValueError:
-                # Catch exception if there is no JSON to be deserialized
-                # Most likely using the v2 VirusTotal API
-                # Fallback to standard dict object containing the HTTP response text
-                return dict(error=self.text)
-        else:
-            return None
-
-    def json(self, **kwargs) -> dict:
-        """
-        Obtain the JSON response of a VirusTotal API request.
+        Retrieve the JSON response of a VirusTotal API request.
 
         :param **kwargs: Parameters to pass to json. Identical to `json.loads(**kwargs)`.
         :returns: JSON response of the requests.Response object.
@@ -189,18 +233,18 @@ class Virustotal(object):
         self,
         resource: str,
         params: dict = {},
-        method: str = "GET",
-        json: dict = None,
+        data: dict = None,
         files: dict = None,
+        method: str = "GET",
     ) -> Tuple[dict, VirustotalResponse]:
         """
         Make a request to the VirusTotal API.
 
         :param resource: A valid VirusTotal API endpoint. (E.g. 'files/{id}')
         :param params: A dictionary containing API endpoint query parameters.
-        :param method: The request method to use.
-        :param json: A dictionary containing the JSON payload to send.
+        :param data: A dictionary containing the data to send.
         :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
+        :param method: The request method to use.
         :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True otherwise, a VirustotalResponse class object is returned.
         :raises Exception: Raise Exception when an unsupported method is provided.
         """
@@ -214,7 +258,7 @@ class Virustotal(object):
             response = requests.get(
                 endpoint,
                 params=params,
-                json=json,
+                data=data,
                 files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
@@ -224,7 +268,7 @@ class Virustotal(object):
             response = requests.post(
                 endpoint,
                 params=params,
-                json=json,
+                data=data,
                 files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
@@ -234,7 +278,7 @@ class Virustotal(object):
             response = requests.patch(
                 endpoint,
                 params=params,
-                json=json,
+                data=data,
                 files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
@@ -244,7 +288,7 @@ class Virustotal(object):
             response = requests.delete(
                 endpoint,
                 params=params,
-                json=json,
+                data=data,
                 files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
@@ -263,6 +307,7 @@ class Virustotal(object):
 
         :param response: A requests.Response object from a successfull API request to the VirusTotal API.
         :returns: A dictionary containing the resp_code and JSON response (if any) or VirustotalResponse class object.
+        :raises VirustotalError: Raises when an HTTP status code other than 200 (successfull) is received.
         """
         if self.COMPATIBILITY_ENABLED:
             if response.status_code == 200:
@@ -283,4 +328,7 @@ class Virustotal(object):
                     resp=response.content,
                 )
         else:
-            return VirustotalResponse(response)
+            if response.status_code != 200:
+                raise VirustotalError(response)
+            else:
+                return VirustotalResponse(response)
