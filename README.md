@@ -48,6 +48,14 @@ vtotal = Virustotal(API_KEY="Insert API key here.")
 
 # You can provide True to the `COMPATIBILITY_ENABLED` parameter to preserve the old response format of previous virustotal-python versions prior to 0.1.0
 vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3", COMPATIBILITY_ENABLED=True)
+
+# You can also set proxies and timeouts for requests made by the library
+vtotal = Virustotal(
+    API_KEY="Insert API Key Here.",
+    API_VERSION="v3",
+    PROXIES={"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"},
+    TIMEOUT=5.0,
+)
 ```
 
 ## Changelog
