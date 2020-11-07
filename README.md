@@ -4,11 +4,13 @@
 A light wrapper around the public VirusTotal v2 and v3 API.
 
 > [!NOTE]
+>
 > This library supports the public VirusTotal APIs. However, it *could* be used to interact with premium API endpoints as well.
 
 # Dependencies and installation
 
 > [!NOTE]
+>
 > This library should work with Python versions >= 3.7.
 
 ```
@@ -27,7 +29,9 @@ Install `virustotal-python` using either:
 ## Example usage (WIP)
 
 > [!NOTE]
+>
 > See the [examples](examples) directory for several usage examples.
+>
 > Furthermore, check `virustotal_python/virustotal.py` for docstrings containing full parameter descriptions.
 
 ### Authenticate
