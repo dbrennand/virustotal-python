@@ -32,7 +32,7 @@ Install `virustotal-python` using either:
 >
 > See the [examples](examples) directory for several usage examples.
 >
-> Furthermore, check `virustotal_python/virustotal.py` for docstrings containing full parameter descriptions.
+> Furthermore, check [`virustotal_python/virustotal.py`](virustotal_python/virustotal.py) for docstrings containing full parameter descriptions.
 
 ### Authenticate
 
