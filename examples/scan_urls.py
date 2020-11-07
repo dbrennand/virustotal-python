@@ -39,6 +39,7 @@ for url in URLS:
 vtotal = Virustotal(API_KEY=API_KEY)
 
 # Send the URLs to VirusTotal for analysis
+# v2 API request, MAX 4 URLs can be sent at once
 resp = vtotal.request("url/scan", params={"url": "\n".join(url)}, method="POST")
 for url_resp in resp.json():
     # Obtain scan_id
