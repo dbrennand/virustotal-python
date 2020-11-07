@@ -79,6 +79,9 @@ files = {"file": (os.path.basename(FILE_PATH), open(os.path.abspath(FILE_PATH), 
 # v3 example
 resp = vtotal.request("files", files=files, method="POST")
 
+# The v3 API returns the JSON response inside the 'data' key
+# https://developers.virustotal.com/v3.0/reference#api-responses
+# This property retrieves the structure inside 'data' from the JSON response
 pprint(resp.data)
 # Or if you provided COMPATIBILITY_ENABLED=True
 pprint(resp["json_resp"])
@@ -86,6 +89,8 @@ pprint(resp["json_resp"])
 # v2 example
 resp = vtotal.request("file/scan", files=files, method="POST")
 
+# The v2 API returns a response_code
+# This property retrieves it from the JSON response
 print(resp.response_code)
 pprint(resp.json())
 ```
