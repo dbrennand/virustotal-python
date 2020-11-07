@@ -167,6 +167,25 @@ except VirustotalError as err:
     print(f"An error occurred: {err}\nCatching and continuing with program.")
 ```
 
+Retrieve information about a domain:
+
+```python
+from pprint import pprint
+
+domain = "virustotal.com"
+
+# v3 example
+resp = vtotal.request(f"domains/{domain}")
+
+pprint(resp.data)
+
+# v2 example
+resp = vtotal.request("domain/report", params={"domain": domain})
+
+print(resp.response_code)
+pprint(resp.json())
+```
+
 ## Changelog
 
 * 0.1.0 - Added support for the VirusTotal v3 API. Changed the library considerably (new usage, tests etc).
