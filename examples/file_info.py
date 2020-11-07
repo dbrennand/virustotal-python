@@ -5,9 +5,9 @@ Retrieve information about a file from the VirusTotal API.
 
 Documentation:
 
-    * v2 documentation - https://www.virustotal.com/en/documentation/public-api/
+    * v2 documentation - https://developers.virustotal.com/reference#file-report
 
-    * v3 documentation - https://developers.virustotal.com/v3.0/reference
+    * v3 documentation - https://developers.virustotal.com/v3.0/reference#file-info
 """
 from virustotal_python import Virustotal
 from pprint import pprint

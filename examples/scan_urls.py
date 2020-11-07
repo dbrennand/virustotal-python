@@ -5,11 +5,13 @@ Send URLs to VirusTotal for analysis and retrieve the analysis results.
 
 Documentation:
 
-    * v2 documentation - https://www.virustotal.com/en/documentation/public-api/
+    * v2 documentation - https://developers.virustotal.com/reference#url-scan
 
-    * v3 documentation - https://developers.virustotal.com/v3.0/reference
+        * https://developers.virustotal.com/reference#url-report
 
-    * Related documentation for v3 - https://developers.virustotal.com/v3.0/reference#url
+    * v3 documentation - https://developers.virustotal.com/v3.0/reference#urls
+
+        * https://developers.virustotal.com/v3.0/reference#url-info
 """
 from virustotal_python import Virustotal
 import os.path

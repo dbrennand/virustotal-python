@@ -5,9 +5,9 @@ Send a file to VirusTotal for analysis.
 
 Documentation:
 
-    * v2 documentation - https://www.virustotal.com/en/documentation/public-api/
+    * v2 documentation - https://developers.virustotal.com/reference#file-scan
 
-    * v3 documentation - https://developers.virustotal.com/v3.0/reference
+    * v3 documentation - https://developers.virustotal.com/v3.0/reference#files-scan
 """
 from virustotal_python import Virustotal
 import os.path
