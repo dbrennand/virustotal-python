@@ -78,6 +78,18 @@ PowerShell example:
 $Env:VIRUSTOTAL_API_KEY = "Insert API key here."
 ```
 
+Then initialise the `Virustotal` class:
+
+```python
+from virustotal_python import Virustotal
+
+# v3 example
+vtotal = Virustotal(API_VERSION="v3")
+
+# v2 example
+vtotal = Virustotal()
+```
+
 Send a file for analysis:
 
 ```python
