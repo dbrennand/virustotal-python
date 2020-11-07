@@ -34,11 +34,18 @@ Install `virustotal-python` using either:
 >
 > Furthermore, check [`virustotal_python/virustotal.py`](virustotal_python/virustotal.py) for docstrings containing full parameter descriptions.
 
-### Authenticate
+Authenticate using your VirusTotal API key.
+
+> ![NOTE]
+>
+> To obtain a VirusTotal API key, [sign up](https://www.virustotal.com/gui/join-us) for a VirusTotal account.
+>
+> Then, view your VirusTotal API key.
+>
+> ![VirusTotal view API key](images/APIKey.png)
 
 ```python
 from virustotal_python import Virustotal
-from pprint import pprint
 
 # v3
 vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3")
@@ -51,11 +58,94 @@ vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3", COMPATIBIL
 
 # You can also set proxies and timeouts for requests made by the library
 vtotal = Virustotal(
-    API_KEY="Insert API Key Here.",
+    API_KEY="Insert API key here.",
     API_VERSION="v3",
     PROXIES={"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"},
-    TIMEOUT=5.0,
-)
+    TIMEOUT=5.0)
+```
+
+Send a file for analysis:
+
+```python
+import os.path
+from pprint import pprint
+
+# Declare PATH to file
+FILE_PATH = "/path/to/file/to/scan.txt"
+
+# Create dictionary containing the file to send for multipart encoding upload
+files = {"file": (os.path.basename(FILE_PATH), open(os.path.abspath(FILE_PATH), "rb"))}
+
+# v3 example
+resp = vtotal.request("files", files=files, method="POST")
+
+pprint(resp.data)
+# Or if you provided COMPATIBILITY_ENABLED=True
+pprint(resp["json_resp"])
+
+# v2 example
+resp = vtotal.request("file/scan", files=files, method="POST")
+
+print(resp.response_code)
+pprint(resp.json())
+```
+
+Retrieve information about a file:
+
+```python
+from pprint import pprint
+
+# The ID (either SHA-256, SHA-1 or MD5) identifying the file
+FILE_ID = "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+
+# v3 example
+resp = vtotal.request(f"files/{FILE_ID}")
+
+pprint(resp.data)
+
+# v2 example
+resp = vtotal.request("file/report", {"resource": FILE_ID})
+
+print(resp.response_code)
+pprint(resp.json())
+```
+
+Send a URL for analysis, retrieve analysis report and catch any potential exceptions that may occur (Non 200 HTTP response codes):
+
+```python
+from virustotal_python import VirustotalError
+from pprint import pprint
+from base64 import urlsafe_b64encode
+
+url = "ihaveaproblem.info"
+
+# v3 example
+try:
+    # Send URL to VirusTotal for analysis
+    resp = vtotal.request("urls", data={"url": url}, method="POST")
+    # URL safe encode URL in base64 format
+    # https://developers.virustotal.com/v3.0/reference#url
+    url_id = urlsafe_b64encode(url.encode()).decode().strip("=")
+    # Obtain the analysis results for the URL using the url_id
+    analysis_resp = vtotal.request(f"urls/{url_id}")
+    pprint(analysis_resp.object_type)
+    pprint(analysis_resp.data)
+except VirustotalError as err:
+    print(f"An error occurred: {err}\nCatching and continuing with program.")
+
+# v2 example
+try:
+    # Send a URL to VirusTotal for analysis
+    resp = vtotal.request("url/scan", params={"url": url}, method="POST")
+    url_resp = resp.json()
+    # Obtain scan_id
+    scan_id = url_resp["scan_id"]
+    # Request report for URL analysis
+    analysis_resp = vtotal.request("url/report", params={"resource": scan_id})
+    print(analysis_resp.response_code)
+    pprint(analysis_resp.json())
+except VirustotalError as err:
+    print(f"An error occurred: {err}\nCatching and continuing with program.")
 ```
 
 ## Changelog
