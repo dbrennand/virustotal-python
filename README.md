@@ -3,8 +3,13 @@
 
 A light wrapper around the public VirusTotal v2 and v3 API.
 
-# Dependencies
-* Written in Python 3.7.
+> [!NOTE]
+> This library supports the public VirusTotal APIs. However, it *could* be used to interact with premium API endpoints as well.
+
+# Dependencies and installation
+
+> [!NOTE]
+> This library should work with Python versions >= 3.7.
 
 ```
 [dev-packages]
@@ -19,106 +24,31 @@ requests = {extras = ["socks"],version = "*"}
 Install `virustotal-python` using either:
 * `pip3 install virustotal-python`, `pipenv install`, `pip3 install -r requirements.txt`, `python setup.py install`.
 
-## Example Usage
+## Example usage (WIP)
+
+> [!NOTE]
+> See the [examples](examples) directory for several usage examples.
+> Furthermore, check `virustotal_python/virustotal.py` for docstrings containing full parameter descriptions.
+
+### Authenticate
+
 ```python
 from virustotal_python import Virustotal
 from pprint import pprint
 
-# Normal Initialisation.
-vtotal = Virustotal("Insert API Key Here.")
+# v3
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3")
 
-# NEW as of version 0.0.5: Proxy support.
-# Example Usage: Using HTTP(S)
-vtotal = Virustotal(
-    "Insert API Key Here.",
-    {"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"})
-# Or using SOCKS
-vtotal = Virustotal(
-    "Insert API Key Here.",
-    {"http": "socks5://user:pass@host:port", "https": "socks5://user:pass@host:port"})
+# v2
+vtotal = Virustotal(API_KEY="Insert API key here.")
 
-# NOTE: Check virustotal.py for docstrings containing full parameter descriptions.
-
-# Send a file to Virustotal for analysis.
-resp = vtotal.file_scan("./tests.py")  # PATH to file for querying.
-
-# Retrieve scan report(s) for given file(s) from Virustotal.
-# A list containing the resource (SHA256) HASH of a known malicious file.
-resp = vtotal.file_report(
-    ["9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115"]
-)
-# A list of resource(s). Can be `md5/sha1/sha256 hashes` and/or combination of hashes and scan_ids (MAX 4 per standard request rate).
-# The first is a scan_id, the second is a SHA256 HASH.
-resp = vtotal.file_report(
-    [
-        "75efd85cf6f8a962fe016787a7f57206ea9263086ee496fc62e3fc56734d4b53-1555351539",
-        "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115",
-    ]
-)
-
-# Query url(s) to VirusTotal.
-# A list containing a url to be scanned by VirusTotal.
-resp = vtotal.url_scan(["ihaveaproblem.info"])  # Query a single url.
-# A list of url(s) to be scanned by VirusTotal (MAX 4 per standard request rate).
-resp = vtotal.url_scan(
-    ["ihaveaproblem.info", "google.com", "wikipedia.com", "github.com"]
-)
-
-# Retrieve url report(s)
-# A list containing the url of the report to be retrieved.
-resp = vtotal.url_report(["ihaveaproblem.info"])  # Query a single url.
-# A list of the url(s) and/or scan_id(s) report(s) to be retrieved (MAX 4 per standard request rate).
-# The first object in the list is a scan_id.
-resp = vtotal.url_report(
-    [
-        "fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e-1555352750",
-        "google.com",
-        "wikipedia.com",
-        "github.com",
-    ],
-    scan=1,
-)
-
-# Query an IP to Virustotal.
-resp = vtotal.ipaddress_report("90.156.201.27")
-
-# Retrieve a domain report.
-resp = vtotal.domain_report("027.ru")
-
-# Put a comment onto a specific resource.
-resp = vtotal.put_comment(
-    "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115",
-    comment="#watchout, this looks very malicious!",
-)
-
-pprint(resp)
+# You can provide True to the `COMPATIBILITY_ENABLED` parameter to preserve the old response format of previous virustotal-python versions prior to 0.1.0
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3", COMPATIBILITY_ENABLED=True)
 ```
-
-```python
-# Example resp for url_scan().
-# Assuming you have already initiated Virustotal() and imported pprint.
-resp = vtotal.url_scan(["ihaveaproblem.info"]) # Query a single url.
-pprint(resp)
-{'json_resp': {'permalink': 'https://www.virustotal.com/url/fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e/analysis/1549973453/',
-               'resource': 'http://ihaveaproblem.info/',
-               'response_code': 1,
-               'scan_date': '2019-02-12 12:10:53',
-               'scan_id': 'fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e-1549973453',
-               'url': 'http://ihaveaproblem.info/',
-               'verbose_msg': 'Scan request successfully queued, come back '
-                              'later for the report'},
- 'status_code': 200}
-```
-
-## Running Tests
-
-* `Navigate to ./virustotal_python/`
-
-* `Run the command: pytest -s tests.py`
 
 ## Changelog
 
-* 0.1.0 - Added support for the VirusTotal v3 API, added a missing endpoint for the v2 API: `/file/scan/upload_url`.
+* 0.1.0 - Added support for the VirusTotal v3 API. Changed the library considerably (new usage, tests etc).
 
 * 0.0.9 - Update dependencies for security vulnerability.
 
