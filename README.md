@@ -26,7 +26,7 @@ requests = {extras = ["socks"],version = "*"}
 Install `virustotal-python` using either:
 * `pip3 install virustotal-python`, `pipenv install`, `pip3 install -r requirements.txt`, `python setup.py install`.
 
-## Example usage (WIP)
+## Example usage
 
 > [!NOTE]
 >
@@ -188,7 +188,7 @@ pprint(resp.json())
 
 ## Changelog
 
-* 0.1.0 - Added support for the VirusTotal v3 API. Changed the library considerably (new usage, tests etc).
+* 0.1.0 - Added support for the VirusTotal v3 API. Changed the library considerably (new usage, examples, tests etc).
 
 * 0.0.9 - Update dependencies for security vulnerability.
 
