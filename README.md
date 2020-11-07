@@ -110,7 +110,7 @@ print(resp.response_code)
 pprint(resp.json())
 ```
 
-Send a URL for analysis, retrieve analysis report and catch any potential exceptions that may occur (Non 200 HTTP response codes):
+Send a URL for analysis, retrieve the analysis report and catch any potential exceptions that may occur (Non 200 HTTP response codes):
 
 ```python
 from virustotal_python import VirustotalError
