@@ -34,7 +34,7 @@ Install `virustotal-python` using either:
 >
 > Furthermore, check [`virustotal_python/virustotal.py`](virustotal_python/virustotal.py) for docstrings containing full parameter descriptions.
 
-Authenticate using your VirusTotal API key.
+Authenticate using your VirusTotal API key:
 
 > ![NOTE]
 >
@@ -62,6 +62,20 @@ vtotal = Virustotal(
     API_VERSION="v3",
     PROXIES={"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"},
     TIMEOUT=5.0)
+```
+
+Additionally, it is possible to provide an API key via the environment variable `VIRUSTOTAL_API_KEY`.
+
+Bash example:
+
+```bash
+export VIRUSTOTAL_API_KEY="Insert API key here."
+```
+
+PowerShell example:
+
+```powershell
+$Env:VIRUSTOTAL_API_KEY = "Insert API key here."
 ```
 
 Send a file for analysis:
