@@ -42,7 +42,7 @@ class VirustotalError(Exception):
     def __str__(self):
         return f"Error {self.error().get('code', 'unknown')} ({self.response.status_code}): {self.error().get('message', 'No message')}"
 
-    def error(self) -> Tuple[dict]:
+    def error(self) -> dict:
         """
         Retrieve the error that occurred from a VirusTotal API request.
 
@@ -50,7 +50,7 @@ class VirustotalError(Exception):
 
         [v2 documentation](https://developers.virustotal.com/reference#api-responses)
 
-        :returns: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns None.
+        :returns: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns an empty dictionary.
         """
         # Attempt to decode JSON as the v3 VirusTotal API returns the error message as JSON
         try:
