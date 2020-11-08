@@ -168,7 +168,8 @@ class VirustotalResponse(object):
 
         :param **kwargs: Parameters to pass to json. Identical to `json.loads(**kwargs)`.
         :returns: JSON response of the requests.Response object.
-        :raises ValueError: Raises ValueError when there is no JSON in the response body to deserialize.
+        :raises ValueError: Raises ValueError when the response body contains invalid JSON.
+        :raises JSONDecodeError: Raises JSONDecodeError when there is no JSON in the response body to deserialize.
         """
         try:
             return self.response.json(**kwargs)
