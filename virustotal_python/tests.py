@@ -1,70 +1,64 @@
-from virustotal_python import Virustotal
-from time import sleep
+import virustotal_python
 import pytest
+import os.path
+from time import sleep
+from base64 import urlsafe_b64encode
 
 
-@pytest.fixture
-def virustotal_object(request):
-    API_KEY = "Insert API Key Here."
-    yield Virustotal(API_KEY)
+@pytest.fixture()
+def vtotal_v3(request):
+    yield virustotal_python.Virustotal(API_VERSION="v3")
 
     def fin():
         """
-        Sleep for 30 seconds after each test; to avoid Virustotal 403 rate quota limit.
+        Helper function which sleeps for 30 seconds between each test. This is to avoid VirusTotal 403 rate quota limits.
         """
-        print("Sleeping for 30 seconds...")
+        print("Sleeping for 30 seconds to avoid VirusTotal 403 rate quota limits...")
         sleep(30)
 
     request.addfinalizer(fin)
 
 
-def assert_content(resp):
+@pytest.fixture()
+def vtotal_v2(request):
+    yield virustotal_python.Virustotal()
+
+    def fin():
+        """
+        Helper function which sleeps for 30 seconds between each test. This is to avoid VirusTotal 403 rate quota limits.
+        """
+        print("Sleeping for 30 seconds to avoid VirusTotal 403 rate quota limits...")
+        sleep(30)
+
+    request.addfinalizer(fin)
+
+
+def test_file_scan_v3(vtotal_v3):
     """
-    Check json_resp data which is nested.
-        :param content: The nested json_resp object.
+    Test for sending a file to the VirusTotal v3 API for analysis.
     """
-    for content in enumerate(resp["json_resp"]):
-        assert content[1]["response_code"] == 1
+    # Create dictionary containing the file to send for multipart encoding upload
+    files = {
+        "file": (
+            os.path.basename("virustotal_python/oldexamples.py"),
+            open(os.path.abspath("virustotal_python/oldexamples.py"), "rb"),
+        )
+    }
+    resp = vtotal_v3.request("files", files=files, method="POST")
+    assert resp.status_code == 200
+    assert resp.data
 
 
-def test_file_scan(virustotal_object):
-    resp = virustotal_object.file_scan("./examples.py")
-    assert resp["status_code"] == 200
-    assert resp["json_resp"]["response_code"] == 1
-
-
-def test_file_report(virustotal_object):
-    resp = virustotal_object.file_report(
-        [
-            "75efd85cf6f8a962fe016787a7f57206ea9263086ee496fc62e3fc56734d4b53-1555351539",
-            "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115",
-        ]
-    )
-    assert resp["status_code"] == 200
-    assert_content(resp)
-
-
-def test_url_scan(virustotal_object):
-    resp = virustotal_object.url_scan(
-        ["ihaveaproblem.info", "google.com", "wikipedia.com", "github.com"]
-    )
-    assert resp["status_code"] == 200
-    assert_content(resp)
-
-
-def test_url_report(virustotal_object):
-    resp = virustotal_object.url_report(["ihaveaproblem.info"], scan=1)
-    assert resp["status_code"] == 200
-    assert resp["json_resp"]["response_code"] == 1
-
-
-def test_ipaddress_report(virustotal_object):
-    resp = virustotal_object.ipaddress_report("90.156.201.27")
-    assert resp["status_code"] == 200
-    assert resp["json_resp"]["response_code"] == 1
-
-
-def test_domain_report(virustotal_object):
-    resp = virustotal_object.domain_report("027.ru")
-    assert resp["status_code"] == 200
-    assert resp["json_resp"]["response_code"] == 1
+def test_file_scan_v2(vtotal_v2):
+    """
+    Test for sending a file to the VirusTotal v2 API for analysis.
+    """
+    # Create dictionary containing the file to send for multipart encoding upload
+    files = {
+        "file": (
+            os.path.basename("virustotal_python/oldexamples.py"),
+            open(os.path.abspath("virustotal_python/oldexamples.py"), "rb"),
+        )
+    }
+    resp = vtotal_v2.request("file/scan", files=files, method="POST")
+    assert resp.response_code == 1
