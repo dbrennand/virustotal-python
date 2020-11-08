@@ -162,7 +162,7 @@ class VirustotalResponse(object):
         """
         return self.json().get("response_code", None)
 
-    def json(self, **kwargs) -> Tuple[dict, list, None]:
+    def json(self, **kwargs) -> Tuple[dict, list]:
         """
         Retrieve the JSON response of a VirusTotal API request.
 
@@ -173,7 +173,7 @@ class VirustotalResponse(object):
         try:
             return self.response.json(**kwargs)
         except JSONDecodeError:
-            return None
+            return dict()
 
 class Virustotal(object):
     """
