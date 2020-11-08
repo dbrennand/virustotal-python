@@ -38,3 +38,11 @@ resp = vtotal.request(f"ip_addresses/{IP}/votes")
 ### https://developers.virustotal.com/v3.0/reference#ip-votes-post
 vote = {"data": {"type": "vote", "attributes": {"verdict": "harmless"}}}
 resp = vtotal.request(f"ip_addresses/{IP}/votes", json=vote, method="POST")
+
+# v2 examples
+vtotal = Virustotal(API_KEY=API_KEY)
+
+## Retrieve information about an IP address
+resp = vtotal.request("ip-address/report", params={"ip": IP})
+
+pprint(resp.json())
