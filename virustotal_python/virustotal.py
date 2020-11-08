@@ -24,6 +24,7 @@ SOFTWARE.
 import requests
 import os
 from typing import Tuple
+from json.decoder import JSONDecodeError
 
 
 class VirustotalError(Exception):
@@ -161,7 +162,7 @@ class VirustotalResponse(object):
         """
         return self.json().get("response_code", None)
 
-    def json(self, **kwargs) -> Tuple[dict, list]:
+    def json(self, **kwargs) -> Tuple[dict, list, None]:
         """
         Retrieve the JSON response of a VirusTotal API request.
 
@@ -169,8 +170,10 @@ class VirustotalResponse(object):
         :returns: JSON response of the requests.Response object.
         :raises ValueError: Raises ValueError when there is no JSON in the response body to deserialize.
         """
-        return self.response.json(**kwargs)
-
+        try:
+            return self.response.json(**kwargs)
+        except JSONDecodeError:
+            return None
 
 class Virustotal(object):
     """
