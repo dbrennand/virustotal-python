@@ -234,6 +234,7 @@ class Virustotal(object):
         resource: str,
         params: dict = {},
         data: dict = None,
+        json: dict = None,
         files: dict = None,
         method: str = "GET",
     ) -> Tuple[dict, VirustotalResponse]:
@@ -242,7 +243,8 @@ class Virustotal(object):
 
         :param resource: A valid VirusTotal API endpoint. (E.g. 'files/{id}')
         :param params: A dictionary containing API endpoint query parameters.
-        :param data: A dictionary containing the data to send.
+        :param data: A dictionary containing the data to send in the body of the request.
+        :param json: A dictionary containing the JSON payload to send with the request.
         :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
         :param method: The request method to use.
         :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True otherwise, a VirustotalResponse class object is returned.
@@ -259,6 +261,7 @@ class Virustotal(object):
                 endpoint,
                 params=params,
                 data=data,
+                json=json,
                 files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
@@ -269,6 +272,7 @@ class Virustotal(object):
                 endpoint,
                 params=params,
                 data=data,
+                json=json,
                 files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
@@ -279,6 +283,7 @@ class Virustotal(object):
                 endpoint,
                 params=params,
                 data=data,
+                json=json,
                 files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
@@ -289,6 +294,7 @@ class Virustotal(object):
                 endpoint,
                 params=params,
                 data=data,
+                json=json,
                 files=files,
                 headers=self.HEADERS,
                 proxies=self.PROXIES,
