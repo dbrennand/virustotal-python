@@ -117,6 +117,39 @@ class VirustotalResponse(object):
         return self.response
 
     @property
+    def links(self) -> Tuple[dict, None]:
+        """
+        Retrieve the value of the key 'links' in the JSON response from a VirusTotal API request.
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
+
+        :returns: A dictionary containing the links used to retrieve the next set of objects (if any), otherwise, returns None.
+        """
+        return self.json().get("links", None)
+
+    @property
+    def meta(self) -> Tuple[dict, None]:
+        """
+        Retrieve the value of the key 'meta' in the JSON response from a VirusTotal API request.
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
+
+        :returns: A dictionary containing metadata about the object(s) (if any), otherwise, returns None.
+        """
+        return self.json().get("meta", None)
+
+    @property
+    def cursor(self) -> Tuple[str, None]:
+        """
+        Retrieve the value of the key 'cursor' in the JSON response value 'meta' from a VirusTotal API request.
+
+        [v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
+
+        :returns: A string representing the cursor used to retrieve additional related object(s), otherwise, returns None.
+        """
+        return self.meta.get("cursor", None)
+
+    @property
     def data(self) -> Tuple[dict, list, None]:
         """
         Retrieve the value of the key 'data' in the JSON response from a VirusTotal API request.
