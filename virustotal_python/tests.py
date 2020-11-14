@@ -53,7 +53,6 @@ def vtotal_v2(request):
     request.addfinalizer(fin)
 
 
-@pytest.mark.skip()
 def test_file_scan_v3(vtotal_v3):
     """
     Test for sending a file to the VirusTotal v3 API for analysis.
@@ -65,7 +64,6 @@ def test_file_scan_v3(vtotal_v3):
     assert data["type"] == "analysis"
 
 
-@pytest.mark.skip()
 def test_file_scan_v2(vtotal_v2):
     """
     Test for sending a file to the VirusTotal v2 API for analysis.
@@ -84,7 +82,6 @@ def test_file_scan_v2(vtotal_v2):
     assert data["permalink"]
 
 
-@pytest.mark.skip()
 def test_file_info_v3(vtotal_v3):
     """
     Test for retrieving information about a file from the VirusTotal v3 API.
@@ -96,7 +93,6 @@ def test_file_info_v3(vtotal_v3):
     assert resp.data["attributes"]["last_analysis_results"]
 
 
-@pytest.mark.skip()
 def test_file_info_v2(vtotal_v2):
     """
     Test for retrieving information about a file from the VirusTotal v2 API.
@@ -106,7 +102,6 @@ def test_file_info_v2(vtotal_v2):
     assert resp.json()["scans"]
 
 
-@pytest.mark.skip()
 def test_compatibility():
     """
     Test COMPATIBILITY_ENABLED parameter on Virustotal class.
@@ -118,7 +113,6 @@ def test_compatibility():
     assert resp["json_resp"]["data"]["attributes"]
 
 
-@pytest.mark.skip()
 def test_scan_url_info_v3(vtotal_v3):
     """
     Test scanning URL and retrieving the scan results from the VirusTotal v3 API.
@@ -137,7 +131,6 @@ def test_scan_url_info_v3(vtotal_v3):
     assert analysis_resp.data["attributes"]
 
 
-@pytest.mark.skip()
 def test_scan_url_info_v2(vtotal_v2):
     """
     Test scanning URL and retrieving the scan results from the VirusTotal v2 API.
@@ -158,7 +151,7 @@ def test_scan_url_info_v2(vtotal_v2):
     assert data["url"] == f"http://{URL_DOMAIN}/"
     assert data["scan_date"]
 
-@pytest.mark.skip()
+
 def test_domain_info_v3(vtotal_v3):
     """
     Test for retrieving domain information from the VirusTotal v3 API.
@@ -171,7 +164,7 @@ def test_domain_info_v3(vtotal_v3):
     assert data["attributes"]["last_analysis_results"]
     assert data["attributes"]["creation_date"]
 
-@pytest.mark.skip()
+
 def test_domain_info_v2(vtotal_v2):
     """
     Test for retrieving domain information from the VirusTotal v2 API.
@@ -185,7 +178,7 @@ def test_domain_info_v2(vtotal_v2):
     assert json["whois_timestamp"]
 
 
-def test_retrieve_comment_file_id(vtotal_v3):
+def test_retrieve_comment_file_id_v3(vtotal_v3):
     """
     Test for retrieving a comment for a given file ID.
     """
@@ -198,11 +191,107 @@ def test_retrieve_comment_file_id(vtotal_v3):
     # Retrieve first comment text
     assert json[0]["attributes"]["text"]
     # Retrieve second comment tags
-    assert json[1]["attributes"]["votes"] and isinstance(json[1]["attributes"]["votes"], dict)
+    assert json[1]["attributes"]["votes"] and isinstance(
+        json[1]["attributes"]["votes"], dict
+    )
 
-"""
-Comments.
-IP.
-Graphs.
-search, meta.
-"""
+
+def test_retrieve_comment_latest_v3(vtotal_v3):
+    """
+    Test for retrieveing the latest 10 comments made on VirusTotal.
+    """
+    resp = vtotal_v3.request("comments", params={"limit": 10})
+    assert resp.status_code == 200
+    assert resp.links
+    assert resp.meta
+    assert resp.cursor
+    json = resp.data
+    assert json[0]["attributes"]["date"]
+    assert len(json) == 10
+
+
+def test_retrieve_comment_file_id_v2(vtotal_v2):
+    """
+    Test for retrieving a comment for a given file ID using the VirusTotal v2 API.
+    """
+    resp = vtotal_v2.request("comments/get", params={"resource": FILE_ID})
+    assert resp.status_code == 200
+    assert resp.response_code == 1
+    json = resp.json()
+    for commentdata in json["comments"]:
+        assert commentdata["date"]
+        assert commentdata["comment"]
+
+
+def test_retrieve_ip_info_v3(vtotal_v3):
+    """
+    Test for retrieving information about an IP address.
+    """
+    resp = vtotal_v3.request(f"ip_addresses/{IP}")
+    assert resp.status_code == 200
+    data = resp.data
+    assert data["attributes"]["as_owner"] == "Google LLC"
+    assert data["attributes"]["country"] == "US"
+    assert data["attributes"]["last_analysis_stats"]
+    assert data["attributes"]["reputation"]
+    assert resp.object_type == "ip_address"
+
+
+def test_retrieve_ip_info_v2(vtotal_v2):
+    """
+    Test for retrieving information about an IP address using the VirusTotal v2 API.
+    """
+    resp = vtotal_v2.request("ip-address/report", params={"ip": IP})
+    assert resp.status_code == 200
+    assert resp.response_code == 1
+    json = resp.json()
+    assert json["as_owner"] == "Google LLC"
+    assert json["country"] == "US"
+    assert json["verbose_msg"] == "IP address in dataset"
+    for sample in json["detected_communicating_samples"]:
+        assert sample["date"]
+        assert sample["positives"]
+        assert sample["sha256"]
+        assert sample["total"]
+
+
+def test_retrieve_graph_v3(vtotal_v3):
+    """
+    Test for retrieving the latest 3 graphs made on VirusTotal.
+    """
+    resp = vtotal_v3.request("graphs", params={"limit": 3})
+    assert resp.status_code == 200
+    assert len(resp.data) == 3
+    data = resp.data
+    assert data[0]["attributes"]["graph_data"]
+    assert resp.links
+    assert resp.meta
+    assert resp.cursor
+
+
+def test_search_v3(vtotal_v3):
+    """
+    Test searching the VirusTotal API.
+    """
+    resp = vtotal_v3.request("search", params={"query": URL_DOMAIN})
+    assert resp.status_code == 200
+    assert resp.links
+    assert resp.object_type
+    data = resp.data
+    assert data[0]["attributes"]["creation_date"]
+    assert data[0]["attributes"]["last_analysis_results"]
+    assert data[0]["attributes"]["last_analysis_stats"]
+    assert data[0]["attributes"]["last_dns_records"]
+    assert data[0]["attributes"]["last_https_certificate"]
+    assert data[0]["attributes"]["total_votes"]
+
+
+def test_metadata_v3(vtotal_v3):
+    """
+    Test retrieving metadata from the VirusTotal API.
+    """
+    resp = vtotal_v3.request("metadata")
+    assert resp.status_code == 200
+    engines_dict = resp.data["engines"]
+    assert engines_dict.keys()
+    assert "Microsoft" in engines_dict.keys()
