@@ -121,7 +121,7 @@ class VirustotalResponse(object):
         """
         Retrieve the value of the key 'links' in the JSON response from a VirusTotal API request.
 
-        NOTE: Links are not retrieved from objects inside 'data'.
+        NOTE: Links are not retrieved for objects inside 'data'.
 
         [v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
 
