@@ -153,7 +153,7 @@ class VirustotalResponse(object):
             return self.meta.get("cursor", None)
         # Catch AttributeError that occurs when attemping to call attribute 'get' on None
         # which is returned if the 'meta' key is not present in the JSON response
-        except AttributeError as err:
+        except AttributeError:
             return None
 
     @property
