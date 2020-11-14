@@ -358,7 +358,7 @@ class Virustotal(object):
 
         :param response: A requests.Response object from a successfull API request to the VirusTotal API.
         :returns: A dictionary containing the resp_code and JSON response (if any) or VirustotalResponse class object.
-        :raises VirustotalError: Raises when an HTTP status code other than 200 (successfull) is received.
+        :raises VirustotalError: Raises VirustotalError when an HTTP status code other than 200 (successfull) is received.
         """
         if self.COMPATIBILITY_ENABLED:
             if response.status_code == 200:
