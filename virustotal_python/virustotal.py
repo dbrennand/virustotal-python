@@ -149,7 +149,12 @@ class VirustotalResponse(object):
 
         :returns: A string representing the cursor used to retrieve additional related object(s), otherwise, returns None.
         """
-        return self.meta.get("cursor", None)
+        try:
+            return self.meta.get("cursor", None)
+        # Catch AttributeError that occurs when attemping to call attribute 'get' on None
+        # which is returned if the 'meta' key is not present in the JSON response
+        except AttributeError as err:
+            return None
 
     @property
     def data(self) -> Tuple[dict, list, None]:
@@ -210,6 +215,7 @@ class VirustotalResponse(object):
             return self.response.json(**kwargs)
         except JSONDecodeError:
             return dict()
+
 
 class Virustotal(object):
     """
