@@ -198,9 +198,19 @@ print(resp.response_code)
 pprint(resp.json())
 ```
 
+## Running tests
+
+To run the tests, perform the following steps:
+
+1. Ensure pytest is installed using: `pip install pytest`
+
+2. Export your API key to the environment variable `VIRUSTOTAL_API_KEY` (instructions above).
+
+3. From the root directory of the project run `pytest -s .\virustotal_python\tests.py`
+
 ## Changelog
 
-* 0.1.0 - Added support for the VirusTotal v3 API. Changed the library considerably (new usage, examples, tests etc).
+* 0.1.0 - Added support for the VirusTotal v3 API. Changed the library considerably (new usage, examples, tests and more.)
 
 * 0.0.9 - Update dependencies for security vulnerability.
 
