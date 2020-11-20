@@ -239,7 +239,7 @@ class Virustotal(object):
 
         :param API_KEY: The API key used to interact with the VirusTotal v2 and v3 APIs. Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
         :param API_VERSION: The version to use when interacting with the VirusTotal API. This parameter defaults to 'v2' for backwards compatibility.
-        :param COMPATIBILITY_ENABLED: Preserve the old response format of previous virustotal-python versions prior to 0.1.0 for backwards compatibility.
+        :param COMPATIBILITY_ENABLED: Preserve the old response format of virustotal-python versions prior to 0.1.0 for backwards compatibility.
         :param PROXIES: A dictionary containing proxies used when making requests.
         :param TIMEOUT: A float for the amount of time to wait in seconds for the HTTP request before timing out.
         :raises ValueError: Raises ValueError when no API_KEY is provided or the API_VERSION is invalid.
