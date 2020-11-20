@@ -1,5 +1,5 @@
 """
-The examples below are for prior to version 0.1.0 of virustotal-python.
+The examples below are for virustotal-python versions <0.1.0.
 
 Examples for versions >=0.1.0 head to /examples directory.
 """
