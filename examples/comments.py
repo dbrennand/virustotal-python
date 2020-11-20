@@ -21,10 +21,10 @@ API_KEY = "Insert API key here."
 FILE_ID = "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115"
 
 # URL/domain identifier
-URL = "google.com"
+DOMAIN = "google.com"
 
 # Obtain the URL ID
-URL_ID = urlsafe_b64encode(URL.encode()).decode().strip("=")
+URL_ID = urlsafe_b64encode(DOMAIN.encode()).decode().strip("=")
 
 # Example IP address (Google DNS)
 IP = "8.8.8.8"
@@ -45,7 +45,7 @@ resp = vtotal.request(f"files/{FILE_ID}/comments", params={"limit": 10})
 ### Retrieve 2 comments for a URL
 resp = vtotal.request(f"urls/{URL_ID}/comments", params={"limit": 2})
 ### Retrieve 2 comments for a domain
-resp = vtotal.request(f"domains/{URL}/comments", params={"limit": 2})
+resp = vtotal.request(f"domains/{DOMAIN}/comments", params={"limit": 2})
 ### Retrieve 5 comments for an IP address
 resp = vtotal.request(f"ip_addresses/{IP}/comments", params={"limit": 5})
 ### Retrieve 3 comments for a graph
@@ -68,7 +68,7 @@ resp = vtotal.request(f"files/{FILE_ID}/comments", json=comment, method="POST")
 ### Submit a comment on a URL
 resp = vtotal.request(f"urls/{URL_ID}/comments", json=comment, method="POST")
 ### Submit a comment on a domain
-resp = vtotal.request(f"domains/{URL}/comments", json=comment, method="POST")
+resp = vtotal.request(f"domains/{DOMAIN}/comments", json=comment, method="POST")
 ### Submit a comment on a IP address
 resp = vtotal.request(f"ip_addresses/{IP}/comments", json=comment, method="POST")
 ### Submit a comment on a graph
