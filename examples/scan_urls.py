@@ -1,7 +1,7 @@
 """
 The examples in this file are for virustotal-python version >=0.1.0
 
-Send URLs to VirusTotal for analysis and retrieve the analysis results.
+Send URLs to the VirusTotal API for analysis and retrieve the analysis results.
 
 Documentation:
 
@@ -34,14 +34,14 @@ for url in URLS:
     print(f"URL: {url} ID: {url_id}")
     # Obtain the analysis results for the URL using the url_id
     analysis_resp = vtotal.request(f"urls/{url_id}")
-    pprint(analysis_resp.object_type)
+    print(analysis_resp.object_type)
     pprint(analysis_resp.data)
 
 # v2 example
 vtotal = Virustotal(API_KEY=API_KEY)
 
 # Send the URLs to VirusTotal for analysis
-# v2 API request, MAX 4 URLs can be sent at once
+# A maximum of 4 URLs can be sent at once for a v2 API request
 resp = vtotal.request("url/scan", params={"url": "\n".join(url)}, method="POST")
 for url_resp in resp.json():
     # Obtain scan_id
