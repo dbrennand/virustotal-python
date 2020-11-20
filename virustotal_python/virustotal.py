@@ -29,7 +29,7 @@ from json.decoder import JSONDecodeError
 
 class VirustotalError(Exception):
     """
-    Class for VirusTotal API request errors.
+    Class for VirusTotal API errors.
     """
 
     def __init__(self, response: requests.Response):
