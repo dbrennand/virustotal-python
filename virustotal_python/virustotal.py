@@ -194,11 +194,11 @@ class VirustotalResponse(object):
     @property
     def response_code(self) -> Tuple[int, None]:
         """
-        Retrieve the response_code from the JSON response of a VirusTotal API request.
+        Retrieve the value of the key 'response_code' in the JSON response from a VirusTotal v2 API request.
 
         [v2 documentation](https://developers.virustotal.com/reference#api-responses)
 
-        :returns: An int of the response_code from the VirusTotal API JSON response (if any), otherwise, returns None.
+        :returns: An int of the response_code from the VirusTotal API (if any), otherwise, returns None.
         """
         return self.json().get("response_code", None)
 
@@ -209,7 +209,6 @@ class VirustotalResponse(object):
         :param **kwargs: Parameters to pass to json. Identical to `json.loads(**kwargs)`.
         :returns: JSON response of the requests.Response object.
         :raises ValueError: Raises ValueError when the response body contains invalid JSON.
-        :raises JSONDecodeError: Raises JSONDecodeError when there is no JSON in the response body to deserialize.
         """
         try:
             return self.response.json(**kwargs)
@@ -219,7 +218,7 @@ class VirustotalResponse(object):
 
 class Virustotal(object):
     """
-    Interact with the public VirusTotal API.
+    Interact with the public VirusTotal v2 and v3 APIs.
 
     [v2 documentation](https://www.virustotal.com/en/documentation/public-api/)
 
@@ -235,7 +234,7 @@ class Virustotal(object):
         TIMEOUT: float = None,
     ):
         """
-        Initalisation function for Virustotal class.
+        Initalisation function for the Virustotal class.
 
         :param API_KEY: The API key used to interact with the VirusTotal v2 and v3 APIs. Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
         :param API_VERSION: The version to use when interacting with the VirusTotal API. This parameter defaults to 'v2' for backwards compatibility.
@@ -247,7 +246,7 @@ class Virustotal(object):
         self.VERSION = "0.1.0"
         if API_KEY is None:
             raise ValueError(
-                "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable VIRUSTOTAL_API_KEY."
+                "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable 'VIRUSTOTAL_API_KEY'."
             )
         self.API_KEY = API_KEY
         self.COMPATIBILITY_ENABLED = COMPATIBILITY_ENABLED
@@ -271,7 +270,7 @@ class Virustotal(object):
             }
         else:
             raise ValueError(
-                f"The API version '{API_VERSION}' is not a valid VirusTotal API version.\nValid API versions are: 'v2' or 'v3'."
+                f"The API version '{API_VERSION}' is not a valid VirusTotal API version.\nValid API versions are 'v2' or 'v3'."
             )
 
     def request(
@@ -292,14 +291,14 @@ class Virustotal(object):
         :param json: A dictionary containing the JSON payload to send with the request.
         :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
         :param method: The request method to use.
-        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True otherwise, a VirustotalResponse class object is returned.
+        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True.
+            Otherwise, a VirustotalResponse class object is returned. If a HTTP status not equal to 200 occurs. Then a VirustotalError class object is returned.
         :raises Exception: Raise Exception when an unsupported method is provided.
         """
         # Create API endpoint
         endpoint = f"{self.BASEURL}{resource}"
         # If API version being used is v2, add the API key to params
         if self.API_VERSION == "v2":
-            # Not the greatest solution as it's a little costly silently manipulating params dict on every request if v2...
             params["apikey"] = self.API_KEY
         if method == "GET":
             response = requests.get(
@@ -356,9 +355,9 @@ class Virustotal(object):
         """
         Helper function to validate the request response.
 
-        :param response: A requests.Response object from a successfull API request to the VirusTotal API.
-        :returns: A dictionary containing the resp_code and JSON response (if any) or VirustotalResponse class object.
-        :raises VirustotalError: Raises VirustotalError when an HTTP status code other than 200 (successfull) is received.
+        :param response: A requests.Response object for an API request made to the VirusTotal API.
+        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True otherwise, a VirustotalResponse class object is returned.
+        :raises VirustotalError: Raises VirustotalError when an HTTP status code other than 200 (successfull) occurs.
         """
         if self.COMPATIBILITY_ENABLED:
             if response.status_code == 200:
