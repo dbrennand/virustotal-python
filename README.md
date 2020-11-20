@@ -1,7 +1,7 @@
 # virustotal-python 🐍
 ![PyPI](https://img.shields.io/pypi/v/virustotal-python.svg?style=flat-square)
 
-A light wrapper around the public VirusTotal v2 and v3 API.
+A Python library to interact with the public VirusTotal v2 and v3 APIs.
 
 > [!NOTE]
 >
