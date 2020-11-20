@@ -1,7 +1,7 @@
 """
 The examples in this file are for virustotal-python version >=0.1.0
 
-Search the VirusTotal v3 API for domains, IP addresses, comments and URL.
+Search the VirusTotal v3 API for a domain, IP address and comment tag.
 
 Also, retrieve VirusTotal metadata.
 
