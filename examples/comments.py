@@ -97,11 +97,11 @@ resp = vtotal.request(f"comments/{COMMENT_ID}", json=edited_comment, method="PAT
 ### Delete a comment based on the ID
 resp = vtotal.request(f"comments/{COMMENT_ID}", method="DELETE")
 ### Submit a vote for a comment
-#### Vote options can be either positive, negative, abuse
+#### Vote options can be either positive, negative or abuse
 ### Submit a positive vote on a comment based on the comment ID
 # This is what I got working
-# The documentation on this endpoint is confusing... If you look you will see :-D
-# https://developers.virustotal.com/v3.0/reference#vote-comment
+## I found the documentation on this endpoint confusing... :-D
+### https://developers.virustotal.com/v3.0/reference#vote-comment
 resp = vtotal.request(f"comments/{COMMENT_ID}/vote", json={"data": "positive"}, method="POST")
 
 # v2 examples
