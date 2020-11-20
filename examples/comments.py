@@ -24,7 +24,7 @@ FILE_ID = "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115"
 URL = "google.com"
 
 # Obtain the URL ID
-url_id = urlsafe_b64encode(URL.encode()).decode().strip("=")
+URL_ID = urlsafe_b64encode(URL.encode()).decode().strip("=")
 
 # Example IP address (Google DNS)
 IP = "8.8.8.8"
@@ -43,7 +43,7 @@ vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
 ### Retrieve 10 comments for a file
 resp = vtotal.request(f"files/{FILE_ID}/comments", params={"limit": 10})
 ### Retrieve 2 comments for a URL
-resp = vtotal.request(f"urls/{url_id}/comments", params={"limit": 2})
+resp = vtotal.request(f"urls/{URL_ID}/comments", params={"limit": 2})
 ### Retrieve 2 comments for a domain
 resp = vtotal.request(f"domains/{URL}/comments", params={"limit": 2})
 ### Retrieve 5 comments for an IP address
@@ -66,7 +66,7 @@ comment = {
 ### Submit a comment on a file
 resp = vtotal.request(f"files/{FILE_ID}/comments", json=comment, method="POST")
 ### Submit a comment on a URL
-resp = vtotal.request(f"urls/{url_id}/comments", json=comment, method="POST")
+resp = vtotal.request(f"urls/{URL_ID}/comments", json=comment, method="POST")
 ### Submit a comment on a domain
 resp = vtotal.request(f"domains/{URL}/comments", json=comment, method="POST")
 ### Submit a comment on a IP address
