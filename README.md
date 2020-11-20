@@ -5,7 +5,7 @@ A light wrapper around the public VirusTotal v2 and v3 API.
 
 > [!NOTE]
 >
-> This library supports the public VirusTotal APIs. However, it *could* be used to interact with premium API endpoints as well.
+> This library is intended to be used with the public VirusTotal APIs. However, it *could* be used to interact with premium API endpoints as well.
 
 # Dependencies and installation
 
