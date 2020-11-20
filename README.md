@@ -26,7 +26,7 @@ requests = {extras = ["socks"],version = "*"}
 Install `virustotal-python` using either:
 * `pip3 install virustotal-python`, `pipenv install`, `pip3 install -r requirements.txt`, `python setup.py install`.
 
-## Example usage
+## Usage examples
 
 > [!NOTE]
 >
@@ -78,7 +78,7 @@ PowerShell example:
 $Env:VIRUSTOTAL_API_KEY = "Insert API key here."
 ```
 
-Then initialise the `Virustotal` class:
+Now, initialise the `Virustotal` class:
 
 ```python
 from virustotal_python import Virustotal
@@ -109,7 +109,7 @@ resp = vtotal.request("files", files=files, method="POST")
 # https://developers.virustotal.com/v3.0/reference#api-responses
 # This property retrieves the structure inside 'data' from the JSON response
 pprint(resp.data)
-# Or if you provided COMPATIBILITY_ENABLED=True
+# Or if you provided COMPATIBILITY_ENABLED=True to the Virustotal class
 pprint(resp["json_resp"])
 
 # v2 example
@@ -118,6 +118,7 @@ resp = vtotal.request("file/scan", files=files, method="POST")
 # The v2 API returns a response_code
 # This property retrieves it from the JSON response
 print(resp.response_code)
+# Print JSON response from the API
 pprint(resp.json())
 ```
 
@@ -141,7 +142,7 @@ print(resp.response_code)
 pprint(resp.json())
 ```
 
-Send a URL for analysis, retrieve the analysis report and catch any potential exceptions that may occur (Non 200 HTTP response codes):
+Send a URL for analysis, retrieve the analysis report and catch any potential exceptions that may occur (Non 200 HTTP status codes):
 
 ```python
 from virustotal_python import VirustotalError
@@ -198,7 +199,7 @@ print(resp.response_code)
 pprint(resp.json())
 ```
 
-## Running tests
+## Running the tests
 
 To run the tests, perform the following steps:
 
