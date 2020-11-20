@@ -53,7 +53,7 @@ vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3")
 # v2
 vtotal = Virustotal(API_KEY="Insert API key here.")
 
-# You can provide True to the `COMPATIBILITY_ENABLED` parameter to preserve the old response format of previous virustotal-python versions prior to 0.1.0
+# You can provide True to the `COMPATIBILITY_ENABLED` parameter to preserve the old response format of virustotal-python versions prior to 0.1.0
 vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3", COMPATIBILITY_ENABLED=True)
 
 # You can also set proxies and timeouts for requests made by the library
