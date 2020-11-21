@@ -5,9 +5,9 @@ with open("README.md", "r", encoding="utf8") as readme:
 
 setup(
     name="virustotal-python",
-    version="0.0.9",
+    version="0.1.0",
     author="dbrennand",
-    description="A light wrapper around the public VirusTotal API.",
+    description="A Python library to interact with the public VirusTotal v2 and v3 APIs.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/dbrennand/virustotal-python",
@@ -17,5 +17,5 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    keywords="Light VirusTotal Wrapper Public API Library",
+    keywords="VirusTotal Wrapper Public API Library v2 v3",
 )

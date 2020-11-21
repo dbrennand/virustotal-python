@@ -1,10 +1,17 @@
 # virustotal-python 🐍
 ![PyPI](https://img.shields.io/pypi/v/virustotal-python.svg?style=flat-square)
 
-A light wrapper around the public VirusTotal API.
+A Python library to interact with the public VirusTotal v2 and v3 APIs.
 
-# Dependencies
-* Written in Python 3.7.
+> [!NOTE]
+>
+> This library is intended to be used with the public VirusTotal APIs. However, it *could* be used to interact with premium API endpoints as well.
+
+# Dependencies and installation
+
+> [!NOTE]
+>
+> This library should work with Python versions >= 3.7.
 
 ```
 [dev-packages]
@@ -19,104 +26,192 @@ requests = {extras = ["socks"],version = "*"}
 Install `virustotal-python` using either:
 * `pip3 install virustotal-python`, `pipenv install`, `pip3 install -r requirements.txt`, `python setup.py install`.
 
-## Example Usage
+## Usage examples
+
+> [!NOTE]
+>
+> See the [examples](examples) directory for several usage examples.
+>
+> Furthermore, check [`virustotal_python/virustotal.py`](virustotal_python/virustotal.py) for docstrings containing full parameter descriptions.
+
+Authenticate using your VirusTotal API key:
+
+> ![NOTE]
+>
+> To obtain a VirusTotal API key, [sign up](https://www.virustotal.com/gui/join-us) for a VirusTotal account.
+>
+> Then, view your VirusTotal API key.
+>
+> ![VirusTotal view API key](images/APIKey.png)
+
 ```python
 from virustotal_python import Virustotal
-from pprint import pprint
 
-# Normal Initialisation.
-vtotal = Virustotal("Insert API Key Here.")
+# v2 example
+vtotal = Virustotal(API_KEY="Insert API key here.")
 
-# NEW as of version 0.0.5: Proxy support.
-# Example Usage: Using HTTP(S)
+# v3 example
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3")
+
+# You can provide True to the `COMPATIBILITY_ENABLED` parameter to preserve the old response format of virustotal-python versions prior to 0.1.0
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3", COMPATIBILITY_ENABLED=True)
+
+# You can also set proxies and timeouts for requests made by the library
 vtotal = Virustotal(
-    "Insert API Key Here.",
-    {"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"})
-# Or using SOCKS
-vtotal = Virustotal(
-    "Insert API Key Here.",
-    {"http": "socks5://user:pass@host:port", "https": "socks5://user:pass@host:port"})
-
-# NOTE: Check virustotal.py for docstrings containing full parameter descriptions.
-
-# Send a file to Virustotal for analysis.
-resp = vtotal.file_scan("./tests.py")  # PATH to file for querying.
-
-# Retrieve scan report(s) for given file(s) from Virustotal.
-# A list containing the resource (SHA256) HASH of a known malicious file.
-resp = vtotal.file_report(
-    ["9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115"]
-)
-# A list of resource(s). Can be `md5/sha1/sha256 hashes` and/or combination of hashes and scan_ids (MAX 4 per standard request rate).
-# The first is a scan_id, the second is a SHA256 HASH.
-resp = vtotal.file_report(
-    [
-        "75efd85cf6f8a962fe016787a7f57206ea9263086ee496fc62e3fc56734d4b53-1555351539",
-        "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115",
-    ]
-)
-
-# Query url(s) to VirusTotal.
-# A list containing a url to be scanned by VirusTotal.
-resp = vtotal.url_scan(["ihaveaproblem.info"])  # Query a single url.
-# A list of url(s) to be scanned by VirusTotal (MAX 4 per standard request rate).
-resp = vtotal.url_scan(
-    ["ihaveaproblem.info", "google.com", "wikipedia.com", "github.com"]
-)
-
-# Retrieve url report(s)
-# A list containing the url of the report to be retrieved.
-resp = vtotal.url_report(["ihaveaproblem.info"])  # Query a single url.
-# A list of the url(s) and/or scan_id(s) report(s) to be retrieved (MAX 4 per standard request rate).
-# The first object in the list is a scan_id.
-resp = vtotal.url_report(
-    [
-        "fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e-1555352750",
-        "google.com",
-        "wikipedia.com",
-        "github.com",
-    ],
-    scan=1,
-)
-
-# Query an IP to Virustotal.
-resp = vtotal.ipaddress_report("90.156.201.27")
-
-# Retrieve a domain report.
-resp = vtotal.domain_report("027.ru")
-
-# Put a comment onto a specific resource.
-resp = vtotal.put_comment(
-    "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115",
-    comment="#watchout, this looks very malicious!",
-)
-
-pprint(resp)
+    API_KEY="Insert API key here.",
+    API_VERSION="v3",
+    PROXIES={"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"},
+    TIMEOUT=5.0)
 ```
+
+Additionally, it is possible to provide an API key via the environment variable `VIRUSTOTAL_API_KEY`.
+
+Bash example:
+
+```bash
+export VIRUSTOTAL_API_KEY="Insert API key here."
+```
+
+PowerShell example:
+
+```powershell
+$Env:VIRUSTOTAL_API_KEY = "Insert API key here."
+```
+
+Now, initialise the `Virustotal` class:
 
 ```python
-# Example resp for url_scan().
-# Assuming you have already initiated Virustotal() and imported pprint.
-resp = vtotal.url_scan(["ihaveaproblem.info"]) # Query a single url.
-pprint(resp)
-{'json_resp': {'permalink': 'https://www.virustotal.com/url/fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e/analysis/1549973453/',
-               'resource': 'http://ihaveaproblem.info/',
-               'response_code': 1,
-               'scan_date': '2019-02-12 12:10:53',
-               'scan_id': 'fd21590d9df715452c8c000e1b5aa909c7c5ea434c2ddcad3f4ccfe9b0ee224e-1549973453',
-               'url': 'http://ihaveaproblem.info/',
-               'verbose_msg': 'Scan request successfully queued, come back '
-                              'later for the report'},
- 'status_code': 200}
+from virustotal_python import Virustotal
+
+# v2 example
+vtotal = Virustotal()
+
+# v3 example
+vtotal = Virustotal(API_VERSION="v3")
 ```
 
-## Running Tests
+Send a file for analysis:
 
-* `Navigate to ./virustotal_python/`
+```python
+import os.path
+from pprint import pprint
 
-* `Run the command: pytest -s tests.py`
+# Declare PATH to file
+FILE_PATH = "/path/to/file/to/scan.txt"
+
+# Create dictionary containing the file to send for multipart encoding upload
+files = {"file": (os.path.basename(FILE_PATH), open(os.path.abspath(FILE_PATH), "rb"))}
+
+# v2 example
+resp = vtotal.request("file/scan", files=files, method="POST")
+
+# The v2 API returns a response_code
+# This property retrieves it from the JSON response
+print(resp.response_code)
+# Print JSON response from the API
+pprint(resp.json())
+
+# v3 example
+resp = vtotal.request("files", files=files, method="POST")
+
+# The v3 API returns the JSON response inside the 'data' key
+# https://developers.virustotal.com/v3.0/reference#api-responses
+# This property retrieves the structure inside 'data' from the JSON response
+pprint(resp.data)
+# Or if you provided COMPATIBILITY_ENABLED=True to the Virustotal class
+pprint(resp["json_resp"])
+```
+
+Retrieve information about a file:
+
+```python
+from pprint import pprint
+
+# The ID (either SHA-256, SHA-1 or MD5) identifying the file
+FILE_ID = "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115"
+
+# v2 example
+resp = vtotal.request("file/report", {"resource": FILE_ID})
+
+print(resp.response_code)
+pprint(resp.json())
+
+# v3 example
+resp = vtotal.request(f"files/{FILE_ID}")
+
+pprint(resp.data)
+```
+
+Send a URL for analysis, retrieve the analysis report and catch any potential exceptions that may occur (Non 200 HTTP status codes):
+
+```python
+from virustotal_python import VirustotalError
+from pprint import pprint
+from base64 import urlsafe_b64encode
+
+url = "ihaveaproblem.info"
+
+# v2 example
+try:
+    # Send a URL to VirusTotal for analysis
+    resp = vtotal.request("url/scan", params={"url": url}, method="POST")
+    url_resp = resp.json()
+    # Obtain scan_id
+    scan_id = url_resp["scan_id"]
+    # Request report for URL analysis
+    analysis_resp = vtotal.request("url/report", params={"resource": scan_id})
+    print(analysis_resp.response_code)
+    pprint(analysis_resp.json())
+except VirustotalError as err:
+    print(f"An error occurred: {err}\nCatching and continuing with program.")
+
+# v3 example
+try:
+    # Send URL to VirusTotal for analysis
+    resp = vtotal.request("urls", data={"url": url}, method="POST")
+    # URL safe encode URL in base64 format
+    # https://developers.virustotal.com/v3.0/reference#url
+    url_id = urlsafe_b64encode(url.encode()).decode().strip("=")
+    # Obtain the analysis results for the URL using the url_id
+    analysis_resp = vtotal.request(f"urls/{url_id}")
+    pprint(analysis_resp.object_type)
+    pprint(analysis_resp.data)
+except VirustotalError as err:
+    print(f"An error occurred: {err}\nCatching and continuing with program.")
+```
+
+Retrieve information about a domain:
+
+```python
+from pprint import pprint
+
+domain = "virustotal.com"
+
+# v2 example
+resp = vtotal.request("domain/report", params={"domain": domain})
+
+print(resp.response_code)
+pprint(resp.json())
+
+# v3 example
+resp = vtotal.request(f"domains/{domain}")
+
+pprint(resp.data)
+```
+
+## Running the tests
+
+To run the tests, perform the following steps:
+
+1. Ensure pytest is installed using: `pip install pytest`
+
+2. Export your API key to the environment variable `VIRUSTOTAL_API_KEY` (instructions above).
+
+3. From the root directory of the project run `pytest -s .\virustotal_python\tests.py`
 
 ## Changelog
+
+* 0.1.0 - Added support for the VirusTotal v3 API. Library redesign (new usage, examples, tests and more.) See [#24](https://github.com/dbrennand/virustotal-python/pull/24).
 
 * 0.0.9 - Update dependencies for security vulnerability.
 
@@ -134,11 +229,11 @@ pprint(resp)
 
 * 0.0.2 - Changes to file_rescan(), file_report(), url_scan(), url_report() to improve ease of use of the wrapper. See issue [#2](https://github.com/dbrennand/virustotal-python/issues/2). Examples updated for changes.
 
-* 0.0.1 - Inital release of virustotal-python. Covered all endpoints of the Virustotal public API. 
+* 0.0.1 - Initial release of virustotal-python. Covered all endpoints of the Virustotal public API.
 
 ## Authors -- Contributors
 
-* **dbrennand** - *Author* - [dbrennand](https://github.com/dbrennand)
+* [**dbrennand**](https://github.com/dbrennand) - *Author*
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) for details.
