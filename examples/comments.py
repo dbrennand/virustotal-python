@@ -36,6 +36,19 @@ GRAPH_ID = "g70fae134aefc4e2f90f069aba47d15a92e0073564310443aa0b6ca3384f5240d"
 # Example comment ID
 COMMENT_ID = "f-9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115-07457619"
 
+# v2 examples
+vtotal = Virustotal(API_KEY=API_KEY)
+
+# Retrieve comments for a given file ID
+resp = vtotal.request("comments/get", params={"resource": FILE_ID})
+
+pprint(resp.json())
+
+# Create a comment for a given file ID
+resp = vtotal.request("comments/put", params={"resource": FILE_ID, "comment": "Wow, this looks like a #malicious file!"}, method="POST")
+
+pprint(resp.json())
+
 # v3 examples
 vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
 
@@ -103,14 +116,3 @@ resp = vtotal.request(f"comments/{COMMENT_ID}", method="DELETE")
 ## I found the documentation on this endpoint confusing... :-D
 ### https://developers.virustotal.com/v3.0/reference#vote-comment
 resp = vtotal.request(f"comments/{COMMENT_ID}/vote", json={"data": "positive"}, method="POST")
-
-# v2 examples
-vtotal = Virustotal(API_KEY=API_KEY)
-
-# Retrieve comments for a given file ID
-resp = vtotal.request("comments/get", params={"resource": FILE_ID})
-
-pprint(resp.json())
-
-# Create a comment for a given file ID
-resp = vtotal.request("comments/put", params={"resource": FILE_ID, "comment": "Wow, this looks like a #malicious file!"}, method="POST")

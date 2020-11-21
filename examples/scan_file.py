@@ -21,13 +21,6 @@ FILE_PATH = "/path/to/file/to/scan.txt"
 # Create dictionary containing the file to send for multipart encoding upload
 files = {"file": (os.path.basename(FILE_PATH), open(os.path.abspath(FILE_PATH), "rb"))}
 
-# v3 example
-vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
-
-resp = vtotal.request("files", files=files, method="POST")
-
-pprint(resp.data)
-
 # v2 example
 vtotal = Virustotal(API_KEY=API_KEY)
 
@@ -35,3 +28,10 @@ resp = vtotal.request("file/scan", files=files, method="POST")
 
 print(resp.response_code)
 pprint(resp.json())
+
+# v3 example
+vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
+
+resp = vtotal.request("files", files=files, method="POST")
+
+pprint(resp.data)

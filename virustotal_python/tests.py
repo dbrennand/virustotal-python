@@ -26,20 +26,6 @@ COMMENT_ID = "f-9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115
 
 
 @pytest.fixture()
-def vtotal_v3(request):
-    yield virustotal_python.Virustotal(API_VERSION="v3")
-
-    def fin():
-        """
-        Helper function which sleeps for 15 seconds between each test. This is to avoid VirusTotal 403 rate quota limits.
-        """
-        print("Sleeping for 15 seconds to avoid VirusTotal 403 rate quota limits...")
-        sleep(15)
-
-    request.addfinalizer(fin)
-
-
-@pytest.fixture()
 def vtotal_v2(request):
     yield virustotal_python.Virustotal()
 
@@ -53,15 +39,18 @@ def vtotal_v2(request):
     request.addfinalizer(fin)
 
 
-def test_file_scan_v3(vtotal_v3):
-    """
-    Test for sending a file to the VirusTotal v3 API for analysis.
-    """
-    resp = vtotal_v3.request("files", files=FILES, method="POST")
-    assert resp.status_code == 200
-    data = resp.data
-    assert data["id"]
-    assert data["type"] == "analysis"
+@pytest.fixture()
+def vtotal_v3(request):
+    yield virustotal_python.Virustotal(API_VERSION="v3")
+
+    def fin():
+        """
+        Helper function which sleeps for 15 seconds between each test. This is to avoid VirusTotal 403 rate quota limits.
+        """
+        print("Sleeping for 15 seconds to avoid VirusTotal 403 rate quota limits...")
+        sleep(15)
+
+    request.addfinalizer(fin)
 
 
 def test_file_scan_v2(vtotal_v2):
@@ -82,15 +71,15 @@ def test_file_scan_v2(vtotal_v2):
     assert data["permalink"]
 
 
-def test_file_info_v3(vtotal_v3):
+def test_file_scan_v3(vtotal_v3):
     """
-    Test for retrieving information about a file from the VirusTotal v3 API.
+    Test for sending a file to the VirusTotal v3 API for analysis.
     """
-    resp = vtotal_v3.request(f"files/{FILE_ID}")
+    resp = vtotal_v3.request("files", files=FILES, method="POST")
     assert resp.status_code == 200
-    assert resp.object_type == "file"
-    assert resp.data["attributes"]
-    assert resp.data["attributes"]["last_analysis_results"]
+    data = resp.data
+    assert data["id"]
+    assert data["type"] == "analysis"
 
 
 def test_file_info_v2(vtotal_v2):
@@ -102,6 +91,17 @@ def test_file_info_v2(vtotal_v2):
     assert resp.json()["scans"]
 
 
+def test_file_info_v3(vtotal_v3):
+    """
+    Test for retrieving information about a file from the VirusTotal v3 API.
+    """
+    resp = vtotal_v3.request(f"files/{FILE_ID}")
+    assert resp.status_code == 200
+    assert resp.object_type == "file"
+    assert resp.data["attributes"]
+    assert resp.data["attributes"]["last_analysis_results"]
+
+
 def test_compatibility():
     """
     Test COMPATIBILITY_ENABLED parameter on Virustotal class.
@@ -111,24 +111,6 @@ def test_compatibility():
     assert resp["status_code"] == 200
     assert resp["json_resp"]["data"]["type"] == "file"
     assert resp["json_resp"]["data"]["attributes"]
-
-
-def test_scan_url_info_v3(vtotal_v3):
-    """
-    Test scanning URL and retrieving the scan results from the VirusTotal v3 API.
-    """
-    resp = vtotal_v3.request("urls", data={"url": URL_DOMAIN}, method="POST")
-    assert resp.status_code == 200
-    assert resp.data["id"]
-    # URL safe encode URL in base64 format
-    # https://developers.virustotal.com/v3.0/reference#url
-    url_id = urlsafe_b64encode(URL_DOMAIN.encode()).decode().strip("=")
-    print(f"URL: {URL_DOMAIN} ID: {url_id}")
-    # Obtain the analysis results for the URL using the url_id
-    analysis_resp = vtotal_v3.request(f"urls/{url_id}")
-    assert analysis_resp.status_code == 200
-    assert analysis_resp.object_type == "url"
-    assert analysis_resp.data["attributes"]
 
 
 def test_scan_url_info_v2(vtotal_v2):
@@ -152,17 +134,22 @@ def test_scan_url_info_v2(vtotal_v2):
     assert data["scan_date"]
 
 
-def test_domain_info_v3(vtotal_v3):
+def test_scan_url_info_v3(vtotal_v3):
     """
-    Test for retrieving domain information from the VirusTotal v3 API.
+    Test scanning URL and retrieving the scan results from the VirusTotal v3 API.
     """
-    resp = vtotal_v3.request(f"domains/{URL_DOMAIN}")
+    resp = vtotal_v3.request("urls", data={"url": URL_DOMAIN}, method="POST")
     assert resp.status_code == 200
-    assert resp.object_type == "domain"
-    data = resp.data
-    assert isinstance(data["links"], dict)
-    assert data["attributes"]["last_analysis_results"]
-    assert data["attributes"]["creation_date"]
+    assert resp.data["id"]
+    # URL safe encode URL in base64 format
+    # https://developers.virustotal.com/v3.0/reference#url
+    url_id = urlsafe_b64encode(URL_DOMAIN.encode()).decode().strip("=")
+    print(f"URL: {URL_DOMAIN} ID: {url_id}")
+    # Obtain the analysis results for the URL using the url_id
+    analysis_resp = vtotal_v3.request(f"urls/{url_id}")
+    assert analysis_resp.status_code == 200
+    assert analysis_resp.object_type == "url"
+    assert analysis_resp.data["attributes"]
 
 
 def test_domain_info_v2(vtotal_v2):
@@ -176,6 +163,19 @@ def test_domain_info_v2(vtotal_v2):
     assert json["Alexa domain info"]
     assert json["Webutation domain info"]["Verdict"]
     assert json["whois_timestamp"]
+
+
+def test_domain_info_v3(vtotal_v3):
+    """
+    Test for retrieving domain information from the VirusTotal v3 API.
+    """
+    resp = vtotal_v3.request(f"domains/{URL_DOMAIN}")
+    assert resp.status_code == 200
+    assert resp.object_type == "domain"
+    data = resp.data
+    assert isinstance(data["links"], dict)
+    assert data["attributes"]["last_analysis_results"]
+    assert data["attributes"]["creation_date"]
 
 
 def test_retrieve_comment_file_id_v3(vtotal_v3):
@@ -196,20 +196,6 @@ def test_retrieve_comment_file_id_v3(vtotal_v3):
     )
 
 
-def test_retrieve_comment_latest_v3(vtotal_v3):
-    """
-    Test for retrieveing the latest 10 comments made on VirusTotal.
-    """
-    resp = vtotal_v3.request("comments", params={"limit": 10})
-    assert resp.status_code == 200
-    assert resp.links
-    assert resp.meta
-    assert resp.cursor
-    json = resp.data
-    assert json[0]["attributes"]["date"]
-    assert len(json) == 10
-
-
 def test_retrieve_comment_file_id_v2(vtotal_v2):
     """
     Test for retrieving a comment for a given file ID using the VirusTotal v2 API.
@@ -223,18 +209,18 @@ def test_retrieve_comment_file_id_v2(vtotal_v2):
         assert commentdata["comment"]
 
 
-def test_retrieve_ip_info_v3(vtotal_v3):
+def test_retrieve_comment_latest_v3(vtotal_v3):
     """
-    Test for retrieving information about an IP address.
+    Test for retrieveing the latest 10 comments made on VirusTotal.
     """
-    resp = vtotal_v3.request(f"ip_addresses/{IP}")
+    resp = vtotal_v3.request("comments", params={"limit": 10})
     assert resp.status_code == 200
-    data = resp.data
-    assert data["attributes"]["as_owner"] == "Google LLC"
-    assert data["attributes"]["country"] == "US"
-    assert data["attributes"]["last_analysis_stats"]
-    assert data["attributes"]["reputation"]
-    assert resp.object_type == "ip_address"
+    assert resp.links
+    assert resp.meta
+    assert resp.cursor
+    json = resp.data
+    assert json[0]["attributes"]["date"]
+    assert len(json) == 10
 
 
 def test_retrieve_ip_info_v2(vtotal_v2):
@@ -253,6 +239,20 @@ def test_retrieve_ip_info_v2(vtotal_v2):
         assert sample["positives"]
         assert sample["sha256"]
         assert sample["total"]
+
+
+def test_retrieve_ip_info_v3(vtotal_v3):
+    """
+    Test for retrieving information about an IP address.
+    """
+    resp = vtotal_v3.request(f"ip_addresses/{IP}")
+    assert resp.status_code == 200
+    data = resp.data
+    assert data["attributes"]["as_owner"] == "Google LLC"
+    assert data["attributes"]["country"] == "US"
+    assert data["attributes"]["last_analysis_stats"]
+    assert data["attributes"]["reputation"]
+    assert resp.object_type == "ip_address"
 
 
 def test_retrieve_graph_v3(vtotal_v3):

@@ -16,13 +16,6 @@ API_KEY = "Insert API key here."
 
 domain = "virustotal.com"
 
-# v3 example
-vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
-
-resp = vtotal.request(f"domains/{domain}")
-
-pprint(resp.data)
-
 # v2 example
 vtotal = Virustotal(API_KEY=API_KEY)
 
@@ -30,3 +23,10 @@ resp = vtotal.request("domain/report", params={"domain": domain})
 
 print(resp.response_code)
 pprint(resp.json())
+
+# v3 example
+vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
+
+resp = vtotal.request(f"domains/{domain}")
+
+pprint(resp.data)

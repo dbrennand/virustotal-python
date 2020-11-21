@@ -22,6 +22,20 @@ API_KEY = "Insert API key here."
 
 URLS = ["google.com", "wikipedia.com", "github.com", "ihaveaproblem.info"]
 
+# v2 example
+vtotal = Virustotal(API_KEY=API_KEY)
+
+# Send the URLs to VirusTotal for analysis
+# A maximum of 4 URLs can be sent at once for a v2 API request
+resp = vtotal.request("url/scan", params={"url": "\n".join(url)}, method="POST")
+for url_resp in resp.json():
+    # Obtain scan_id
+    scan_id = url_resp["scan_id"]
+    # Request report for URL analysis
+    analysis_resp = vtotal.request("url/report", params={"resource": scan_id})
+    print(analysis_resp.response_code)
+    pprint(analysis_resp.json())
+
 # v3 example
 vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
 
@@ -36,17 +50,3 @@ for url in URLS:
     analysis_resp = vtotal.request(f"urls/{url_id}")
     print(analysis_resp.object_type)
     pprint(analysis_resp.data)
-
-# v2 example
-vtotal = Virustotal(API_KEY=API_KEY)
-
-# Send the URLs to VirusTotal for analysis
-# A maximum of 4 URLs can be sent at once for a v2 API request
-resp = vtotal.request("url/scan", params={"url": "\n".join(url)}, method="POST")
-for url_resp in resp.json():
-    # Obtain scan_id
-    scan_id = url_resp["scan_id"]
-    # Request report for URL analysis
-    analysis_resp = vtotal.request("url/report", params={"resource": scan_id})
-    print(analysis_resp.response_code)
-    pprint(analysis_resp.json())
