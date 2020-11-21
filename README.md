@@ -211,7 +211,7 @@ To run the tests, perform the following steps:
 
 ## Changelog
 
-* 0.1.0 - Added support for the VirusTotal v3 API. Changed the library considerably (new usage, examples, tests and more.)
+* 0.1.0 - Added support for the VirusTotal v3 API. Changed the library considerably (new usage, examples, tests and more.) See [#24](https://github.com/dbrennand/virustotal-python/pull/24).
 
 * 0.0.9 - Update dependencies for security vulnerability.
 
@@ -233,7 +233,7 @@ To run the tests, perform the following steps:
 
 ## Authors -- Contributors
 
-* **dbrennand** - *Author* - [dbrennand](https://github.com/dbrennand)
+* [**dbrennand**](https://github.com/dbrennand) - *Author*
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) for details.
