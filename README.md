@@ -47,11 +47,11 @@ Authenticate using your VirusTotal API key:
 ```python
 from virustotal_python import Virustotal
 
-# v3 example
-vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3")
-
 # v2 example
 vtotal = Virustotal(API_KEY="Insert API key here.")
+
+# v3 example
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3")
 
 # You can provide True to the `COMPATIBILITY_ENABLED` parameter to preserve the old response format of virustotal-python versions prior to 0.1.0
 vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3", COMPATIBILITY_ENABLED=True)
@@ -83,11 +83,11 @@ Now, initialise the `Virustotal` class:
 ```python
 from virustotal_python import Virustotal
 
-# v3 example
-vtotal = Virustotal(API_VERSION="v3")
-
 # v2 example
 vtotal = Virustotal()
+
+# v3 example
+vtotal = Virustotal(API_VERSION="v3")
 ```
 
 Send a file for analysis:
@@ -102,6 +102,15 @@ FILE_PATH = "/path/to/file/to/scan.txt"
 # Create dictionary containing the file to send for multipart encoding upload
 files = {"file": (os.path.basename(FILE_PATH), open(os.path.abspath(FILE_PATH), "rb"))}
 
+# v2 example
+resp = vtotal.request("file/scan", files=files, method="POST")
+
+# The v2 API returns a response_code
+# This property retrieves it from the JSON response
+print(resp.response_code)
+# Print JSON response from the API
+pprint(resp.json())
+
 # v3 example
 resp = vtotal.request("files", files=files, method="POST")
 
@@ -111,15 +120,6 @@ resp = vtotal.request("files", files=files, method="POST")
 pprint(resp.data)
 # Or if you provided COMPATIBILITY_ENABLED=True to the Virustotal class
 pprint(resp["json_resp"])
-
-# v2 example
-resp = vtotal.request("file/scan", files=files, method="POST")
-
-# The v2 API returns a response_code
-# This property retrieves it from the JSON response
-print(resp.response_code)
-# Print JSON response from the API
-pprint(resp.json())
 ```
 
 Retrieve information about a file:
@@ -130,16 +130,16 @@ from pprint import pprint
 # The ID (either SHA-256, SHA-1 or MD5) identifying the file
 FILE_ID = "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115"
 
-# v3 example
-resp = vtotal.request(f"files/{FILE_ID}")
-
-pprint(resp.data)
-
 # v2 example
 resp = vtotal.request("file/report", {"resource": FILE_ID})
 
 print(resp.response_code)
 pprint(resp.json())
+
+# v3 example
+resp = vtotal.request(f"files/{FILE_ID}")
+
+pprint(resp.data)
 ```
 
 Send a URL for analysis, retrieve the analysis report and catch any potential exceptions that may occur (Non 200 HTTP status codes):
@@ -150,20 +150,6 @@ from pprint import pprint
 from base64 import urlsafe_b64encode
 
 url = "ihaveaproblem.info"
-
-# v3 example
-try:
-    # Send URL to VirusTotal for analysis
-    resp = vtotal.request("urls", data={"url": url}, method="POST")
-    # URL safe encode URL in base64 format
-    # https://developers.virustotal.com/v3.0/reference#url
-    url_id = urlsafe_b64encode(url.encode()).decode().strip("=")
-    # Obtain the analysis results for the URL using the url_id
-    analysis_resp = vtotal.request(f"urls/{url_id}")
-    pprint(analysis_resp.object_type)
-    pprint(analysis_resp.data)
-except VirustotalError as err:
-    print(f"An error occurred: {err}\nCatching and continuing with program.")
 
 # v2 example
 try:
@@ -178,6 +164,20 @@ try:
     pprint(analysis_resp.json())
 except VirustotalError as err:
     print(f"An error occurred: {err}\nCatching and continuing with program.")
+
+# v3 example
+try:
+    # Send URL to VirusTotal for analysis
+    resp = vtotal.request("urls", data={"url": url}, method="POST")
+    # URL safe encode URL in base64 format
+    # https://developers.virustotal.com/v3.0/reference#url
+    url_id = urlsafe_b64encode(url.encode()).decode().strip("=")
+    # Obtain the analysis results for the URL using the url_id
+    analysis_resp = vtotal.request(f"urls/{url_id}")
+    pprint(analysis_resp.object_type)
+    pprint(analysis_resp.data)
+except VirustotalError as err:
+    print(f"An error occurred: {err}\nCatching and continuing with program.")
 ```
 
 Retrieve information about a domain:
@@ -187,16 +187,16 @@ from pprint import pprint
 
 domain = "virustotal.com"
 
-# v3 example
-resp = vtotal.request(f"domains/{domain}")
-
-pprint(resp.data)
-
 # v2 example
 resp = vtotal.request("domain/report", params={"domain": domain})
 
 print(resp.response_code)
 pprint(resp.json())
+
+# v3 example
+resp = vtotal.request(f"domains/{domain}")
+
+pprint(resp.data)
 ```
 
 ## Running the tests
