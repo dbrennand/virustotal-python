@@ -47,10 +47,10 @@ Authenticate using your VirusTotal API key:
 ```python
 from virustotal_python import Virustotal
 
-# v3
+# v3 example
 vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3")
 
-# v2
+# v2 example
 vtotal = Virustotal(API_KEY="Insert API key here.")
 
 # You can provide True to the `COMPATIBILITY_ENABLED` parameter to preserve the old response format of virustotal-python versions prior to 0.1.0
