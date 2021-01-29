@@ -295,3 +295,30 @@ def test_metadata_v3(vtotal_v3):
     engines_dict = resp.data["engines"]
     assert engines_dict.keys()
     assert "Microsoft" in engines_dict.keys()
+
+
+def test_contextmanager_v2():
+    """
+    Test basic Context Manager support.
+    """
+    with virustotal_python.Virustotal() as vtotal:
+        # Retrieve information about an IP address
+        resp = vtotal.request("ip-address/report", params={"ip": IP})
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["as_owner"] == "Google LLC"
+        assert data["country"] == "US"
+
+
+def test_contextmanager_v3():
+    """
+    Test basic Context Manager support.
+    """
+    with virustotal_python.Virustotal(API_VERSION="v3") as vtotal:
+        # Retrieve information about an IP address
+        resp = vtotal.request(f"ip_addresses/{IP}")
+        assert resp.status_code == 200
+        data = resp.data
+        assert data["id"] == IP
+        assert data["attributes"]["as_owner"] == "Google LLC"
+        assert data["attributes"]["country"] == "US"
