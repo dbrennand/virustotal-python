@@ -62,6 +62,15 @@ vtotal = Virustotal(
     API_VERSION="v3",
     PROXIES={"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"},
     TIMEOUT=5.0)
+
+# As of version 0.1.1, the Virustotal class can be invoked as a Context Manager!
+## v2 example
+with Virustotal(API_KEY="Insert API key here.") as vtotal:
+    # Your code here
+
+## v3 example
+with Virustotal(API_KEY="Insert API key here.", API_VERSION="v3") as vtotal:
+    # Your code here
 ```
 
 Additionally, it is possible to provide an API key via the environment variable `VIRUSTOTAL_API_KEY`.
@@ -210,6 +219,8 @@ To run the tests, perform the following steps:
 3. From the root directory of the project run `pytest -s .\virustotal_python\tests.py`
 
 ## Changelog
+
+* 0.1.1 - Added Context Manager support and tests. Updated dependencies and license year.
 
 * 0.1.0 - Added support for the VirusTotal v3 API. Library redesign (new usage, examples, tests and more.) See [#24](https://github.com/dbrennand/virustotal-python/pull/24).
 

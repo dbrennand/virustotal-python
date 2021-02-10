@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2020 dbrennand
+Copyright (c) 2021 dbrennand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -243,7 +243,7 @@ class Virustotal(object):
         :param TIMEOUT: A float for the amount of time to wait in seconds for the HTTP request before timing out.
         :raises ValueError: Raises ValueError when no API_KEY is provided or the API_VERSION is invalid.
         """
-        self.VERSION = "0.1.0"
+        self.VERSION = "0.1.1"
         if API_KEY is None:
             raise ValueError(
                 "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable 'VIRUSTOTAL_API_KEY'."
@@ -272,6 +272,19 @@ class Virustotal(object):
             raise ValueError(
                 f"The API version '{API_VERSION}' is not a valid VirusTotal API version.\nValid API versions are 'v2' or 'v3'."
             )
+
+    # Context Manager support
+    def __enter__(self):
+        """
+        Context Manager enter function.
+        """
+        return self
+
+    def __exit__(self, type, value, traceback):
+        """
+        Context Manager exit function.
+        """
+        return
 
     def request(
         self,
