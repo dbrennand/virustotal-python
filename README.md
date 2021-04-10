@@ -220,6 +220,8 @@ To run the tests, perform the following steps:
 
 ## Changelog
 
+* 0.1.2 - Update dependencies for security vulnerability. Fixed an issue with some tests failing.
+
 * 0.1.1 - Added Context Manager support and tests. Updated dependencies and license year.
 
 * 0.1.0 - Added support for the VirusTotal v3 API. Library redesign (new usage, examples, tests and more.) See [#24](https://github.com/dbrennand/virustotal-python/pull/24).
