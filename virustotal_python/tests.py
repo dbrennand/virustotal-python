@@ -231,7 +231,7 @@ def test_retrieve_ip_info_v2(vtotal_v2):
     assert resp.status_code == 200
     assert resp.response_code == 1
     json = resp.json()
-    assert json["as_owner"] == "Google LLC"
+    assert json["as_owner"] == "GOOGLE"
     assert json["country"] == "US"
     assert json["verbose_msg"] == "IP address in dataset"
     for sample in json["detected_communicating_samples"]:
@@ -248,7 +248,7 @@ def test_retrieve_ip_info_v3(vtotal_v3):
     resp = vtotal_v3.request(f"ip_addresses/{IP}")
     assert resp.status_code == 200
     data = resp.data
-    assert data["attributes"]["as_owner"] == "Google LLC"
+    assert data["attributes"]["as_owner"] == "GOOGLE"
     assert data["attributes"]["country"] == "US"
     assert data["attributes"]["last_analysis_stats"]
     assert data["attributes"]["reputation"]
@@ -306,7 +306,7 @@ def test_contextmanager_v2():
         resp = vtotal.request("ip-address/report", params={"ip": IP})
         assert resp.status_code == 200
         data = resp.json()
-        assert data["as_owner"] == "Google LLC"
+        assert data["as_owner"] == "GOOGLE"
         assert data["country"] == "US"
 
 
@@ -320,5 +320,5 @@ def test_contextmanager_v3():
         assert resp.status_code == 200
         data = resp.data
         assert data["id"] == IP
-        assert data["attributes"]["as_owner"] == "Google LLC"
+        assert data["attributes"]["as_owner"] == "GOOGLE"
         assert data["attributes"]["country"] == "US"
