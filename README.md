@@ -220,6 +220,8 @@ To run the tests, perform the following steps:
 
 ## Changelog
 
+* 0.1.3 - Update urllib3 to 1.26.5 to address [CVE-2021-33503](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-33503).
+
 * 0.1.2 - Update dependencies for security vulnerability. Fixed an issue with some tests failing.
 
 * 0.1.1 - Added Context Manager support and tests. Updated dependencies and license year.

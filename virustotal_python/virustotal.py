@@ -243,7 +243,7 @@ class Virustotal(object):
         :param TIMEOUT: A float for the amount of time to wait in seconds for the HTTP request before timing out.
         :raises ValueError: Raises ValueError when no API_KEY is provided or the API_VERSION is invalid.
         """
-        self.VERSION = "0.1.2"
+        self.VERSION = "0.1.3"
         if API_KEY is None:
             raise ValueError(
                 "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable 'VIRUSTOTAL_API_KEY'."
