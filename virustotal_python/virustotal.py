@@ -253,14 +253,14 @@ class Virustotal(object):
         self.PROXIES = PROXIES
         self.TIMEOUT = TIMEOUT
         # Declare appropriate variables depending on the API_VERSION provided
-        if API_VERSION == "v2":
+        if (API_VERSION == "v2") or (API_VERSION == 2):
             self.API_VERSION = API_VERSION
             self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
             self.HEADERS = {
                 "Accept-Encoding": "gzip, deflate",
                 "User-Agent": f"gzip,  virustotal-python {self.VERSION}",
             }
-        elif API_VERSION == "v3":
+        elif (API_VERSION == "v3") or (API_VERSION == 3):
             self.API_VERSION = API_VERSION
             self.BASEURL = "https://www.virustotal.com/api/v3/"
             self.HEADERS = {
@@ -270,7 +270,7 @@ class Virustotal(object):
             }
         else:
             raise ValueError(
-                f"The API version '{API_VERSION}' is not a valid VirusTotal API version.\nValid API versions are 'v2' or 'v3'."
+                f"The API version '{API_VERSION}' is not a valid VirusTotal API version.\nValid API versions are 'v2', 2, 'v3' and 3."
             )
 
     # Context Manager support
