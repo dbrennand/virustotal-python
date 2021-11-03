@@ -220,7 +220,7 @@ class Virustotal(object):
     """
     Interact with the public VirusTotal v2 and v3 APIs.
 
-    [v2 documentation](https://www.virustotal.com/en/documentation/public-api/)
+    [v2 documentation](https://developers.virustotal.com/v2.0/reference)
 
     [v3 documentation](https://developers.virustotal.com/v3.0/reference)
     """
