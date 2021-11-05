@@ -28,19 +28,21 @@ from json.decoder import JSONDecodeError
 
 
 class VirustotalError(Exception):
-    """
-    Class for VirusTotal API errors.
+    """Class for VirusTotal API errors.
+
+    Args:
+        Exception: Inherit the properties and methods from the Exception class.
     """
 
-    def __init__(self, response: requests.Response):
-        """
-        Initalisation for VirustotalError class.
+    def __init__(self, response: requests.Response) -> None:
+        """Initalisation for VirustotalError class.
 
-        :param response: A requests.Response object from a failed API request to the VirusTotal API.
+        Args:
+            response (requests.Response): A requests.Response object from a failed API request to the VirusTotal API.
         """
         self.response = response
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Error {self.error().get('code', 'unknown')} ({self.response.status_code}): {self.error().get('message', 'No message')}"
 
     def error(self) -> dict:
@@ -358,7 +360,9 @@ class Virustotal(object):
                 timeout=self.TIMEOUT,
             )
         else:
-            raise NotImplementedError(f"The request method '{method}' is not implemented.")
+            raise NotImplementedError(
+                f"The request method '{method}' is not implemented."
+            )
         # Validate response and return it
         return self.validate_response(response)
 
