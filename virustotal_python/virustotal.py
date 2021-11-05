@@ -364,7 +364,7 @@ class Virustotal(object):
 
     def validate_response(
         self, response: requests.Response
-    ) -> Tuple[dict, VirustotalResponse]:
+    ) -> Tuple[dict, VirustotalResponse, VirustotalError]:
         """
         Helper function to validate the request response.
 
