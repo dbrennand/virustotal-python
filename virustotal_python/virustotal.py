@@ -311,7 +311,7 @@ class Virustotal(object):
         # Create API endpoint
         endpoint = f"{self.BASEURL}{resource}"
         # If API version being used is v2, add the API key to params
-        if self.API_VERSION == "v2":
+        if (self.API_VERSION == "v2") or (self.API_VERSION == 2):
             params["apikey"] = self.API_KEY
         if method == "GET":
             response = requests.get(
