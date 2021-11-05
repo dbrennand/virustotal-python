@@ -43,23 +43,25 @@ class VirustotalError(Exception):
         self.response = response
 
     def __str__(self) -> str:
-        return f"Error {self.error().get('code', 'unknown')} ({self.response.status_code}): {self.error().get('message', 'No message')}"
+        error = self.error()
+        return f"Error {error.get('code', 'Unknown')} ({self.response.status_code}): {error.get('message', 'No message')}"
 
     def error(self) -> dict:
-        """
-        Retrieve the error that occurred from a VirusTotal API request.
+        """Retrieve the error that occurred from a VirusTotal API request.
 
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#errors)
+        https://developers.virustotal.com/v2.0/reference#api-responses
 
-        [v2 documentation](https://developers.virustotal.com/reference#api-responses)
+        https://developers.virustotal.com/v3.0/reference#errors
 
-        :returns: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns an empty dictionary.
+        Returns:
+            dict: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns an empty dictionary.
         """
         # Attempt to decode JSON as the v3 VirusTotal API returns the error message as JSON
+        # Fallback to an empty dict if error is somehow missing
         try:
             return self.response.json().get("error", dict())
         except ValueError:
-            # Catch exception if there is no JSON to be deserialized
+            # Catch ValueError if JSON fails to be deserialized or there is no JSON
             # Most likely using the v2 VirusTotal API
             # Check there is response text, if not, return an empty dict
             if self.response.text:
