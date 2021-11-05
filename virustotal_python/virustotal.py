@@ -358,7 +358,7 @@ class Virustotal(object):
                 timeout=self.TIMEOUT,
             )
         else:
-            raise Exception(f"The request method '{method}' is not supported.")
+            raise NotImplementedError(f"The request method '{method}' is not implemented.")
         # Validate response and return it
         return self.validate_response(response)
 
