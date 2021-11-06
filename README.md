@@ -220,15 +220,15 @@ resp = vtotal.request(f"domains/{domain}")
 pprint(resp.data)
 ```
 
-## Running the tests
+## Development and Unit Tests
 
-To run the tests, perform the following steps:
+Install the development dependencies using Poetry: `poetry install -E socks`
 
-1. Ensure pytest is installed using: `pip install pytest`
+To run the unit tests, perform the following steps:
 
-2. Export your API key to the environment variable `VIRUSTOTAL_API_KEY` (instructions above).
+1. Export your VirusTotal API key to the environment variable `VIRUSTOTAL_API_KEY` (instructions above).
 
-3. From the root directory of the project run `pytest -s .\virustotal_python\tests.py`
+2. From the root directory of the project run: `poetry run pytest`
 
 ## Changelog
 
