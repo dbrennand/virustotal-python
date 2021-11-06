@@ -9,28 +9,36 @@ A Python library to interact with the public VirusTotal v2 and v3 APIs.
 
 # Dependencies and installation
 
-> [!NOTE]
->
-> This library should work with Python versions >= 3.7.
-
 ```
-[dev-packages]
-black = "*"
-twine = "*"
-pytest = "*"
+# pyproject.toml
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = {version = "^2.26.0", extras = ["socks"]}
 
-[packages]
-requests = {extras = ["socks"],version = "*"}
+[tool.poetry.extras]
+socks = ["PySocks^1.7.1"]
+
+[tool.poetry.dev-dependencies]
+black = "^21.10b0"
+twine = "^3.5.0"
+pytest = "^6.2.5"
 ```
 
 Install `virustotal-python` using either:
-* `pip3 install virustotal-python`, `pipenv install`, `pip3 install -r requirements.txt`, `python setup.py install`.
 
-## Usage examples
+* PyPi: `pip3 install virustotal-python`
+
+* Poetry: `poetry install --no-dev`
+
+* Poetry (with proxy support): `poetry install --no-dev -E socks`
+
+* Requirements file: `pip3 install -r requirements.txt`
+
+## Usage
 
 > [!NOTE]
 >
-> See the [examples](examples) directory for several usage examples.
+> See the [examples](examples) directory for usage examples.
 >
 > Furthermore, check [`virustotal_python/virustotal.py`](virustotal_python/virustotal.py) for docstrings containing full parameter descriptions.
 
@@ -47,20 +55,24 @@ Authenticate using your VirusTotal API key:
 ```python
 from virustotal_python import Virustotal
 
-# v2 example
+# v2 examples
 vtotal = Virustotal(API_KEY="Insert API key here.")
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v2")
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION=2)
 
-# v3 example
+# v3 examples
 vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3")
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION=3)
 
 # You can provide True to the `COMPATIBILITY_ENABLED` parameter to preserve the old response format of virustotal-python versions prior to 0.1.0
-vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION="v3", COMPATIBILITY_ENABLED=True)
+vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION=3, COMPATIBILITY_ENABLED=True)
 
 # You can also set proxies and timeouts for requests made by the library
+# NOTE: You must have the PySocks extra installed
 vtotal = Virustotal(
     API_KEY="Insert API key here.",
-    API_VERSION="v3",
-    PROXIES={"http": "http://10.10.1.10:3128", "https": "http://10.10.1.10:1080"},
+    API_VERSION=3,
+    PROXIES={"http": "http://10.10.1.10:3128", "https": "https://10.10.1.10:1080"},
     TIMEOUT=5.0)
 
 # As of version 0.1.1, the Virustotal class can be invoked as a Context Manager!
@@ -69,7 +81,7 @@ with Virustotal(API_KEY="Insert API key here.") as vtotal:
     # Your code here
 
 ## v3 example
-with Virustotal(API_KEY="Insert API key here.", API_VERSION="v3") as vtotal:
+with Virustotal(API_KEY="Insert API key here.", API_VERSION=3) as vtotal:
     # Your code here
 ```
 
@@ -96,7 +108,7 @@ from virustotal_python import Virustotal
 vtotal = Virustotal()
 
 # v3 example
-vtotal = Virustotal(API_VERSION="v3")
+vtotal = Virustotal(API_VERSION=3)
 ```
 
 Send a file for analysis:
