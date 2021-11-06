@@ -43,6 +43,11 @@ class VirustotalError(Exception):
         self.response = response
 
     def __str__(self) -> str:
+        """String dunder method for VirustotalError class.
+
+        Returns:
+            str: A string containing the error code, HTTP status code and error message from a VirusTotal API request.
+        """
         error = self.error()
         return f"Error {error.get('code', 'Unknown')} ({self.response.status_code}): {error.get('message', 'No message')}"
 
@@ -71,125 +76,124 @@ class VirustotalError(Exception):
 
 
 class VirustotalResponse(object):
-    """
-    Response class for VirusTotal API requests.
-    """
+    """Response class for VirusTotal API requests."""
 
     def __init__(self, response: requests.Response):
-        """
-        Initalisation for VirustotalResponse class.
+        """Initalisation for VirustotalResponse class.
 
-        :param response: A requests.Response object from a successfull API request to the VirusTotal API.
+        Args:
+            response (requests.Response): A requests.Response object from a successfull API request to the VirusTotal API.
         """
         self.response = response
 
     @property
     def headers(self) -> dict:
-        """
-        Retrieve the HTTP headers of a VirusTotal API request.
+        """Retrieve the HTTP headers of a VirusTotal API request.
 
-        :returns: The HTTP headers of the requests.Response object.
+        Returns:
+            dict: The HTTP headers of the requests.Response object.
         """
         return self.response.headers
 
     @property
     def status_code(self) -> int:
-        """
-        Retrieve the HTTP status code of a VirusTotal API request.
+        """Retrieve the HTTP status code of a VirusTotal API request.
 
-        :returns: The HTTP status code of the requests.Response object.
+        Returns:
+            int: The HTTP status code of the requests.Response object.
         """
         return self.response.status_code
 
     @property
     def text(self) -> str:
-        """
-        Retrieve the HTTP text response of a VirusTotal API request.
+        """Retrieve the HTTP text response of a VirusTotal API request.
 
-        :returns: The HTTP text response of the requests.Response object.
+        Returns:
+            str: The HTTP text response of the requests.Response object.
         """
         return self.response.text
 
     @property
     def requests_response(self) -> requests.Response:
-        """
-        Retrieve the HTTP requests.Response object of a VirusTotal API request.
+        """Retrieve the HTTP requests.Response object of a VirusTotal API request.
         You may want to access this property if you wanted to read other aspects of the response such as cookies.
 
-        :returns: A requests.Response object.
+        Returns:
+            requests.Response: A requests.Response object.
         """
         return self.response
 
     @property
     def links(self) -> Tuple[dict, None]:
-        """
-        Retrieve the value of the key 'links' in the JSON response from a VirusTotal API request.
+        """Retrieve the value of the key 'links' in the JSON response from a VirusTotal API request.
+
+        https://developers.virustotal.com/v3.0/reference#collections
 
         NOTE: Links are not retrieved for objects inside 'data'.
 
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
-
-        :returns: A dictionary containing the links used to retrieve the next set of objects (if any), otherwise, returns None.
+        Returns:
+            Tuple[dict, None]: A dictionary containing the links used to retrieve the next set of objects (if any), otherwise, returns None.
         """
         return self.json().get("links", None)
 
     @property
     def meta(self) -> Tuple[dict, None]:
-        """
-        Retrieve the value of the key 'meta' in the JSON response from a VirusTotal API request.
+        """Retrieve the value of the key 'meta' in the JSON response from a VirusTotal API request.
 
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
+        https://developers.virustotal.com/v3.0/reference#collections
 
-        :returns: A dictionary containing metadata about the object(s) (if any), otherwise, returns None.
+        Returns:
+            Tuple[dict, None]: A dictionary containing metadata about the object(s) (if any), otherwise, returns None.
         """
         return self.json().get("meta", None)
 
     @property
     def cursor(self) -> Tuple[str, None]:
-        """
-        Retrieve the value of the key 'cursor' in the JSON response value 'meta' from a VirusTotal API request.
+        """Retrieve the value of the key 'cursor' in the JSON response value 'meta' from a VirusTotal API request.
 
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
+        https://developers.virustotal.com/v3.0/reference#collections
 
-        :returns: A string representing the cursor used to retrieve additional related object(s), otherwise, returns None.
+        Returns:
+            Tuple[str, None]: A string representing the cursor used to retrieve additional related object(s), otherwise, returns None.
         """
         try:
             return self.meta.get("cursor", None)
-        # Catch AttributeError that occurs when attemping to call attribute 'get' on None
-        # which is returned if the 'meta' key is not present in the JSON response
+        # Catch AttributeError that occurs when attempting to call attribute 'get' on None
+        # which is raised if the 'meta' key is not present in the JSON response
         except AttributeError:
             return None
 
     @property
     def data(self) -> Tuple[dict, list, None]:
-        """
-        Retrieve the value of the key 'data' in the JSON response from a VirusTotal API request.
+        """Retrieve the value of the key 'data' in the JSON response from a VirusTotal API request.
 
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#objects)
+        https://developers.virustotal.com/v3.0/reference#objects
 
-        :returns: A dictionary or list depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns None.
+        Returns:
+            Tuple[dict, list, None]: A dictionary or list depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns None.
         """
         return self.json().get("data", None)
 
     @property
     def object_type(self) -> Tuple[list, str, None]:
-        """
-        Retrieve the object type(s) in the JSON response from a VirusTotal API request.
+        """Retrieve the object type(s) in the JSON response from a VirusTotal API request.
 
-        [v3 documentation](https://developers.virustotal.com/v3.0/reference#objects)
+        https://developers.virustotal.com/v3.0/reference#objects
 
-        [More v3 documentation](https://developers.virustotal.com/v3.0/reference#collections)
+        https://developers.virustotal.com/v3.0/reference#collections
 
-        :returns: A list or string depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns None.
+        Returns:
+            Tuple[list, str, None]: A list or string depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns None.
         """
         data = self.data
-        # Check if data is more than one object
+        # Check if data contains more than one object
         if isinstance(data, list):
             object_list = []
             for data_object in data:
                 data_object_type = data_object.get("type", None)
                 object_list.append(data_object_type)
             return object_list
+        # Data contains only one object
         elif isinstance(data, dict):
             return data.get("type", None)
         else:
@@ -197,22 +201,26 @@ class VirustotalResponse(object):
 
     @property
     def response_code(self) -> Tuple[int, None]:
-        """
-        Retrieve the value of the key 'response_code' in the JSON response from a VirusTotal v2 API request.
+        """Retrieve the value of the key 'response_code' in the JSON response from a VirusTotal v2 API request.
 
-        [v2 documentation](https://developers.virustotal.com/reference#api-responses)
+        https://developers.virustotal.com/v2.0/reference#api-responses
 
-        :returns: An int of the response_code from the VirusTotal API (if any), otherwise, returns None.
+        Returns:
+            Tuple[int, None]: An int of the response_code from the VirusTotal API (if any), otherwise, returns None.
         """
         return self.json().get("response_code", None)
 
-    def json(self, **kwargs) -> Tuple[dict, list]:
-        """
-        Retrieve the JSON response of a VirusTotal API request.
+    def json(self, **kwargs) -> dict:
+        """Retrieve the JSON response of a VirusTotal API request.
 
-        :param **kwargs: Parameters to pass to json. Identical to `json.loads(**kwargs)`.
-        :returns: JSON response of the requests.Response object.
-        :raises ValueError: Raises ValueError when the response body contains invalid JSON.
+        Args:
+            **kwargs: Parameters to pass to json. Identical to `json.loads(**kwargs)`.
+
+        Returns:
+            dict: JSON response from a VirusTotal API request.
+
+        Raises:
+            ValueError when the response body contains invalid JSON.
         """
         try:
             return self.response.json(**kwargs)
