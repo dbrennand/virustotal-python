@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "virustotal-python"
+version = "0.2.0"
+description = "A Python library to interact with the public VirusTotal v2 and v3 APIs."
+authors = ["dbrennand"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/dbrennand/virustotal-python"
+repository = "https://github.com/dbrennand/virustotal-python"
+keywords = [
+    "VirusTotal",
+    "Wrapper",
+    "Public API",
+    "Library",
+    "v2",
+    "v3"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+]
+exclude = [".gitignore"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = {version = "^2.26.0", extras = ["socks"]}
+
+[tool.poetry.extras]
+socks = ["PySocks^1.7.1"]
+
+[tool.poetry.dev-dependencies]
+black = "^21.10b0"
+twine = "^3.5.0"
+pytest = "^6.2.5"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
