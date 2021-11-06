@@ -380,12 +380,17 @@ class Virustotal(object):
     def validate_response(
         self, response: requests.Response
     ) -> Tuple[dict, VirustotalResponse, VirustotalError]:
-        """
-        Helper function to validate the request response.
+        """Helper function to validate an API request response from the VirusTotal API.
 
-        :param response: A requests.Response object for an API request made to the VirusTotal API.
-        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True otherwise, a VirustotalResponse class object is returned.
-        :raises VirustotalError: Raises VirustotalError when an HTTP status code other than 200 (successfull) occurs.
+        Args:
+            response (requests.Response): A requests.Response object from an API request to the VirusTotal API.
+
+        Raises:
+            VirustotalError: Raises VirustotalError when a HTTP status code other than 200 occurs.
+
+        Returns:
+            Tuple[dict, VirustotalResponse, VirustotalError]: A dictionary if `COMPATIBILITY_ENABLED` is True.
+            Otherwise returns a `VirustotalResponse` on a HTTP 200 status code or `VirustotalError` on a HTTP status code other than 200 (successfull).
         """
         if self.COMPATIBILITY_ENABLED:
             if response.status_code == 200:
