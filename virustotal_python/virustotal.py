@@ -308,12 +308,12 @@ class Virustotal(object):
         """Make a request to the VirusTotal API.
 
         Args:
-            resource (str): A valid VirusTotal API endpoint. (E.g. 'files/<ID>')
-            params (dict, optional): A dictionary containing API endpoint query parameters. Defaults to {}.
-            data (dict, optional): A dictionary containing the data to send in the body of the request. Defaults to None.
-            json (dict, optional): A dictionary containing the JSON payload to send with the request. Defaults to None.
+            resource (str): A valid VirusTotal API endpoint. (E.g. `"files/<ID>"`)
+            params (dict, optional): A dictionary containing API endpoint query parameters. Defaults to `{}`.
+            data (dict, optional): A dictionary containing the data to send in the body of the request. Defaults to `None`.
+            json (dict, optional): A dictionary containing the JSON payload to send with the request. Defaults to `None`.
             files (dict, optional): A dictionary containing the file for multipart encoding upload. (E.g: `{'file': ('filename', open('filename.txt', 'rb'))})`. Defaults to None.
-            method (str, optional): The request method to use. Defaults to "GET".
+            method (str, optional): The request method to use. Defaults to `"GET"`.
 
         Raises:
             NotImplementedError: Raises NotImplementedError when an unsupported request method is provided.
