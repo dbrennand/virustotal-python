@@ -68,7 +68,7 @@ vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION=3)
 vtotal = Virustotal(API_KEY="Insert API key here.", API_VERSION=3, COMPATIBILITY_ENABLED=True)
 
 # You can also set proxies and timeouts for requests made by the library
-# NOTE: You must have the PySocks extra installed
+# NOTE: To use proxies, you must have the PySocks extra installed
 vtotal = Virustotal(
     API_KEY="Insert API key here.",
     API_VERSION=3,
