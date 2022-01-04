@@ -294,6 +294,7 @@ class Virustotal(object):
         json: dict = None,
         files: dict = None,
         method: str = "GET",
+        large_file: bool = False,
     ) -> Tuple[dict, VirustotalResponse]:
         """
         Make a request to the VirusTotal API.
@@ -310,6 +311,8 @@ class Virustotal(object):
         """
         # Create API endpoint
         endpoint = f"{self.BASEURL}{resource}"
+        if large_file:
+            endpoint = f"{resource}"
         # If API version being used is v2, add the API key to params
         if self.API_VERSION == "v2":
             params["apikey"] = self.API_KEY
