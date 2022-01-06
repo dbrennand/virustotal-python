@@ -305,6 +305,8 @@ class Virustotal(object):
         :param json: A dictionary containing the JSON payload to send with the request.
         :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
         :param method: The request method to use.
+        :param large_file: If a file is larger than 32MB, a custom generated upload URL is required. 
+            If this param is set to `True`, this URL can be set via the resource param.
         :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True.
             Otherwise, a VirustotalResponse class object is returned. If a HTTP status not equal to 200 occurs. Then a VirustotalError class object is returned.
         :raises Exception: Raise Exception when an unsupported method is provided.
