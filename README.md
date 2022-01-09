@@ -6,6 +6,8 @@ A Python library to interact with the public VirusTotal v2 and v3 APIs.
 > [!NOTE]
 >
 > This library is intended to be used with the public VirusTotal APIs. However, it *could* be used to interact with premium API endpoints as well.
+>
+> It is highly recommended that you use the VirusTotal v3 API as it is the "default and encouraged way to programmatically interact with VirusTotal".
 
 # Dependencies and installation
 
@@ -219,6 +221,8 @@ To run the tests, perform the following steps:
 3. From the root directory of the project run `pytest -s .\virustotal_python\tests.py`
 
 ## Changelog
+
+* 0.2.0 - Added `large_file` parameter to `request` so a file larger than 32MB can be submitted for analysis. Thank you @smk762.
 
 * 0.1.3 - Update urllib3 to 1.26.5 to address [CVE-2021-33503](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-33503).
 
