@@ -42,7 +42,12 @@ pprint(resp.data)
 vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
 
 # Create dictionary containing the large file to send for multipart encoding upload
-large_file = {"file": (os.path.basename("/path/to/file/larger/than/32MB"), open(os.path.abspath("/path/to/file/larger/than/32MB"), "rb"))}
+large_file = {
+    "file": (
+        os.path.basename("/path/to/file/larger/than/32MB"),
+        open(os.path.abspath("/path/to/file/larger/than/32MB"), "rb"),
+    )
+}
 # Get URL to send a large file
 upload_url = vtotal.request("files/upload_url").data
 # Submit large file to VirusTotal v3 API for analysis
