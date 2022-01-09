@@ -341,7 +341,6 @@ def test_contextmanager_v3():
         assert data["attributes"]["country"] == "US"
 
 
-@pytest.mark.largefile
 def test_large_file_v2(vtotal_v2, large_file_fixture):
     """Test sending a large file to the VirusTotal v2 API for analysis.
 
@@ -364,7 +363,6 @@ def test_large_file_v2(vtotal_v2, large_file_fixture):
         assert data["scan_id"]
 
 
-@pytest.mark.largefile
 def test_large_file_v3(vtotal_v3, large_file_fixture):
     """Test sending a large file to the VirusTotal v3 API for analysis.
 
