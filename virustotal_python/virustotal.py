@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2021 dbrennand
+Copyright (c) 2022 dbrennand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -243,7 +243,7 @@ class Virustotal(object):
         :param TIMEOUT: A float for the amount of time to wait in seconds for the HTTP request before timing out.
         :raises ValueError: Raises ValueError when no API_KEY is provided or the API_VERSION is invalid.
         """
-        self.VERSION = "0.1.3"
+        self.VERSION = "0.2.0"
         if API_KEY is None:
             raise ValueError(
                 "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable 'VIRUSTOTAL_API_KEY'."
@@ -294,6 +294,7 @@ class Virustotal(object):
         json: dict = None,
         files: dict = None,
         method: str = "GET",
+        large_file: bool = False,
     ) -> Tuple[dict, VirustotalResponse]:
         """
         Make a request to the VirusTotal API.
@@ -304,12 +305,16 @@ class Virustotal(object):
         :param json: A dictionary containing the JSON payload to send with the request.
         :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
         :param method: The request method to use.
+        :param large_file: If a file is larger than 32MB, a custom generated upload URL is required.
+            If this param is set to `True`, this URL can be set via the resource param.
         :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True.
             Otherwise, a VirustotalResponse class object is returned. If a HTTP status not equal to 200 occurs. Then a VirustotalError class object is returned.
         :raises Exception: Raise Exception when an unsupported method is provided.
         """
         # Create API endpoint
         endpoint = f"{self.BASEURL}{resource}"
+        if large_file:
+            endpoint = resource
         # If API version being used is v2, add the API key to params
         if self.API_VERSION == "v2":
             params["apikey"] = self.API_KEY
