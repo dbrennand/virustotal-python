@@ -254,5 +254,7 @@ To run the tests, perform the following steps:
 
 * [**dbrennand**](https://github.com/dbrennand) - *Author*
 
+* [**smk762**](https://github.com/smk762) - *Contributor*
+
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) for details.
