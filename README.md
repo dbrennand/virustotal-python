@@ -222,7 +222,7 @@ To run the tests, perform the following steps:
 
 ## Changelog
 
-* 0.2.0 - Added `large_file` parameter to `request` so a file larger than 32MB can be submitted for analysis. Thank you @smk762.
+* 0.2.0 - Added `large_file` parameter to `request` so a file larger than 32MB can be submitted for analysis. See [#33](https://github.com/dbrennand/virustotal-python/pull/33). Thank you @smk762.
 
 * 0.1.3 - Update urllib3 to 1.26.5 to address [CVE-2021-33503](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-33503).
 
