@@ -370,7 +370,7 @@ def test_large_file_v3(vtotal_v3, large_file_fixture):
     """
     # Get URL to send large file
     upload_url = vtotal_v3.request("files/upload_url").data
-    # Submit large file to VirusTotal v2 API for analysis
+    # Submit large file to VirusTotal v3 API for analysis
     resp = vtotal_v3.request(
         upload_url, files=large_file_fixture, method="POST", large_file=True
     )
