@@ -1,6 +1,7 @@
 import virustotal_python
 import pytest
 import os.path
+import subprocess
 from time import sleep
 from base64 import urlsafe_b64encode
 
@@ -23,6 +24,29 @@ GRAPH_ID = "g70fae134aefc4e2f90f069aba47d15a92e0073564310443aa0b6ca3384f5240d"
 URL_DOMAIN = "google.com"
 # Example comment ID
 COMMENT_ID = "f-9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115-07457619"
+
+
+@pytest.fixture()
+def large_file_fixture(request):
+    """Setup and teardown fixture for `test_large_file_v2` and `test_large_file_v3`."""
+    # Create a large file of 33MB to submit to the VirusTotal API for analysis
+    subprocess.run(
+        ["dd", "if=/dev/urandom", "of=dummy.dat", "bs=33M", "count=1"], check=True
+    )
+
+    def teardown():
+        """Delete the large file created by the fixture."""
+        subprocess.run(["rm", "dummy.dat"], check=True)
+
+    # Add finalizer function
+    request.addfinalizer(teardown)
+
+    return {
+        "file": (
+            os.path.basename("dummy.dat"),
+            open(os.path.abspath("dummy.dat"), "rb"),
+        )
+    }
 
 
 @pytest.fixture()
@@ -57,13 +81,6 @@ def test_file_scan_v2(vtotal_v2):
     """
     Test for sending a file to the VirusTotal v2 API for analysis.
     """
-    # Create dictionary containing the file to send for multipart encoding upload
-    files = {
-        "file": (
-            os.path.basename("virustotal_python/oldexamples.py"),
-            open(os.path.abspath("virustotal_python/oldexamples.py"), "rb"),
-        )
-    }
     resp = vtotal_v2.request("file/scan", files=FILES, method="POST")
     data = resp.json()
     assert resp.response_code == 1
@@ -322,3 +339,42 @@ def test_contextmanager_v3():
         assert data["id"] == IP
         assert data["attributes"]["as_owner"] == "GOOGLE"
         assert data["attributes"]["country"] == "US"
+
+
+def test_large_file_v2(vtotal_v2, large_file_fixture):
+    """Test sending a large file to the VirusTotal v2 API for analysis.
+
+    https://developers.virustotal.com/v2.0/reference/file-scan-upload-url
+
+    NOTE: Currently this test does not work and returns a HTTP 500 internal server error.
+
+    Please see: https://github.com/dbrennand/virustotal-python/pull/33#issuecomment-1008307393
+    """
+    # Get URL to send large file
+    upload_url = vtotal_v2.request("file/scan/upload_url").json()["upload_url"]
+    # Expect VirustotalError due to HTTP 500 internal server error
+    with pytest.raises(virustotal_python.VirustotalError):
+        # Submit large file to VirusTotal v2 API for analysis
+        resp = vtotal_v2.request(
+            upload_url, files=large_file_fixture, method="POST", large_file=True
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["scan_id"]
+
+
+def test_large_file_v3(vtotal_v3, large_file_fixture):
+    """Test sending a large file to the VirusTotal v3 API for analysis.
+
+    https://developers.virustotal.com/reference/files-upload-url
+    """
+    # Get URL to send large file
+    upload_url = vtotal_v3.request("files/upload_url").data
+    # Submit large file to VirusTotal v3 API for analysis
+    resp = vtotal_v3.request(
+        upload_url, files=large_file_fixture, method="POST", large_file=True
+    )
+    assert resp.status_code == 200
+    data = resp.data
+    assert data["id"]
+    assert data["type"] == "analysis"
