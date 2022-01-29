@@ -28,13 +28,13 @@ pytest = "^6.2.5"
 
 Install `virustotal-python` using either:
 
-* PyPi: `pip3 install virustotal-python`
+* PyPi: `pip install virustotal-python`
 
 * Poetry: `poetry install --no-dev`
 
 * Poetry (with proxy support): `poetry install --no-dev -E socks`
 
-* Requirements file: `pip3 install -r requirements.txt`
+* Requirements file: `pip install -r requirements.txt`
 
 ## Usage
 
