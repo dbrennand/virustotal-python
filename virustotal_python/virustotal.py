@@ -261,7 +261,7 @@ class Virustotal(object):
                 Defaults to `None`.
 
         Raises:
-            ValueError: Raises ValueError when no `API_KEY` is provided or the `API_VERSION` is invalid.
+            ValueError: Raises `ValueError` when no `API_KEY` is provided or the `API_VERSION` is invalid.
         """
         self.VERSION = "0.3.0"
         if API_KEY is None:
@@ -312,22 +312,25 @@ class Virustotal(object):
         method: str = "GET",
         large_file: bool = False,
     ) -> Tuple[dict, VirustotalResponse]:
-        """
-        Make a request to the VirusTotal API.
+        """Make a request to the VirusTotal API.
 
-        :param resource: A valid VirusTotal API endpoint.
-            E.g. `'files/{id}'`
-        :param params: A dictionary containing API endpoint query parameters.
-        :param data: A dictionary containing the data to send in the body of the request.
-        :param json: A dictionary containing the JSON payload to send with the request.
-        :param files: A dictionary containing the file for multipart encoding upload.
-            E.g: `{'file': ('filename', open('filename.txt', 'rb'))}`
-        :param method: The request method to use.
-        :param large_file: If a file is larger than 32MB, a custom generated upload URL is required.
-            If this param is set to `True`, this URL can be set via the resource param.
-        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is `True`.
-            Otherwise, a VirustotalResponse class object is returned. If a HTTP status not equal to 200 occurs. Then a VirustotalError class object is returned.
-        :raises Exception: Raise Exception when an unsupported method is provided.
+        Args:
+            resource (str): A valid VirusTotal API endpoint. E.g. `f'files/{id}'`.
+            params (dict, optional): API endpoint query parameters. Defaults to `{}`.
+            data (dict, optional): Data to send in the body of the request. Defaults to `None`.
+            json (dict, optional): JSON payload to send with the request Defaults to `None`.
+            files (dict, optional): File(s) for multipart encoding upload. Defaults to `None`.
+            method (str, optional): The HTTP request method to use. Defaults to `"GET"`.
+            large_file (bool, optional): If a file is larger than 32MB, a custom generated upload URL is required.
+                If this param is set to `True`, this URL can be set via the resource param. Defaults to `False`.
+
+        Raises:
+            NotImplementedError: Raises `NotImplementedError` when a unsupported HTTP method is provided.
+
+        Returns:
+            Tuple[dict, VirustotalResponse]: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp)
+                if self.COMPATIBILITY_ENABLED is `True`. Otherwise, a `VirustotalResponse` class object is returned.
+                If a HTTP status not equal to 200 occurs, then a `VirustotalError` class object is returned.
         """
         # Create API endpoint
         endpoint = f"{self.BASEURL}{resource}"
@@ -396,11 +399,12 @@ class Virustotal(object):
             response (requests.Response): A requests.Response object from an API request to the VirusTotal API.
 
         Raises:
-            VirustotalError: Raises VirustotalError when a HTTP status code other than 200 occurs.
+            VirustotalError: Raises `VirustotalError` when a HTTP status code other than 200 occurs.
 
         Returns:
             Tuple[dict, VirustotalResponse, VirustotalError]: A dictionary if `COMPATIBILITY_ENABLED` is True.
-            Otherwise returns a `VirustotalResponse` on a HTTP 200 status code or `VirustotalError` on a HTTP status code other than 200 (successfull).
+            Otherwise returns a `VirustotalResponse` on a HTTP 200 status code or `VirustotalError` on a HTTP
+            status code other than 200 (successfull).
         """
         if self.COMPATIBILITY_ENABLED:
             if response.status_code == 200:
