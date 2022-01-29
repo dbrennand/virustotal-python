@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "virustotal-python"
-version = "0.2.0"
+version = "0.3.0"
 description = "A Python library to interact with the public VirusTotal v2 and v3 APIs."
 authors = ["dbrennand"]
 license = "MIT"
