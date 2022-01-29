@@ -48,9 +48,7 @@ Authenticate using your VirusTotal API key:
 
 > ![NOTE]
 >
-> To obtain a VirusTotal API key, [sign up](https://www.virustotal.com/gui/join-us) for a VirusTotal account.
->
-> Then, view your VirusTotal API key.
+> To obtain a VirusTotal API key, [sign up](https://www.virustotal.com/gui/join-us) for a VirusTotal account. Then, view your VirusTotal API key.
 >
 > ![VirusTotal view API key](images/APIKey.png)
 
