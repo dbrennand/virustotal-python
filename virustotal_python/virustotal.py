@@ -35,7 +35,7 @@ class VirustotalError(Exception):
     """
 
     def __init__(self, response: requests.Response) -> None:
-        """Initalisation for VirustotalError class.
+        """Initialisation for VirustotalError class.
 
         Args:
             response (requests.Response): A requests.Response object from a failed API request to the VirusTotal API.
@@ -79,7 +79,7 @@ class VirustotalResponse(object):
     """Response class for VirusTotal API requests."""
 
     def __init__(self, response: requests.Response):
-        """Initalisation for VirustotalResponse class.
+        """Initialisation for VirustotalResponse class.
 
         Args:
             response (requests.Response): A requests.Response object from a successfull API request to the VirusTotal API.
@@ -132,7 +132,7 @@ class VirustotalResponse(object):
         NOTE: Links are not retrieved for objects inside 'data'.
 
         Returns:
-            Tuple[dict, None]: A dictionary containing the links used to retrieve the next set of objects (if any), otherwise, returns None.
+            Tuple[dict, None]: A dictionary containing the links used to retrieve the next set of objects (if any), otherwise, returns `None`.
         """
         return self.json().get("links", None)
 
@@ -143,7 +143,7 @@ class VirustotalResponse(object):
         https://developers.virustotal.com/v3.0/reference#collections
 
         Returns:
-            Tuple[dict, None]: A dictionary containing metadata about the object(s) (if any), otherwise, returns None.
+            Tuple[dict, None]: A dictionary containing metadata about the object(s) (if any), otherwise, returns `None`.
         """
         return self.json().get("meta", None)
 
@@ -154,7 +154,7 @@ class VirustotalResponse(object):
         https://developers.virustotal.com/v3.0/reference#collections
 
         Returns:
-            Tuple[str, None]: A string representing the cursor used to retrieve additional related object(s), otherwise, returns None.
+            Tuple[str, None]: A string representing the cursor used to retrieve additional related object(s), otherwise, returns `None`.
         """
         try:
             return self.meta.get("cursor", None)
@@ -170,7 +170,7 @@ class VirustotalResponse(object):
         https://developers.virustotal.com/v3.0/reference#objects
 
         Returns:
-            Tuple[dict, list, None]: A dictionary or list depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns None.
+            Tuple[dict, list, None]: A dictionary or list depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns `None`.
         """
         return self.json().get("data", None)
 
@@ -183,7 +183,7 @@ class VirustotalResponse(object):
         https://developers.virustotal.com/v3.0/reference#collections
 
         Returns:
-            Tuple[list, str, None]: A list or string depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns None.
+            Tuple[list, str, None]: A list or string depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns `None`.
         """
         data = self.data
         # Check if data contains more than one object
@@ -206,7 +206,7 @@ class VirustotalResponse(object):
         https://developers.virustotal.com/v2.0/reference#api-responses
 
         Returns:
-            Tuple[int, None]: An int of the response_code from the VirusTotal API (if any), otherwise, returns None.
+            Tuple[int, None]: An int of the response_code from the VirusTotal API (if any), otherwise, returns `None`.
         """
         return self.json().get("response_code", None)
 
@@ -244,15 +244,24 @@ class Virustotal(object):
         PROXIES: dict = None,
         TIMEOUT: float = None,
     ):
-        """
-        Initalisation function for the Virustotal class.
+        """Initialisation function for the Virustotal class.
 
-        :param API_KEY: The API key used to interact with the VirusTotal v2 and v3 APIs. Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
-        :param API_VERSION: The version to use when interacting with the VirusTotal API. This parameter defaults to 'v2' for backwards compatibility.
-        :param COMPATIBILITY_ENABLED: Preserve the old response format of virustotal-python versions prior to 0.1.0 for backwards compatibility.
-        :param PROXIES: A dictionary containing proxies used when making requests.
-        :param TIMEOUT: A float for the amount of time to wait in seconds for the HTTP request before timing out.
-        :raises ValueError: Raises ValueError when no API_KEY is provided or the API_VERSION is invalid.
+        Args:
+            API_KEY (str, optional): The API key used to interact with the VirusTotal v2 and v3 APIs.
+                Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
+                Defaults to `os.environ.get("VIRUSTOTAL_API_KEY", None)`.
+            API_VERSION (str, optional): The version to use when interacting with the VirusTotal API.
+                Defaults to `"v2"` for backwards compatibility.
+            COMPATIBILITY_ENABLED (bool, optional): Preserve the old response format of virustotal-python
+                versions prior to 0.1.0 for backwards compatibility. Defaults to `False`.
+            PROXIES (dict, optional): A dictionary containing proxies used when making requests.
+                E.g. `{"http": "http://10.10.1.10:3128", "https": "https://10.10.1.10:1080"}`
+                Defaults to `None`.
+            TIMEOUT (float, optional): A float for the amount of time to wait in seconds for the HTTP request before timing out.
+                Defaults to `None`.
+
+        Raises:
+            ValueError: Raises ValueError when no `API_KEY` is provided or the `API_VERSION` is invalid.
         """
         self.VERSION = "0.2.0"
         if API_KEY is None:
@@ -306,15 +315,17 @@ class Virustotal(object):
         """
         Make a request to the VirusTotal API.
 
-        :param resource: A valid VirusTotal API endpoint. (E.g. 'files/{id}')
+        :param resource: A valid VirusTotal API endpoint.
+            E.g. `'files/{id}'`
         :param params: A dictionary containing API endpoint query parameters.
         :param data: A dictionary containing the data to send in the body of the request.
         :param json: A dictionary containing the JSON payload to send with the request.
-        :param files: A dictionary containing the file for multipart encoding upload. (E.g: {'file': ('filename', open('filename.txt', 'rb'))})
+        :param files: A dictionary containing the file for multipart encoding upload.
+            E.g: `{'file': ('filename', open('filename.txt', 'rb'))}`
         :param method: The request method to use.
         :param large_file: If a file is larger than 32MB, a custom generated upload URL is required.
             If this param is set to `True`, this URL can be set via the resource param.
-        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is True.
+        :returns: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp) if self.COMPATIBILITY_ENABLED is `True`.
             Otherwise, a VirustotalResponse class object is returned. If a HTTP status not equal to 200 occurs. Then a VirustotalError class object is returned.
         :raises Exception: Raise Exception when an unsupported method is provided.
         """
