@@ -7,4 +7,4 @@ name = "virustotal-python"
 
 __all__ = ["Virustotal", "VirustotalError"]
 __author__ = "dbrennand"
-__version__ = "0.3.0"
+__version__ = "1.0.0"
