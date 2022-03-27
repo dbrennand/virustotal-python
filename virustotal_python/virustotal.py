@@ -306,7 +306,7 @@ class Virustotal(object):
             resource (str): A valid VirusTotal API endpoint. E.g. `f'files/{id}'`.
             params (dict, optional): API endpoint query parameters. Defaults to `{}`.
             data (dict, optional): Data to send in the body of the request. Defaults to `None`.
-            json (dict, optional): JSON payload to send with the request Defaults to `None`.
+            json (dict, optional): JSON payload to send with the request. Defaults to `None`.
             files (dict, optional): File(s) for multipart encoding upload. Defaults to `None`.
             method (str, optional): The HTTP request method to use. Defaults to `"GET"`.
             large_file (bool, optional): If a file is larger than 32MB, a custom generated upload URL is required.
