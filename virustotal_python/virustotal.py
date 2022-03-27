@@ -313,7 +313,7 @@ class Virustotal(object):
                 If this param is set to `True`, this URL can be set via the resource param. Defaults to `False`.
 
         Raises:
-            NotImplementedError: Raises `NotImplementedError` when a unsupported HTTP method is provided.
+            NotImplementedError: When a unsupported HTTP method is provided.
 
         Returns:
             VirustotalResponse: A `VirustotalResponse` class object.
