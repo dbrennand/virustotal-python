@@ -75,10 +75,10 @@ class VirustotalResponse(object):
     """Response class for VirusTotal API requests."""
 
     def __init__(self, response: requests.Response):
-        """Initialisation for VirustotalResponse class.
+        """Initialisation for `VirustotalResponse`.
 
         Args:
-            response (requests.Response): A requests.Response object from a successfull API request to the VirusTotal API.
+            response (requests.Response): From a successfull API request to the VirusTotal API.
         """
         self.response = response
 
