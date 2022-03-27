@@ -70,11 +70,13 @@ def test_request_notimplemented_error() -> None:
 
 
 """
-# Tests
+# Tests - TODO
 
-Test request `large_file` parameter
+* Look into mocking requests
 
-Test VirustotalResponse properties and methods
+* Test `VirustotalResponse` properties and methods
 
-Test VirustotalError properties and methods
+* Test VirustotalError properties and methods
+
+* Test request `large_file` parameter
 """
