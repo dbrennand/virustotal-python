@@ -5,7 +5,7 @@ Use a cursor from the VirusTotal API JSON response to retrieve more results.
 
 Documentation:
 
-    * v3 documentation - https://developers.virustotal.com/v3.0/reference#collections
+    * v3 documentation - https://developers.virustotal.com/reference/collections
 """
 from virustotal_python import Virustotal
 from pprint import pprint
