@@ -111,11 +111,11 @@ class VirustotalResponse(object):
 
     @property
     def requests_response(self) -> requests.Response:
-        """Retrieve the HTTP requests.Response object of a VirusTotal API request.
+        """Retrieve the HTTP `requests.Response` object of a VirusTotal API request.
         You may want to access this property if you wanted to read other aspects of the response such as cookies.
 
         Returns:
-            requests.Response: A requests.Response object.
+            requests.Response: The `requests.Response` object from a successfull API request to the VirusTotal API.
         """
         return self.response
 
