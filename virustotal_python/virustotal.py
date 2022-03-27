@@ -236,7 +236,6 @@ class Virustotal(object):
         self,
         API_KEY: str = None,
         API_VERSION: int = 3,
-        COMPATIBILITY_ENABLED: bool = False,
         PROXIES: dict = None,
         TIMEOUT: float = None,
     ):
@@ -247,8 +246,6 @@ class Virustotal(object):
                 Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
             API_VERSION (str, optional): The version to use when interacting with the VirusTotal API.
                 Defaults to 3.
-            COMPATIBILITY_ENABLED (bool, optional): Preserve the old response format of virustotal-python
-                versions prior to 0.1.0 for backwards compatibility. Defaults to `False`.
             PROXIES (dict, optional): A dictionary containing proxies used when making requests.
                 E.g. `{"http": "http://10.10.1.10:3128", "https": "https://10.10.1.10:1080"}`
                 Defaults to `None`.
@@ -265,7 +262,6 @@ class Virustotal(object):
                     "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable 'VIRUSTOTAL_API_KEY'."
                 )
         self.API_KEY = API_KEY
-        self.COMPATIBILITY_ENABLED = COMPATIBILITY_ENABLED
         self.PROXIES = PROXIES
         self.TIMEOUT = TIMEOUT
         # Declare appropriate variables depending on the API_VERSION provided
@@ -307,7 +303,7 @@ class Virustotal(object):
         files: dict = None,
         method: str = "GET",
         large_file: bool = False,
-    ) -> Tuple[dict, VirustotalResponse]:
+    ) -> VirustotalResponse:
         """Make a request to the VirusTotal API.
 
         Args:
@@ -324,9 +320,7 @@ class Virustotal(object):
             NotImplementedError: Raises `NotImplementedError` when a unsupported HTTP method is provided.
 
         Returns:
-            Tuple[dict, VirustotalResponse]: A dictionary containing the HTTP response code (resp_code) and JSON response (json_resp)
-                if self.COMPATIBILITY_ENABLED is `True`. Otherwise, a `VirustotalResponse` class object is returned.
-                If a HTTP status not equal to 200 occurs, then a `VirustotalError` class object is returned.
+            VirustotalResponse: A `VirustotalResponse` class object.
         """
         # Create API endpoint
         endpoint = f"{self.BASEURL}{resource}"
@@ -388,7 +382,7 @@ class Virustotal(object):
 
     def validate_response(
         self, response: requests.Response
-    ) -> Tuple[dict, VirustotalResponse, VirustotalError]:
+    ) -> VirustotalResponse:
         """Helper function to validate an API request response from the VirusTotal API.
 
         Args:
@@ -398,30 +392,9 @@ class Virustotal(object):
             VirustotalError: Raises `VirustotalError` when a HTTP status code other than 200 occurs.
 
         Returns:
-            Tuple[dict, VirustotalResponse, VirustotalError]: A dictionary if `COMPATIBILITY_ENABLED` is True.
-            Otherwise returns a `VirustotalResponse` on a HTTP 200 status code or `VirustotalError` on a HTTP
-            status code other than 200 (successfull).
+            VirustotalResponse: A `VirustotalResponse` class object on a HTTP 200 status code.
         """
-        if self.COMPATIBILITY_ENABLED:
-            if response.status_code == 200:
-                json_resp = response.json()
-                return dict(status_code=response.status_code, json_resp=json_resp)
-            else:
-                # An error has occurred
-                # The v3 API returns the error as JSON, attempt to retrieve it
-                try:
-                    error_json = response.json()
-                except ValueError:
-                    # API version being used is likely to be v2. Catch the raised ValueError and continue
-                    pass
-                return dict(
-                    status_code=response.status_code,
-                    # Provide JSON error message if retrieved successfully, otherwise fallback on response.text
-                    error=(error_json if error_json else response.text),
-                    resp=response.content,
-                )
+        if response.status_code != 200:
+            raise VirustotalError(response)
         else:
-            if response.status_code != 200:
-                raise VirustotalError(response)
-            else:
-                return VirustotalResponse(response)
+            return VirustotalResponse(response)
