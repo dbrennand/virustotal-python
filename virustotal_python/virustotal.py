@@ -373,23 +373,6 @@ class Virustotal(object):
             raise NotImplementedError(
                 f"The request method '{method}' is not implemented."
             )
-        # Validate response and return
-        return self.validate_response(response)
-
-    def validate_response(
-        self, response: requests.Response
-    ) -> VirustotalResponse:
-        """Helper function to validate an API request response from the VirusTotal API.
-
-        Args:
-            response (requests.Response): A requests.Response object from an API request to the VirusTotal API.
-
-        Raises:
-            VirustotalError: Raises `VirustotalError` when a HTTP status code other than 200 occurs.
-
-        Returns:
-            VirustotalResponse: A `VirustotalResponse` class object on a HTTP 200 status code.
-        """
         if response.status_code != 200:
             raise VirustotalError(response)
         else:
