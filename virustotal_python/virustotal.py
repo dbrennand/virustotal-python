@@ -23,7 +23,7 @@ SOFTWARE.
 """
 import requests
 import os
-from typing import Tuple, Union
+from typing import Union
 from json.decoder import JSONDecodeError
 
 
@@ -120,7 +120,7 @@ class VirustotalResponse(object):
         return self.response
 
     @property
-    def links(self) -> Tuple[dict, None]:
+    def links(self) -> Union[dict, None]:
         """Retrieve the value of the key 'links' in the JSON response from a VirusTotal API request.
 
         https://developers.virustotal.com/reference/collections
@@ -128,29 +128,29 @@ class VirustotalResponse(object):
         NOTE: Links are not retrieved for objects inside 'data'.
 
         Returns:
-            Tuple[dict, None]: The links used to retrieve the next set of objects (if any), otherwise, returns `None`.
+            Union[dict, None]: The links used to retrieve the next set of objects (if any), otherwise, returns `None`.
         """
         return self.json().get("links", None)
 
     @property
-    def meta(self) -> Tuple[dict, None]:
+    def meta(self) -> Union[dict, None]:
         """Retrieve the value of the key 'meta' in the JSON response from a VirusTotal API request.
 
         https://developers.virustotal.com/reference/collections
 
         Returns:
-            Tuple[dict, None]: The metadata about the object(s) (if any), otherwise, returns `None`.
+            Union[dict, None]: The metadata about the object(s) (if any), otherwise, returns `None`.
         """
         return self.json().get("meta", None)
 
     @property
-    def cursor(self) -> Tuple[str, None]:
+    def cursor(self) -> Union[str, None]:
         """Retrieve the value of the key 'cursor' in the JSON response value 'meta' from a VirusTotal API request.
 
         https://developers.virustotal.com/reference/collections
 
         Returns:
-            Tuple[str, None]: The cursor used to retrieve related object(s), otherwise, returns `None`.
+            Union[str, None]: The cursor used to retrieve related object(s), otherwise, returns `None`.
         """
         try:
             return self.meta.get("cursor", None)
@@ -160,18 +160,18 @@ class VirustotalResponse(object):
             return None
 
     @property
-    def data(self) -> Tuple[dict, list, None]:
+    def data(self) -> Union[dict, list, None]:
         """Retrieve the value of the key 'data' in the JSON response from a VirusTotal API request.
 
         https://developers.virustotal.com/reference/objects
 
         Returns:
-            Tuple[dict, list, None]: A dictionary or list depending on the number of objects returned (if any) otherwise, returns `None`.
+            Union[dict, list, None]: A dictionary or list depending on the number of objects returned (if any) otherwise, returns `None`.
         """
         return self.json().get("data", None)
 
     @property
-    def object_type(self) -> Tuple[list, str, None]:
+    def object_type(self) -> Union[list, str, None]:
         """Retrieve the object type(s) in the JSON response from a VirusTotal API request.
 
         https://developers.virustotal.com/reference/objects
@@ -179,7 +179,7 @@ class VirustotalResponse(object):
         https://developers.virustotal.com/reference/collections
 
         Returns:
-            Tuple[list, str, None]: A list or string depending on the number of objects returned (if any) otherwise, returns `None`.
+            Union[list, str, None]: A list or string depending on the number of objects returned (if any) otherwise, returns `None`.
         """
         data = self.data
         # Check if data contains more than one object
@@ -196,13 +196,13 @@ class VirustotalResponse(object):
             return None
 
     @property
-    def response_code(self) -> Tuple[int, None]:
+    def response_code(self) -> Union[int, None]:
         """Retrieve the value of the key 'response_code' in the JSON response from a VirusTotal v2 API request.
 
         https://developers.virustotal.com/v2.0/reference/api-responses
 
         Returns:
-            Tuple[int, None]: The response_code from the VirusTotal API (if any), otherwise, returns `None`.
+            Union[int, None]: The response_code from the VirusTotal API (if any), otherwise, returns `None`.
         """
         return self.json().get("response_code", None)
 
