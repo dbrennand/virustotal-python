@@ -235,7 +235,7 @@ class Virustotal(object):
     def __init__(
         self,
         API_KEY: str = None,
-        API_VERSION: str = "v2",
+        API_VERSION: int = 3,
         COMPATIBILITY_ENABLED: bool = False,
         PROXIES: dict = None,
         TIMEOUT: float = None,
@@ -246,7 +246,7 @@ class Virustotal(object):
             API_KEY (str, optional): The API key used to interact with the VirusTotal v2 and v3 APIs.
                 Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
             API_VERSION (str, optional): The version to use when interacting with the VirusTotal API.
-                Defaults to `"v2"` for backwards compatibility.
+                Defaults to 3.
             COMPATIBILITY_ENABLED (bool, optional): Preserve the old response format of virustotal-python
                 versions prior to 0.1.0 for backwards compatibility. Defaults to `False`.
             PROXIES (dict, optional): A dictionary containing proxies used when making requests.
