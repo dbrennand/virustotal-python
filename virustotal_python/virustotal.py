@@ -322,7 +322,7 @@ class Virustotal(object):
         endpoint = f"{self.BASEURL}{resource}"
         if large_file:
             endpoint = resource
-        # If API version being used is v2, add the API key to params
+        # VirusTotal API version 2 requires API_KEY to be in the request parameters
         if (self.API_VERSION == "v2") or (self.API_VERSION == 2):
             params["apikey"] = self.API_KEY
         if method == "GET":
