@@ -50,7 +50,7 @@ class VirustotalError(Exception):
     def error(self) -> dict:
         """Retrieve the error that occurred from a failed VirusTotal API request.
 
-        https://developers.virustotal.com/v2.0/reference#api-responses
+        https://developers.virustotal.com/v2.0/reference/api-responses
 
         https://developers.virustotal.com/v3.0/reference#errors
 
@@ -123,7 +123,7 @@ class VirustotalResponse(object):
     def links(self) -> Tuple[dict, None]:
         """Retrieve the value of the key 'links' in the JSON response from a VirusTotal API request.
 
-        https://developers.virustotal.com/v3.0/reference#collections
+        https://developers.virustotal.com/reference/collections
 
         NOTE: Links are not retrieved for objects inside 'data'.
 
@@ -136,7 +136,7 @@ class VirustotalResponse(object):
     def meta(self) -> Tuple[dict, None]:
         """Retrieve the value of the key 'meta' in the JSON response from a VirusTotal API request.
 
-        https://developers.virustotal.com/v3.0/reference#collections
+        https://developers.virustotal.com/reference/collections
 
         Returns:
             Tuple[dict, None]: A dictionary containing metadata about the object(s) (if any), otherwise, returns `None`.
@@ -147,7 +147,7 @@ class VirustotalResponse(object):
     def cursor(self) -> Tuple[str, None]:
         """Retrieve the value of the key 'cursor' in the JSON response value 'meta' from a VirusTotal API request.
 
-        https://developers.virustotal.com/v3.0/reference#collections
+        https://developers.virustotal.com/reference/collections
 
         Returns:
             Tuple[str, None]: A string representing the cursor used to retrieve additional related object(s), otherwise, returns `None`.
@@ -163,7 +163,7 @@ class VirustotalResponse(object):
     def data(self) -> Tuple[dict, list, None]:
         """Retrieve the value of the key 'data' in the JSON response from a VirusTotal API request.
 
-        https://developers.virustotal.com/v3.0/reference#objects
+        https://developers.virustotal.com/reference/objects
 
         Returns:
             Tuple[dict, list, None]: A dictionary or list depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns `None`.
@@ -174,9 +174,9 @@ class VirustotalResponse(object):
     def object_type(self) -> Tuple[list, str, None]:
         """Retrieve the object type(s) in the JSON response from a VirusTotal API request.
 
-        https://developers.virustotal.com/v3.0/reference#objects
+        https://developers.virustotal.com/reference/objects
 
-        https://developers.virustotal.com/v3.0/reference#collections
+        https://developers.virustotal.com/reference/collections
 
         Returns:
             Tuple[list, str, None]: A list or string depending on the number of objects returned from the VirusTotal API (if any) otherwise, returns `None`.
@@ -199,7 +199,7 @@ class VirustotalResponse(object):
     def response_code(self) -> Tuple[int, None]:
         """Retrieve the value of the key 'response_code' in the JSON response from a VirusTotal v2 API request.
 
-        https://developers.virustotal.com/v2.0/reference#api-responses
+        https://developers.virustotal.com/v2.0/reference/api-responses
 
         Returns:
             Tuple[int, None]: An int of the response_code from the VirusTotal API (if any), otherwise, returns `None`.
