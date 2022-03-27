@@ -214,9 +214,6 @@ class VirustotalResponse(object):
 
         Returns:
             dict: JSON response from a VirusTotal API request.
-
-        Raises:
-            ValueError when the response body contains invalid JSON.
         """
         try:
             return self.response.json(**kwargs)
