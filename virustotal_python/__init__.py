@@ -1,4 +1,4 @@
-"""A Python library to interact with the public VirusTotal v2 and v3 APIs.
+"""A Python library to interact with the public VirusTotal v3 and v2 APIs.
 """
 from virustotal_python.virustotal import Virustotal
 from virustotal_python.virustotal import VirustotalResponse
