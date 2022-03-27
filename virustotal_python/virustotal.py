@@ -234,7 +234,7 @@ class Virustotal(object):
 
     def __init__(
         self,
-        API_KEY: str = os.environ.get("VIRUSTOTAL_API_KEY", None),
+        API_KEY: str = None,
         API_VERSION: str = "v2",
         COMPATIBILITY_ENABLED: bool = False,
         PROXIES: dict = None,
@@ -245,7 +245,6 @@ class Virustotal(object):
         Args:
             API_KEY (str, optional): The API key used to interact with the VirusTotal v2 and v3 APIs.
                 Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
-                Defaults to `os.environ.get("VIRUSTOTAL_API_KEY", None)`.
             API_VERSION (str, optional): The version to use when interacting with the VirusTotal API.
                 Defaults to `"v2"` for backwards compatibility.
             COMPATIBILITY_ENABLED (bool, optional): Preserve the old response format of virustotal-python
@@ -260,9 +259,11 @@ class Virustotal(object):
             ValueError: Raises `ValueError` when no `API_KEY` is provided or the `API_VERSION` is invalid.
         """
         if API_KEY is None:
-            raise ValueError(
-                "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable 'VIRUSTOTAL_API_KEY'."
-            )
+            API_KEY = os.environ.get("VIRUSTOTAL_API_KEY", None)
+            if API_KEY is None:
+                raise ValueError(
+                    "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable 'VIRUSTOTAL_API_KEY'."
+                )
         self.API_KEY = API_KEY
         self.COMPATIBILITY_ENABLED = COMPATIBILITY_ENABLED
         self.PROXIES = PROXIES
