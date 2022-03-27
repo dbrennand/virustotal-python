@@ -222,7 +222,7 @@ class VirustotalResponse(object):
 
 
 class Virustotal(object):
-    """Interact with the public VirusTotal v2 and v3 APIs.
+    """Interact with the public VirusTotal v3 and v2 APIs.
 
     https://developers.virustotal.com/v2.0/reference
 
@@ -236,7 +236,7 @@ class Virustotal(object):
         PROXIES: dict = None,
         TIMEOUT: float = None,
     ):
-        """Initialisation function for the Virustotal class.
+        """Interact with the public VirusTotal v3 and v2 APIs.
 
         Args:
             API_KEY (str, optional): The API key used to interact with the VirusTotal v2 and v3 APIs.
