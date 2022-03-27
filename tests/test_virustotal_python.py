@@ -5,23 +5,14 @@ import pytest
 import pytest_mock
 
 
-@pytest.fixture
-def mock_os_environ(mocker: pytest_mock.MockerFixture) -> None:
-    """Mocker fixture for `os.environ`.
+def test_virustotal_apikey_env(mocker: pytest_mock.MockerFixture) -> None:
+    """Test `Virustotal` environment variable `VIRUSTOTAL_API_KEY`.
 
     Args:
         mocker (pytest_mock.MockerFixture): A pytest_mock.MockerFixture providing a
             thin-wrapper around the patching API from the mock library.
     """
     mocker.patch.dict("os.environ", dict(VIRUSTOTAL_API_KEY="API key"))
-
-
-def test_virustotal_apikey_env(mock_os_environ) -> None:
-    """Test `Virustotal` environment variable `VIRUSTOTAL_API_KEY`.
-
-    Args:
-        mock_os_environ: Pytest fixture function to mock `os.environ`.
-    """
     vtotal = virustotal_python.Virustotal()
     assert vtotal.API_KEY == "API key"
 
