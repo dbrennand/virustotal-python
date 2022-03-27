@@ -241,16 +241,16 @@ class Virustotal(object):
         Args:
             API_KEY (str, optional): The API key used to interact with the VirusTotal v2 and v3 APIs.
                 Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
-            API_VERSION (str, optional): The version to use when interacting with the VirusTotal API.
+            API_VERSION (int, optional): The version to use when interacting with the VirusTotal API.
                 Defaults to 3.
-            PROXIES (dict, optional): A dictionary containing proxies used when making requests.
+            PROXIES (dict, optional): Proxies to use when making requests.
                 E.g. `{"http": "http://10.10.1.10:3128", "https": "https://10.10.1.10:1080"}`
                 Defaults to `None`.
-            TIMEOUT (float, optional): A float for the amount of time to wait in seconds for the HTTP request before timing out.
+            TIMEOUT (float, optional): The amount of time (in seconds) to wait for the HTTP request before timing out.
                 Defaults to `None`.
 
         Raises:
-            ValueError: Raises `ValueError` when no `API_KEY` is provided or the `API_VERSION` is invalid.
+            ValueError: When no `API_KEY` is provided or the `API_VERSION` is invalid.
         """
         if API_KEY is None:
             API_KEY = os.environ.get("VIRUSTOTAL_API_KEY", None)
