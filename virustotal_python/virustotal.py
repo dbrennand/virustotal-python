@@ -31,7 +31,7 @@ class VirustotalError(Exception):
     """Class for VirusTotal API errors."""
 
     def __init__(self, response: requests.Response) -> None:
-        """Initialisation for VirustotalError class.
+        """Initialisation for `VirustotalError`.
 
         Args:
             response (requests.Response): A requests.Response object from a failed VirusTotal API request.
@@ -39,10 +39,10 @@ class VirustotalError(Exception):
         self.response = response
 
     def __str__(self) -> str:
-        """String dunder method for VirustotalError class.
+        """String dunder method for `VirustotalError`.
 
         Returns:
-            str: A string containing the error code, HTTP status code and error message from a failed VirusTotal API request.
+            str: Containing the error code, HTTP status code and error message from a failed VirusTotal API request.
         """
         error = self.error()
         return f"Error {error.get('code', 'Unknown')} ({self.response.status_code}): {error.get('message', 'No message')}"
@@ -55,7 +55,7 @@ class VirustotalError(Exception):
         https://developers.virustotal.com/v3.0/reference#errors
 
         Returns:
-            dict: A dictionary containing the error code and message returned from the VirusTotal API (if any) otherwise, returns an empty dictionary.
+            dict: Containing the error code and message returned from the VirusTotal API (if any) otherwise, returns an empty dictionary.
         """
         # Attempt to decode JSON as the v3 VirusTotal API returns the error message as JSON
         # Fallback to an empty dict if error is somehow missing
