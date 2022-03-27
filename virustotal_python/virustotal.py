@@ -224,9 +224,9 @@ class VirustotalResponse(object):
 class Virustotal(object):
     """Interact with the public VirusTotal v3 and v2 APIs.
 
-    https://developers.virustotal.com/v2.0/reference
-
     https://developers.virustotal.com/v3.0/reference
+
+    https://developers.virustotal.com/v2.0/reference
     """
 
     def __init__(
@@ -239,7 +239,7 @@ class Virustotal(object):
         """Interact with the public VirusTotal v3 and v2 APIs.
 
         Args:
-            API_KEY (str, optional): The API key used to interact with the VirusTotal v2 and v3 APIs.
+            API_KEY (str, optional): The API key used to interact with the VirusTotal v3 and v2 APIs.
                 Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
             API_VERSION (Union[int, str], optional): The version to use when interacting with the VirusTotal API.
                 Defaults to 3.
