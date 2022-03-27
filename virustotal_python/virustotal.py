@@ -314,11 +314,11 @@ class Virustotal(object):
 
         Raises:
             NotImplementedError: When a unsupported HTTP method is provided.
+            VirustotalError: When a failed VirusTotal API response occurs.
 
         Returns:
             VirustotalResponse: A `VirustotalResponse` class object.
         """
-        # Create API endpoint
         endpoint = f"{self.BASEURL}{resource}"
         if large_file:
             endpoint = resource
