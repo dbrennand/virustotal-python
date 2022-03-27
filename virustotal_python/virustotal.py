@@ -282,7 +282,6 @@ class Virustotal(object):
                 f"The API version '{API_VERSION}' is not a valid VirusTotal API version.\nValid API versions are 'v2', 2, 'v3' and 3."
             )
 
-    # Context Manager support
     def __enter__(self):
         """Context Manager enter function."""
         return self
