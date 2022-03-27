@@ -259,7 +259,6 @@ class Virustotal(object):
         Raises:
             ValueError: Raises `ValueError` when no `API_KEY` is provided or the `API_VERSION` is invalid.
         """
-        self.VERSION = "0.3.0"
         if API_KEY is None:
             raise ValueError(
                 "An API key is required to interact with the VirusTotal API.\nProvide one to the API_KEY parameter or by setting the environment variable 'VIRUSTOTAL_API_KEY'."
