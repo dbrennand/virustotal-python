@@ -23,7 +23,7 @@ SOFTWARE.
 """
 import requests
 import os
-from typing import Tuple
+from typing import Tuple, Union
 from json.decoder import JSONDecodeError
 
 
@@ -232,7 +232,7 @@ class Virustotal(object):
     def __init__(
         self,
         API_KEY: str = None,
-        API_VERSION: int = 3,
+        API_VERSION: Union[int, str] = 3,
         PROXIES: dict = None,
         TIMEOUT: float = None,
     ):
@@ -241,7 +241,7 @@ class Virustotal(object):
         Args:
             API_KEY (str, optional): The API key used to interact with the VirusTotal v2 and v3 APIs.
                 Alternatively, the environment variable `VIRUSTOTAL_API_KEY` can be provided.
-            API_VERSION (int, optional): The version to use when interacting with the VirusTotal API.
+            API_VERSION (Union[int, str], optional): The version to use when interacting with the VirusTotal API.
                 Defaults to 3.
             PROXIES (dict, optional): Proxies to use when making requests.
                 E.g. `{"http": "http://10.10.1.10:3128", "https": "https://10.10.1.10:1080"}`
