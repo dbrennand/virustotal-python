@@ -28,17 +28,13 @@ from json.decoder import JSONDecodeError
 
 
 class VirustotalError(Exception):
-    """Class for VirusTotal API errors.
-
-    Args:
-        Exception: Inherit the properties and methods from the Exception class.
-    """
+    """Class for VirusTotal API errors."""
 
     def __init__(self, response: requests.Response) -> None:
         """Initialisation for VirustotalError class.
 
         Args:
-            response (requests.Response): A requests.Response object from a failed API request to the VirusTotal API.
+            response (requests.Response): A requests.Response object from a failed VirusTotal API request.
         """
         self.response = response
 
@@ -46,13 +42,13 @@ class VirustotalError(Exception):
         """String dunder method for VirustotalError class.
 
         Returns:
-            str: A string containing the error code, HTTP status code and error message from a VirusTotal API request.
+            str: A string containing the error code, HTTP status code and error message from a failed VirusTotal API request.
         """
         error = self.error()
         return f"Error {error.get('code', 'Unknown')} ({self.response.status_code}): {error.get('message', 'No message')}"
 
     def error(self) -> dict:
-        """Retrieve the error that occurred from a VirusTotal API request.
+        """Retrieve the error that occurred from a failed VirusTotal API request.
 
         https://developers.virustotal.com/v2.0/reference#api-responses
 
