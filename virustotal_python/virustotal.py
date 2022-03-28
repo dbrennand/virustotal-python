@@ -52,7 +52,7 @@ class VirustotalError(Exception):
 
         https://developers.virustotal.com/v2.0/reference/api-responses
 
-        https://developers.virustotal.com/v3.0/reference#errors
+        https://developers.virustotal.com/reference/errors
 
         Returns:
             dict: Containing the error code and message returned from the VirusTotal API (if any) otherwise, returns an empty dictionary.
