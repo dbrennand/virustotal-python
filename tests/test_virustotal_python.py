@@ -176,6 +176,24 @@ def test_virustotal_response_cursor(mock_http_request) -> None:
     assert resp.cursor == json.loads(example_json)["meta"]["cursor"]
 
 
+def test_virustotal_response_cursor_none(requests_mock: req_mock.Mocker) -> None:
+    """Test `VirustotalResponse.cursor` property returns `None` if `meta` key
+    is not present in the JSON response.
+
+    Args:
+        requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
+            thin-wrapper around patching the `requests` library.
+    """
+    requests_mock.register_uri(
+        req_mock.ANY,
+        req_mock.ANY,
+        status_code=200,
+    )
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.cursor == None
+
+
 def test_virustotal_response_data(mock_http_request) -> None:
     """Test `VirustotalResponse.data` property.
 
@@ -189,7 +207,7 @@ def test_virustotal_response_data(mock_http_request) -> None:
 
 
 def test_virustotal_response_object_type_list(mock_http_request) -> None:
-    """Test `VirustotalResponse.object_type` property returns a list of all the object types.
+    """Test `VirustotalResponse.object_type` property returns a `list` of all the object types.
 
     Args:
         mock_http_request (`mock_http_request()`): A pytest fixture to
@@ -204,7 +222,7 @@ def test_virustotal_response_object_type_list(mock_http_request) -> None:
 
 
 def test_virustotal_response_object_type_str(requests_mock: req_mock.Mocker) -> None:
-    """Test `VirustotalResponse.object_type` property returns a str of a single
+    """Test `VirustotalResponse.object_type` property returns a `str` of a single
     object type.
 
     Args:
