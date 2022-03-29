@@ -204,7 +204,8 @@ def test_virustotal_response_object_type_list(mock_http_request) -> None:
 
 
 def test_virustotal_response_object_type_str(requests_mock: req_mock.Mocker) -> None:
-    """Test `VirustotalResponse.object_type` property returns a str of a single object type.
+    """Test `VirustotalResponse.object_type` property returns a str of a single
+    object type.
 
     Args:
         requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
@@ -219,6 +220,29 @@ def test_virustotal_response_object_type_str(requests_mock: req_mock.Mocker) -> 
     with virustotal_python.Virustotal("test") as vtotal:
         resp = vtotal.request("test")
     assert resp.object_type == "test type"
+
+
+def test_virustotal_response_object_type_none(requests_mock: req_mock.Mocker) -> None:
+    """Test `VirustotalResponse.object_type` property returns `None` when the data property
+    is neither a `list` or `dict`.
+
+    Example endpoint: https://developers.virustotal.com/reference/files-upload-url
+
+    Args:
+        requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
+            thin-wrapper around patching the `requests` library.
+    """
+    requests_mock.register_uri(
+        req_mock.ANY,
+        req_mock.ANY,
+        status_code=200,
+        json={
+            "data": "http://www.virustotal.com/_ah/upload/AMmfu6b-_DXUeFe36Sb3b0F4B8mH9Nb-CHbRoUNVOPwG/"
+        },
+    )
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.object_type == None
 
 
 def test_virustotal_response_response_code(mock_http_request) -> None:
