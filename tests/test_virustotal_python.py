@@ -103,18 +103,22 @@ def test_request_large_file(requests_mock: req_mock.Mocker) -> None:
         "GET",
         "https://www.virustotal.com/api/v3/files/upload_url",
         status_code=200,
-        json={"data": "http://www.virustotal.com/_ah/upload/AMmfu6b-_DXUeFe36Sb3b0F4B8mH9Nb-CHbRoUNVOPwG/"}
+        json={
+            "data": "http://www.virustotal.com/_ah/upload/AMmfu6b-_DXUeFe36Sb3b0F4B8mH9Nb-CHbRoUNVOPwG/"
+        },
     )
     requests_mock.register_uri(
         "POST",
         "http://www.virustotal.com/_ah/upload/AMmfu6b-_DXUeFe36Sb3b0F4B8mH9Nb-CHbRoUNVOPwG/",
         status_code=200,
-        json={"data": {"type": "analysis", "id": "test=="}}
+        json={"data": {"type": "analysis", "id": "test=="}},
     )
     with virustotal_python.Virustotal(API_KEY="test", API_VERSION=3) as vtotal:
         resp = vtotal.request("files/upload_url")
         large_upload_url = resp.data
-        large_upload_resp = vtotal.request(large_upload_url, method="POST", large_file=True)
+        large_upload_resp = vtotal.request(
+            large_upload_url, method="POST", large_file=True
+        )
     assert large_upload_resp.data == {"type": "analysis", "id": "test=="}
 
 
