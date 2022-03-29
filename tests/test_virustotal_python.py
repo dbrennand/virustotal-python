@@ -1,8 +1,31 @@
 """Tests for virustotal-python.
 """
 import virustotal_python
+import json
+import requests
 import pytest
 import pytest_mock
+import requests_mock as req_mock
+
+with open("tests/example.json") as json_file:
+    example_json = json.dumps(json.load(json_file))
+
+
+@pytest.fixture
+def mock_http_request(requests_mock: req_mock.Mocker) -> None:
+    """Fixture to mock HTTP requests made by the `Virustotal.request()` method.
+
+    Args:
+        requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
+            thin-wrapper around patching the `requests` library.
+    """
+    requests_mock.register_uri(
+        req_mock.ANY,
+        req_mock.ANY,
+        status_code=200,
+        text=example_json,
+        headers={"test": "test"},
+    )
 
 
 def test_virustotal_apikey_env(mocker: pytest_mock.MockerFixture) -> None:
@@ -69,14 +92,211 @@ def test_request_notimplemented_error() -> None:
     assert "The request method 'test' is not implemented." == str(execinfo.value)
 
 
-"""
-# Tests - TODO
+def test_virustotal_response_headers(mock_http_request) -> None:
+    """Test `VirustotalResponse.headers` property.
 
-* Look into mocking requests
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.headers == {"test": "test"}
 
-* Test `VirustotalResponse` properties and methods
 
-* Test VirustotalError properties and methods
+def test_virustotal_response_status_code(mock_http_request) -> None:
+    """Test `VirustotalResponse.status_code` property.
 
-* Test request `large_file` parameter
-"""
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.status_code == 200
+
+
+def test_virustotal_response_text(mock_http_request) -> None:
+    """Test `VirustotalResponse.text` property.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.text == example_json
+
+
+def test_virustotal_response_requests_response(mock_http_request) -> None:
+    """Test `VirustotalResponse.requests_response` property.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert type(resp.requests_response) == requests.Response
+
+
+def test_virustotal_response_links(mock_http_request) -> None:
+    """Test `VirustotalResponse.links` property.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.links == json.loads(example_json)["links"]
+
+
+def test_virustotal_response_meta(mock_http_request) -> None:
+    """Test `VirustotalResponse.meta` property.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.meta == json.loads(example_json)["meta"]
+
+
+def test_virustotal_response_cursor(mock_http_request) -> None:
+    """Test `VirustotalResponse.cursor` property.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.cursor == json.loads(example_json)["meta"]["cursor"]
+
+
+def test_virustotal_response_data(mock_http_request) -> None:
+    """Test `VirustotalResponse.data` property.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.data == json.loads(example_json)["data"]
+
+
+def test_virustotal_response_object_type_list(mock_http_request) -> None:
+    """Test `VirustotalResponse.object_type` property returns a list of all the object types.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    obj_types = []
+    for comment in resp.data:
+        obj_types.append(comment["type"])
+    assert resp.object_type == obj_types
+
+
+def test_virustotal_response_object_type_str(requests_mock: req_mock.Mocker) -> None:
+    """Test `VirustotalResponse.object_type` property returns a str of a single object type.
+
+    Args:
+        requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
+            thin-wrapper around patching the `requests` library.
+    """
+    requests_mock.register_uri(
+        req_mock.ANY,
+        req_mock.ANY,
+        status_code=200,
+        json={"data": {"type": "test type"}},
+    )
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.object_type == "test type"
+
+
+def test_virustotal_response_response_code(mock_http_request) -> None:
+    """Test `VirustotalResponse.response_code` property.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.response_code == json.loads(example_json)["response_code"]
+
+
+def test_virustotal_response_json(mock_http_request) -> None:
+    """Test `VirustotalResponse.json()` method.
+
+    Args:
+        mock_http_request (`mock_http_request()`): A pytest fixture to
+            to mock HTTP requests made by the `Virustotal.request()` method.
+    """
+    with virustotal_python.Virustotal("test") as vtotal:
+        resp = vtotal.request("test")
+    assert resp.json() == json.loads(example_json)
+
+
+def test_virustotal_error(requests_mock: req_mock.Mocker) -> None:
+    """Test `VirustotalError.error()` method and string dunder.
+
+    Args:
+        requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
+            thin-wrapper around patching the `requests` library.
+    """
+    requests_mock.register_uri(
+        req_mock.ANY,
+        req_mock.ANY,
+        status_code=404,
+        json={
+            "error": {
+                "code": "NotFoundError",
+                "message": 'URL "thisurlidmakesnosenseatall" not found',
+            }
+        },
+    )
+    with pytest.raises(virustotal_python.VirustotalError) as execinfo:
+        vtotal = virustotal_python.Virustotal("test")
+        vtotal.request("test")
+    assert (
+        'Error NotFoundError (404): URL "thisurlidmakesnosenseatall" not found'
+        == str(execinfo.value)
+    )
+
+
+def test_virustotal_error_no_code_message(requests_mock: req_mock.Mocker) -> None:
+    """Test `VirustotalError.error()` method and string dunder with no code or message.
+
+    Args:
+        requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
+            thin-wrapper around patching the `requests` library.
+    """
+    requests_mock.register_uri(req_mock.ANY, req_mock.ANY, status_code=400)
+    with pytest.raises(virustotal_python.VirustotalError) as execinfo:
+        vtotal = virustotal_python.Virustotal("test")
+        vtotal.request("test")
+    assert "Error Unknown (400): No message" == str(execinfo.value)
+
+
+def test_virustotal_error_text_only(requests_mock: req_mock.Mocker) -> None:
+    """Test `VirustotalError.error()` method and string dunder with `requests.Response.text` present.
+
+    Args:
+        requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
+            thin-wrapper around patching the `requests` library.
+    """
+    requests_mock.register_uri(
+        req_mock.ANY, req_mock.ANY, status_code=400, text="Request failed"
+    )
+    with pytest.raises(virustotal_python.VirustotalError) as execinfo:
+        vtotal = virustotal_python.Virustotal("test")
+        vtotal.request("test")
+    assert "Error Unknown (400): Request failed" == str(execinfo.value)
