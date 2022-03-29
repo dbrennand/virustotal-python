@@ -160,13 +160,13 @@ class VirustotalResponse(object):
             return None
 
     @property
-    def data(self) -> Union[dict, list, None]:
+    def data(self) -> Union[dict, list, str, None]:
         """Retrieve the value of the key 'data' in the JSON response from a VirusTotal API request.
 
         https://developers.virustotal.com/reference/objects
 
         Returns:
-            Union[dict, list, None]: A dictionary or list depending on the number of objects returned (if any) otherwise, returns `None`.
+            Union[dict, list, str, None]: The data from a VirusTotal API request (if any) otherwise, returns `None`.
         """
         return self.json().get("data", None)
 
