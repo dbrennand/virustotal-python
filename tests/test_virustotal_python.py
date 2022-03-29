@@ -92,6 +92,32 @@ def test_request_notimplemented_error() -> None:
     assert "The request method 'test' is not implemented." == str(execinfo.value)
 
 
+def test_request_large_file(requests_mock: req_mock.Mocker) -> None:
+    """Test `Virustotal.request()` `large_file` parameter.
+
+    Args:
+        requests_mock (req_mock.Mocker): A req_mock.Mocker providing a
+            thin-wrapper around patching the `requests` library.
+    """
+    requests_mock.register_uri(
+        "GET",
+        "https://www.virustotal.com/api/v3/files/upload_url",
+        status_code=200,
+        json={"data": "http://www.virustotal.com/_ah/upload/AMmfu6b-_DXUeFe36Sb3b0F4B8mH9Nb-CHbRoUNVOPwG/"}
+    )
+    requests_mock.register_uri(
+        "POST",
+        "http://www.virustotal.com/_ah/upload/AMmfu6b-_DXUeFe36Sb3b0F4B8mH9Nb-CHbRoUNVOPwG/",
+        status_code=200,
+        json={"data": {"type": "analysis", "id": "test=="}}
+    )
+    with virustotal_python.Virustotal(API_KEY="test", API_VERSION=3) as vtotal:
+        resp = vtotal.request("files/upload_url")
+        large_upload_url = resp.data
+        large_upload_resp = vtotal.request(large_upload_url, method="POST", large_file=True)
+    assert large_upload_resp.data == {"type": "analysis", "id": "test=="}
+
+
 def test_virustotal_response_headers(mock_http_request) -> None:
     """Test `VirustotalResponse.headers` property.
 
