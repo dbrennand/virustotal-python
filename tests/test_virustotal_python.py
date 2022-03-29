@@ -51,7 +51,7 @@ def test_virustotal(mocker: pytest_mock.MockerFixture) -> None:
         "API_KEY": "test",
         "API_VERSION": 3,
         "PROXIES": {"http": "http://10.10.1.10:3128"},
-        "TIMEOUT": 10,
+        "TIMEOUT": 5.0,
     }
     mock_vtotal = mocker.patch("virustotal_python.Virustotal")
     virustotal_python.Virustotal(**keyword_arguments)
