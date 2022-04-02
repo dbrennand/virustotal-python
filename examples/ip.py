@@ -32,7 +32,7 @@ resp = vtotal.request(f"ip_addresses/{IP}/historical_whois")
 # Get communicating_files related to the IP address with a limit of 5
 resp = vtotal.request(f"ip_addresses/{IP}/communicating_files", params={"limit": 5})
 
-# Retrieve votes for an IP address
+# Get votes for an IP address
 resp = vtotal.request(f"ip_addresses/{IP}/votes")
 # Add a vote for an IP address
 # Verdict can be either harmless or malicious
