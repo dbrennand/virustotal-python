@@ -66,7 +66,7 @@ resp = vtotal.url_scan(
 
 # Retrieve url report(s)
 # A list containing the url of the report to be retrieved
-resp = vtotal.url_report(["ihaveaproblem.info"]) # Query a single url
+resp = vtotal.url_report(["ihaveaproblem.info"])  # Query a single url
 # A list of the url(s) and/or scan_id(s) report(s) to be retrieved (MAX 4 per standard request rate)
 # The first object in the list is a scan_id
 resp = vtotal.url_report(
