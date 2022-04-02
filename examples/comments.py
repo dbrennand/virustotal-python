@@ -21,7 +21,6 @@ Documentation:
 """
 from virustotal_python import Virustotal
 from base64 import urlsafe_b64encode
-from pprint import pprint
 
 API_KEY = "<VirusTotal API Key>"
 # The ID (either SHA-256, SHA-1 or MD5 hash) identifying the file
