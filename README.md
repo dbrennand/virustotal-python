@@ -128,6 +128,8 @@ with virustotal_python.Virustotal("<VirusTotal API Key>") as vtotal:
 
 ## Development and Unit Tests
 
+[black](https://github.com/psf/black) is used for code formatting.
+
 Install the development dependencies using Poetry:
 
 ```bash
