@@ -24,7 +24,10 @@ count = 0
 while resp.cursor:
     print(f"Current count: {count} - Cursor: {resp.cursor}")
     # Get more results using the cursor
-    resp = vtotal.request(f"ip_addresses/{IP}/communicating_files", params={"limit": 2, "cursor": resp.cursor})
+    resp = vtotal.request(
+        f"ip_addresses/{IP}/communicating_files",
+        params={"limit": 2, "cursor": resp.cursor},
+    )
     # Do something with the resp here
     # Add to the count to show how many times we have retrieved another cursor
     count += 1
