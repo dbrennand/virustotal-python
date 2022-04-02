@@ -8,27 +8,22 @@ Documentation:
     * v3 documentation - https://developers.virustotal.com/reference/collections
 """
 from virustotal_python import Virustotal
-from pprint import pprint
 
-API_KEY = "Insert API key here."
-
-# Example IP address (Google DNS)
+API_KEY = "<VirusTotal API Key>"
+#  (Google DNS)
 IP = "8.8.8.8"
 
 # v3 example
-vtotal = Virustotal(API_KEY=API_KEY, API_VERSION="v3")
+vtotal = Virustotal(API_KEY=API_KEY, API_VERSION=3)
 
-# Retrieve communicating_files related to the IP address with a limit of 5
+# Get communicating_files related to the IP address with a limit of 2
 resp = vtotal.request(f"ip_addresses/{IP}/communicating_files", params={"limit": 2})
 
-# Initialise count variable
 count = 0
-
 # While a cursor is present, keep collecting results!
 while resp.cursor:
-    print(count)
-    print(f"This is the current: {resp.cursor}")
-    # Get more results with cursor
+    print(f"Current count: {count} - Cursor: {resp.cursor}")
+    # Get more results using the cursor
     resp = vtotal.request(f"ip_addresses/{IP}/communicating_files", params={"limit": 2, "cursor": resp.cursor})
     # Do something with the resp here
     # Add to the count to show how many times we have retrieved another cursor
