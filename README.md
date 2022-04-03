@@ -1,6 +1,7 @@
 # virustotal-python 🐍
 ![PyPI](https://img.shields.io/pypi/v/virustotal-python.svg?style=flat-square)
 [![CI](https://github.com/dbrennand/virustotal-python/actions/workflows/ci.yml/badge.svg)](https://github.com/dbrennand/virustotal-python/actions/workflows/ci.yml)
+[![Publish](https://github.com/dbrennand/virustotal-python/actions/workflows/publish.yml/badge.svg)](https://github.com/dbrennand/virustotal-python/actions/workflows/publish.yml)
 
 A Python library to interact with the public VirusTotal v3 and v2 APIs.
 
