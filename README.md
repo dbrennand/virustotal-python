@@ -13,6 +13,8 @@ A Python library to interact with the public VirusTotal v3 and v2 APIs.
 ```bash
 # PyPi
 pip install virustotal-python
+# Manually
+pip install .
 # Poetry
 poetry install --no-dev
 # Poetry (with proxy support)
