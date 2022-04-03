@@ -126,9 +126,11 @@ with virustotal_python.Virustotal("<VirusTotal API Key>") as vtotal:
     pprint(resp.data)
 ```
 
-## Development and Unit Tests
+## Development
 
-[black](https://github.com/psf/black) is used for code formatting.
+[Black](https://github.com/psf/black) is used for code formatting.
+
+### Unit Tests
 
 Install the development dependencies using Poetry:
 
@@ -140,6 +142,16 @@ To run the unit tests, run `pytest` from the root of the project:
 
 ```bash
 pytest --cov=virustotal_python
+```
+
+### Publishing a new release
+
+```bash
+# Run from the master branch
+export VERSION=x.x.x
+git commit --allow-empty -m "Publish $VERSION"
+git tag -a $VERSION -m "Version $VERSION"
+git push --tags
 ```
 
 ## Authors & Contributors
