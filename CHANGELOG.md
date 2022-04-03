@@ -4,17 +4,21 @@
 
 ### Breaking Changes
 
-* Changed default VirusTotal API to version 3.
+* The `Virustotal` class now defaults to version 3 of the VirusTotal API.
 
-* Dropped support for `COMPATIBILITY_ENABLED`
+* Dropped support for `COMPATIBILITY_ENABLED` parameter on the `Virustotal` class.
 
 ### Docs
 
-* Updated README.
+* Updated README content including instructions for running tests and improve general readability.
 
-* Moved to Google docstring format.
+* Moved to using Google docstring format.
 
-* Refactored examples to favour VirusTotal API version 3.
+* Improved type hints.
+
+* Refactored examples to favour version 3 of the VirusTotal API.
+
+* Added a proper CHANGELOG.
 
 ### Tests
 
@@ -24,7 +28,7 @@
 
 * `API_VERSION` can now accept an `int` to specify VirusTotal API version to use.
 
-* Added GitHub actions to automate testing and publishing.
+* Add GitHub actions workflows for automated testing and publishing.
 
 ## 0.2.0
 
