@@ -17,8 +17,6 @@ pip install virustotal-python
 pip install .
 # Poetry
 poetry install --no-dev
-# Poetry (with proxy support)
-poetry install --no-dev -E socks
 ```
 
 ## Get a VirusTotal API Key 🔑
