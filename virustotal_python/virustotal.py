@@ -34,7 +34,7 @@ class VirustotalError(Exception):
         """Initialisation for `VirustotalError`.
 
         Args:
-            response (requests.Response): A requests.Response object from a failed VirusTotal API request.
+            response (requests.Response): From a failed API request to the VirusTotal API.
         """
         self.response = response
 
