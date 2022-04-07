@@ -78,7 +78,7 @@ class VirustotalResponse(object):
         """Initialisation for `VirustotalResponse`.
 
         Args:
-            response (requests.Response): From a successfull API request to the VirusTotal API.
+            response (requests.Response): From a successful API request to the VirusTotal API.
         """
         self.response = response
 
@@ -115,7 +115,7 @@ class VirustotalResponse(object):
         You may want to access this property if you wanted to read other aspects of the response such as cookies.
 
         Returns:
-            requests.Response: From a successfull API request to the VirusTotal API.
+            requests.Response: From a successful API request to the VirusTotal API.
         """
         return self.response
 
