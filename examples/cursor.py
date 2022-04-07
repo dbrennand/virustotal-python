@@ -14,7 +14,7 @@ API_KEY = "<VirusTotal API Key>"
 IP = "8.8.8.8"
 
 # v3 example
-vtotal = Virustotal(API_KEY=API_KEY, API_VERSION=3)
+vtotal = Virustotal(API_KEY=API_KEY)
 
 # Get communicating_files related to the IP address with a limit of 2
 resp = vtotal.request(f"ip_addresses/{IP}/communicating_files", params={"limit": 2})
