@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+* chore(deps): Update all dependencies.
+
 ## 1.0.0
 
 ### Breaking Changes
