@@ -267,14 +267,14 @@ class Virustotal(object):
             self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
             self.HEADERS = {
                 "Accept-Encoding": "gzip, deflate",
-                "User-Agent": f"gzip, virustotal-python 1.0.1",
+                "User-Agent": f"gzip, virustotal-python 1.0.2",
             }
         elif (API_VERSION == "v3") or (API_VERSION == 3):
             self.API_VERSION = API_VERSION
             self.BASEURL = "https://www.virustotal.com/api/v3/"
             self.HEADERS = {
                 "Accept-Encoding": "gzip, deflate",
-                "User-Agent": f"gzip, virustotal-python 1.0.1",
+                "User-Agent": f"gzip, virustotal-python 1.0.2",
                 "x-apikey": f"{self.API_KEY}",
             }
         else:
