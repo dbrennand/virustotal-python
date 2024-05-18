@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "virustotal-python"
-version = "1.0.2"
+version = "1.1.0"
 description = "A Python library to interact with the public VirusTotal v3 and v2 APIs."
 authors = ["dbrennand"]
 license = "MIT"
@@ -20,23 +20,27 @@ classifiers = [
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 exclude = [".gitignore"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-requests = {version = "^2.26.0", extras = ["socks"]}
+python = "^3.12"
+requests = { version = "^2.31.0" }
+PySocks = { version = "^1.7.1", optional = true }
 
 [tool.poetry.extras]
-socks = ["PySocks^1.7.1"]
+socks = ["PySocks"]
 
 [tool.poetry.dev-dependencies]
-black = "22.3.0"
-twine = "^3.5.0"
-pytest = "^6.2.5"
-pytest-mock = "^3.6.1"
-requests-mock = "^1.9.3"
-pytest-cov = "^3.0.0"
+black = "24.4.2 "
+twine = "^5.1.0"
+pytest = "^8.2.0"
+pytest-mock = "^3.14.0"
+requests-mock = "^1.12.1"
+pytest-cov = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
