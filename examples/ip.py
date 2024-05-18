@@ -13,6 +13,7 @@ Documentation:
 
     * v2 documentation - https://developers.virustotal.com/v2.0/reference/ip-address-report
 """
+
 from virustotal_python import Virustotal
 from pprint import pprint
 

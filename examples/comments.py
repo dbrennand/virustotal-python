@@ -19,6 +19,7 @@ Documentation:
         https://developers.virustotal.com/v2.0/reference/comments-get
         https://developers.virustotal.com/v2.0/reference/comments-put
 """
+
 from virustotal_python import Virustotal
 from base64 import urlsafe_b64encode
 

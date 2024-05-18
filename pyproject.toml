@@ -35,7 +35,7 @@ PySocks = { version = "^1.7.1", optional = true }
 socks = ["PySocks"]
 
 [tool.poetry.dev-dependencies]
-black = "24.4.2 "
+black = "^24.4.2"
 twine = "^5.1.0"
 pytest = "^8.2.0"
 pytest-mock = "^3.14.0"

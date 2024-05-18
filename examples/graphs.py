@@ -7,6 +7,7 @@ Documentation:
 
     * v3 documentation - https://developers.virustotal.com/reference/graphs
 """
+
 from virustotal_python import Virustotal
 
 API_KEY = "<VirusTotal API Key>"

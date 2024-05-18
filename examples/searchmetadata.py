@@ -12,6 +12,7 @@ Documentation:
         https://developers.virustotal.com/reference/search-1
         https://developers.virustotal.com/reference/metadata
 """
+
 from virustotal_python import Virustotal
 
 API_KEY = "<VirusTotal API Key>"

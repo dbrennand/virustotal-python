@@ -12,6 +12,7 @@ Documentation:
 
     * v2 documentation - https://developers.virustotal.com/v2.0/reference/file-scan
 """
+
 from virustotal_python import Virustotal
 import os.path
 from pprint import pprint
