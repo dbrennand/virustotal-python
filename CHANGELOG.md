@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+* chore(deps): Update all dependencies.
+* chore: update license year.
+
 ## 1.0.2
 
 * chore(deps): Update all dependencies.

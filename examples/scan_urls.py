@@ -15,6 +15,7 @@ Documentation:
         https://developers.virustotal.com/v2.0/reference/url-scan
         https://developers.virustotal.com/v2.0/reference/url-report
 """
+
 from virustotal_python import Virustotal
 from pprint import pprint
 from base64 import urlsafe_b64encode

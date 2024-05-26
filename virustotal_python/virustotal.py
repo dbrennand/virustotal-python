@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2023 dbrennand
+Copyright (c) 2024 Daniel Brennand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+
 import requests
 import os
 from typing import Union
@@ -267,14 +268,14 @@ class Virustotal(object):
             self.BASEURL = "https://www.virustotal.com/vtapi/v2/"
             self.HEADERS = {
                 "Accept-Encoding": "gzip, deflate",
-                "User-Agent": f"gzip, virustotal-python 1.0.2",
+                "User-Agent": f"gzip, virustotal-python 1.1.0",
             }
         elif (API_VERSION == "v3") or (API_VERSION == 3):
             self.API_VERSION = API_VERSION
             self.BASEURL = "https://www.virustotal.com/api/v3/"
             self.HEADERS = {
                 "Accept-Encoding": "gzip, deflate",
-                "User-Agent": f"gzip, virustotal-python 1.0.2",
+                "User-Agent": f"gzip, virustotal-python 1.1.0",
                 "x-apikey": f"{self.API_KEY}",
             }
         else:
