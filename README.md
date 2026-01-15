@@ -17,8 +17,8 @@ A Python library to interact with the public VirusTotal v3 and v2 APIs.
 pip install virustotal-python
 # Manually
 pip install .
-# Poetry
-poetry install --no-dev
+# uv
+uv sync --no-dev
 ```
 
 ## Get a VirusTotal API Key 🔑
