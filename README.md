@@ -135,16 +135,11 @@ with virustotal_python.Virustotal("<VirusTotal API Key>") as vtotal:
 
 ### Unit Tests
 
-Install the development dependencies using Poetry:
-
-```bash
-poetry install && poetry shell
-```
-
 To run the unit tests, run `pytest` from the root of the project:
 
 ```bash
-pytest --cov=virustotal_python
+uv sync --dev
+uv run pytest --cov=virustotal_python
 ```
 
 ### Publishing a new release
