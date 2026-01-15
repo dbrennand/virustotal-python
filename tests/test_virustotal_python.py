@@ -1,5 +1,4 @@
-"""Tests for virustotal-python.
-"""
+"""Tests for virustotal-python."""
 
 import virustotal_python
 import json

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1
+
+* chore(deps): Update all dependencies.
+* chore: update license year.
+* chore: ci maintenance.
+* chore: migrate to uv instead of poetry.
+
 ## 1.1.0
 
 * chore(deps): Update all dependencies.
