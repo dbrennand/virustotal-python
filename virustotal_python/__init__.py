@@ -8,4 +8,4 @@ name = "virustotal-python"
 
 __all__ = ["Virustotal", "VirustotalResponse", "VirustotalError"]
 __author__ = "dbrennand"
-__version__ = "1.1.1"
+__version__ = "1.1.2"
