@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.2
+
+* chore(deps): refresh uv lockfile.
+* chore(release): bump version to 1.1.2.
+
 ## 1.1.1
 
 * chore(deps): Update all dependencies.
